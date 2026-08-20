@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Ascend__soqlQuery",
+      "mcp__claude_ai_Ascend__getObjectSchema",
+      "mcp__claude_ai_Ascend__getRelatedRecords",
+      "PowerShell(sf org display --target-org jdarla@teamascend.com --json)",
+      "PowerShell(sf org list --json)",
+      "PowerShell(sf org list --json 2>$null)",
+      "mcp__claude_ai_Ascend__getUserInfo",
+      "PowerShell(sf org display --target-org jdarla@teamascend.com.prod.pilot --json 2>$null)",
+      "mcp__claude_ai_Ascend__createSobjectRecord",
+      "PowerShell(sf project retrieve start --metadata Flow:Set_Opportunity_Record_Type_to_Churn Flow:Opportunity_BeforeTriggerFlow Flow:Opportunity_AfterTriggerFlow Flow:Quote_To_Opportunity_Margin_Sync --json 2>&1)",
+      "PowerShell(sf org login web --alias jdarla@teamascend.com --instance-url https://teamascend--pilot.sandbox.my.salesforce.com --json)",
+      "PowerShell(sf data query -q \"SELECT Id, Line_of_Business__c, MRR__c, TotalCost FROM QuoteLineItem WHERE QuoteId = '0Q0VF000003XxUD0A0'\" -o \"jdarla@teamascend.com\" --json 2>$null)",
+      "PowerShell(sf data query -q \"SELECT Id, Line_of_Business__c, MRR__c, TotalCost FROM QuoteLineItem WHERE QuoteId = '0Q0VF000003XxUD0A0'\" -o \"aniketshindedisquali2508@gmail.com\" --json 2>$null)",
+      "PowerShell(sf data query -q \"SELECT Id, Line_of_Business__c, MRR__c, TotalCost FROM QuoteLineItem WHERE QuoteId = '0Q0VF000003XxUD0A0'\" -o \"aniketshindercaorg@gmail.com\" --json 2>$null)",
+      "PowerShell(sf data query -q \"SELECT Id, Line_of_Business__c, MRR__c, TotalCost FROM QuoteLineItem WHERE QuoteId = '0Q0VF000003XxUD0A0'\" -o \"aniketshindequalification2508@gmail.com\" --json 2>$null)",
+      "mcp__claude_ai_Ascend__deleteSobjectRecord",
+      "mcp__claude_ai_Ascend__updateSobjectRecord",
+      "WebSearch",
+      "WebFetch(domain:developer.salesforce.com)",
+      "PowerShell(sf --version)",
+      "PowerShell(sf sobject describe --sobject AssetAction --json | ConvertFrom-Json | ForEach-Object { $_.result.fields } | Where-Object { $_.name -in @\\('AdjustmentAmountChange','ProductAmountChange','SubtotalChange','Amount','MrrChange'\\) } | Select-Object name, type, updateable, createable, calculated, calculatedFormula | Format-List)",
+      "PowerShell(sf org list --json | ConvertFrom-Json | ForEach-Object { $_.result } | ConvertTo-Json -Depth 4 -Compress)",
+      "mcp__claude_ai_Ascend__find",
+      "PowerShell($f=\"C:\\\\Users\\\\Aniket Shinde\\\\.claude\\\\projects\\\\c--Users-Aniket-Shinde-OneDrive-Desktop-Ascend\\\\730d734e-ee4a-4dfc-a0f6-af7a28a8742b\\\\tool-results\\\\mcp-claude_ai_Ascend-soqlQuery-1786977821243.txt\"; $j=Get-Content $f -Raw | ConvertFrom-Json; \"totalSize=$\\($j.totalSize\\) done=$\\($j.done\\) returned=$\\($j.records.Count\\)\"; \"--- duplicates within same quote+product+group \\(count>1\\) ---\"; $j.records | Group-Object {\"$\\($_.QuoteId\\)|$\\($_.Product2.Name\\)|$\\($_.QuoteLineGroup.Name\\)\"} | Where-Object {$_.Count -gt 1} | ForEach-Object { \"{0}  x{1}\" -f $_.Name, $_.Count })",
+      "PowerShell($f=\"C:\\\\Users\\\\Aniket Shinde\\\\.claude\\\\projects\\\\c--Users-Aniket-Shinde-OneDrive-Desktop-Ascend\\\\730d734e-ee4a-4dfc-a0f6-af7a28a8742b\\\\tool-results\\\\mcp-claude_ai_Ascend-soqlQuery-1786977821243.txt\"; $j=Get-Content $f -Raw | ConvertFrom-Json; \"--- distinct products in ramped groups \\(lines, quotes, lines w/ RampIdentifier\\) ---\"; $j.records | Group-Object {$_.Product2.Name} | Sort-Object Count -Descending | ForEach-Object { $g=$_.Group; \"{0,-62} lines={1,-4} quotes={2,-3} ramped={3}\" -f $_.Name, $_.Count, \\(\\($g | Select-Object -ExpandProperty QuoteId -Unique\\).Count\\), \\(\\($g | Where-Object {$_.RampIdentifier}\\).Count\\) })"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Aniket Shinde\\OneDrive\\Desktop\\Ascend"
+    ]
+  }
+}

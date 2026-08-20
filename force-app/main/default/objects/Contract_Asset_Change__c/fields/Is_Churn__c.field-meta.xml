@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Churn__c</fullName>
+    <formula>Transaction_Type__c = &quot;Decrease&quot; ||  Transaction_Type__c = &quot;Removal&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Is Churn</label>
+    <type>Checkbox</type>
+</CustomField>

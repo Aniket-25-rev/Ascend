@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Block_Amend_Cancel_No_End_Date</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    OR(
+        ISPICKVAL(Type, &quot;Change&quot;),
+        ISPICKVAL(Type, &quot;Cancel&quot;)
+    ),
+    ISBLANK(Asset.LifecycleEndDate)
+)</errorConditionFormula>
+    <errorMessage>This asset has no End Date (one-time onboarding fee) and cannot be amended or cancelled.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Net_Change_Desk__c</fullName>
+    <label>Net Change - Desk</label>
+    <inlineHelpText>New renewal Quote Service Desk Principal Amount minus prior Quote Service Desk Principal Amount.</inlineHelpText>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Currency</type>
+</CustomField>

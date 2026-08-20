@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Renewal_Rate_Applied__c</fullName>
+    <label>Renewal Rate Applied</label>
+    <inlineHelpText>Predefined rate increase pulled from the originating Contract and applied automatically to compute this renewal&#39;s Amount.</inlineHelpText>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Percent</type>
+</CustomField>

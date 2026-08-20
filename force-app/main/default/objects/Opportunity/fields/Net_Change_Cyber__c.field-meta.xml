@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Net_Change_Cyber__c</fullName>
+    <label>Net Change - Cyber</label>
+    <inlineHelpText>New renewal Quote Cybersecurity Principal Amount minus prior Quote Cybersecurity Principal Amount.</inlineHelpText>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Currency</type>
+</CustomField>

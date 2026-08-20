@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <environments>Default</environments>
+    <interviewLabel>Renewal Opportunity Financials {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Renewal Opportunity Financials</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <status>Active</status>
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Get_Contract</targetReference>
+        </connector>
+        <object>Opportunity</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Renewal</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>ContractId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>SyncedQuoteId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+    </start>
+
+    <!-- 1. Expiring contract: gives prior TCV/MRR and the SourceQuoteId that priced it -->
+    <recordLookups>
+        <name>Get_Contract</name>
+        <label>Get Contract</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <connector>
+            <targetReference>Get_Prior_Quote</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ContractId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contract</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <!-- 2. The quote that priced the expiring contract (may not exist for older contracts) -->
+    <recordLookups>
+        <name>Get_Prior_Quote</name>
+        <label>Get Prior Quote</label>
+        <locationX>176</locationX>
+        <locationY>218</locationY>
+        <connector>
+            <targetReference>Get_New_Quote</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Contract.SourceQuoteId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Quote</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <!-- 3. The renewal Opportunity's own priced quote: new LOB amounts and Booked MRR -->
+    <recordLookups>
+        <name>Get_New_Quote</name>
+        <label>Get New Quote</label>
+        <locationX>176</locationX>
+        <locationY>302</locationY>
+        <connector>
+            <targetReference>Set_Renewal_Financials</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.SyncedQuoteId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Quote</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <formulas>
+        <name>Existing_MRR_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_Contract.Booked_MRR__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>New_MRR_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_New_Quote.Booked_MRR__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>MRR_Incremental_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>{!New_MRR_Formula} - {!Existing_MRR_Formula}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Prior_Contract_Value_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_Contract.TCV__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Net_Desk_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_New_Quote.Service_Desk_Principal_Amount__c}, 0) - BLANKVALUE({!Get_Prior_Quote.Service_Desk_Principal_Amount__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Net_Infra_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_New_Quote.Infrastructure_Principal_Amount__c}, 0) - BLANKVALUE({!Get_Prior_Quote.Infrastructure_Principal_Amount__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Net_Cyber_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_New_Quote.Cybersecurity_Principal_Amount__c}, 0) - BLANKVALUE({!Get_Prior_Quote.Cybersecurity_Principal_Amount__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Net_Private_Cloud_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>BLANKVALUE({!Get_New_Quote.Private_Cloud_Principal_Amount__c}, 0) - BLANKVALUE({!Get_Prior_Quote.Private_Cloud_Principal_Amount__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Total_Net_Change_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>{!Net_Desk_Formula} + {!Net_Infra_Formula} + {!Net_Cyber_Formula} + {!Net_Private_Cloud_Formula}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Rate_Applied_Formula</name>
+        <dataType>Number</dataType>
+        <expression>IF(AND(NOT(ISBLANK({!Get_New_Quote.Auto_Renew_Increase__c})), {!Get_New_Quote.Auto_Renew_Increase__c} &lt;&gt; 0), {!Get_New_Quote.Auto_Renew_Increase__c}, BLANKVALUE({!Get_New_Quote.Annual_Increase__c}, 0))</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>Amount_Formula</name>
+        <dataType>Currency</dataType>
+        <expression>IF(NOT(ISBLANK({!Get_New_Quote.GrandTotal})), {!Get_New_Quote.GrandTotal}, {!Prior_Contract_Value_Formula} + {!Total_Net_Change_Formula})</expression>
+        <scale>2</scale>
+    </formulas>
+
+    <!-- 4. Write everything onto the triggering Opportunity (before-save: no extra DML) -->
+    <assignments>
+        <name>Set_Renewal_Financials</name>
+        <label>Set Renewal Financials</label>
+        <locationX>176</locationX>
+        <locationY>386</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Total_Existing_MRR__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Existing_MRR_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.MRR_Value__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>New_MRR_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Total_MRR_Incremental__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>MRR_Incremental_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Prior_Contract_Value__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Prior_Contract_Value_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Net_Change_Desk__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Net_Desk_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Net_Change_Infra__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Net_Infra_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Net_Change_Cyber__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Net_Cyber_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Net_Change_Private_Cloud__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Net_Private_Cloud_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Total_Net_Change__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Total_Net_Change_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Renewal_Rate_Applied__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Rate_Applied_Formula</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Amount</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Amount_Formula</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+</Flow>
