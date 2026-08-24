@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Term_Change_Requested__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Set manually by the SOA user (or a dedicated action) to signal a deliberate Contract Term change on an Amendment Quote. Automatically reset to false after the QLI End Date recalculation runs. Must never be set automatically from Contract_Term_Months__c changing, since that field is also rewritten by the native pricing engine on unrelated reprices (Quantity/Product changes, Reprice All).</description>
+    <inlineHelpText>Check this, along with changing Contract Term (Months), to intentionally recalculate the QLI End Date. Do not rely on this being set automatically.</inlineHelpText>
+    <label>Term Change Requested</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

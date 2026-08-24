@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CommunityThemeDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <bundlesInfo>
+        <description>Ascend</description>
+        <order>1</order>
+        <title>Ascend</title>
+        <type>Highlight</type>
+    </bundlesInfo>
+    <bundlesInfo>
+        <image>siteAsset_cfc92267ad2d48358dfd8c0ee585edcc</image>
+        <order>1</order>
+        <title>siteAsset_cfc92267ad2d48358dfd8c0ee585edcc</title>
+        <type>PreviewImage</type>
+    </bundlesInfo>
+    <defaultBrandingSet>CustomerSupport</defaultBrandingSet>
+    <description>Ascend</description>
+    <enableExtendedCleanUpOnDelete>true</enableExtendedCleanUpOnDelete>
+    <masterLabel>CustomerSupport</masterLabel>
+    <publisher>Ascend</publisher>
+    <themeSetting>
+        <themeLayout>CustomerSupport_themeLayout_Login</themeLayout>
+        <themeLayoutType>Login</themeLayoutType>
+    </themeSetting>
+    <themeSetting>
+        <themeLayout>CustomerSupport_themeLayout_ServiceNotAvailable</themeLayout>
+        <themeLayoutType>ServiceNotAvailable</themeLayoutType>
+    </themeSetting>
+    <themeSetting>
+        <themeLayout>CustomerSupport_themeLayout_Default</themeLayout>
+        <themeLayoutType>Inner</themeLayoutType>
+    </themeSetting>
+</CommunityThemeDefinition>

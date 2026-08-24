@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Start__c</fullName>
+    <description>Date field used to capture the Contract State date
+
+Case/Ticket:
+W-002559</description>
+    <inlineHelpText>MRR Contract Start Date; date for the core managed services contract</inlineHelpText>
+    <label>Contract Start</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

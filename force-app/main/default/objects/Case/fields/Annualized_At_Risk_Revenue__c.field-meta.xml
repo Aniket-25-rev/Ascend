@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Annualized_At_Risk_Revenue__c</fullName>
+    <description>Aggregates the Annualized At Risk amounts from all related At Risk Asset records to provide a total annualized revenue exposure for the case.</description>
+    <inlineHelpText>The total annualized revenue at risk across all assets associated with this case.</inlineHelpText>
+    <label>Annualized At Risk Revenue</label>
+    <summarizedField>At_Risk_Asset__c.Annualized_At_Risk_Revenue__c</summarizedField>
+    <summaryForeignKey>At_Risk_Asset__c.Case__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

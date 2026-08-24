@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>All_to_W2</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>All to W2</label>
+        <sharedTo>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedTo>
+        <criteriaItems>
+            <field>Start_Date__c</field>
+            <operation>greaterThan</operation>
+            <value>1/1/2010</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>false</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+    <sharingOwnerRules>
+        <fullName>Corbin_Chad_Share</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>Corbin Chad Share</label>
+        <sharedTo>
+            <portalRole>Sincera2CustomerExecutive</portalRole>
+        </sharedTo>
+        <sharedFrom>
+            <portalRoleAndSubordinates>Sincera2CustomerExecutive</portalRoleAndSubordinates>
+        </sharedFrom>
+    </sharingOwnerRules>
+    <sharingOwnerRules>
+        <fullName>W2_users</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>W2 users</label>
+        <sharedTo>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedTo>
+        <sharedFrom>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedFrom>
+    </sharingOwnerRules>
+</SharingRules>

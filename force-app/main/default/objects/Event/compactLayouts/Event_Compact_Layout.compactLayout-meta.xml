@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Compact_Layout</fullName>
+    <fields>WhatId</fields>
+    <fields>WhoId</fields>
+    <fields>OwnerId</fields>
+    <fields>Subject</fields>
+    <fields>Purpose__c</fields>
+    <fields>ActivityDate</fields>
+    <label>Event Compact Layout</label>
+</CompactLayout>

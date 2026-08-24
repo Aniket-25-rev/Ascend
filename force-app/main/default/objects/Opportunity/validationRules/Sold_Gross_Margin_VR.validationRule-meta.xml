@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sold_Gross_Margin_VR</fullName>
+    <active>true</active>
+    <description>Sold Gross Margin is required
+Added requirement for Amount great than zero.
+
+Case/Ticket:
+#00015044
+#00016020</description>
+    <errorConditionFormula>AND(
+ ISCHANGED( StageName ),
+ ISPICKVAL( StageName , &apos;Approve&apos;),
+ NOT(PRIORVALUE( StageName ) = &apos;Approve&apos;),
+ Amount &gt; 0,
+		
+ OR(
+  ISNULL(Sold_Gross_Margin__c ),
+  ISBLANK(Sold_Gross_Margin__c )),
+
+ OR(
+  RecordType.DeveloperName = &apos;Opportunity&apos;,
+  RecordType.DeveloperName = &apos;Salesforce_Consulting&apos;),
+
+ OR(
+  ISPICKVAL( Type , &apos;New Business&apos;),
+  ISPICKVAL( Type , &apos;Existing Business&apos;)),
+
+ NOT(CONTAINS( Service_Offering_Rollup__c , &apos;Salesforce&apos;)),
+ NOT(CONTAINS( Service_Offering_Rollup__c , &apos;HubSpot&apos;)),
+ NOT(CONTAINS( Service_Offering_Rollup__c , &apos;Zingly&apos;)),
+ NOT(CONTAINS( Service_Offering_Rollup__c , &apos;Application Solutions&apos;)),
+
+ NOT( $Permission.BypassValidationRules),
+ NOT( $User.Id = &apos;0053b00000CSZR6&apos;)
+)</errorConditionFormula>
+    <errorDisplayField>Sold_Gross_Margin__c</errorDisplayField>
+    <errorMessage>This field is required before the Opportunity can be moved to &quot;Approve&quot; stage</errorMessage>
+</ValidationRule>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Queue_Review_Notes__c</fullName>
+    <description>Used only in a list view on the queue review record page. Should not be added to the case layout, Purpose is to capture a chatter comment while editing teh list view. This is done with a case after flow that created teh chatter post.</description>
+    <label>Queue Review Notes</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

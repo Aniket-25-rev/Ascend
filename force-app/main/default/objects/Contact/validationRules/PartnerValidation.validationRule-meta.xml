@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PartnerValidation</fullName>
+    <active>true</active>
+    <description>Role, Segment, Vertical, Mailing City &amp; Mailing State must be input before Partner Contact can move to Refer.</description>
+    <errorConditionFormula>AND(
+RecordType.DeveloperName = &quot;Partner&quot;,
+OR(
+ISPICKVAL(Stage__c,&quot;Refer&quot;),
+ISPICKVAL(Stage__c,&quot;Loyal&quot;)),
+OR(
+ISBLANK(TEXT(Role__c)),
+ISBLANK(TEXT(Segment__c)),
+ISBLANK(TEXT(Vertical__c)),
+ISBLANK(MailingCity),
+ISBLANK(MailingState)
+))</errorConditionFormula>
+    <errorMessage>Role, Segment, Vertical, Mailing City &amp; Mailing State must be input before Partner Contact can move to Refer.</errorMessage>
+</ValidationRule>

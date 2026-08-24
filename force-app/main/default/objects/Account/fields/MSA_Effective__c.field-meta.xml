@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MSA_Effective__c</fullName>
+    <inlineHelpText>This is the effective date of the MSA, also signature date of the MSA, captured  upon contract signature.</inlineHelpText>
+    <label>MSA Effective</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Industry_New__c</fullName>
+    <label>Industry OLD</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Aerospace and Defense</fullName>
+                <default>false</default>
+                <label>Aerospace and Defense</label>
+            </value>
+            <value>
+                <fullName>Agriculture and Mining</fullName>
+                <default>false</default>
+                <label>Agriculture and Mining</label>
+            </value>
+            <value>
+                <fullName>Automotive</fullName>
+                <default>false</default>
+                <label>Automotive</label>
+            </value>
+            <value>
+                <fullName>Communications</fullName>
+                <default>false</default>
+                <label>Communications</label>
+            </value>
+            <value>
+                <fullName>Consumer Goods</fullName>
+                <default>false</default>
+                <label>Consumer Goods</label>
+            </value>
+            <value>
+                <fullName>Energy and Utilities</fullName>
+                <default>false</default>
+                <label>Energy and Utilities</label>
+            </value>
+            <value>
+                <fullName>Engineering, Construction and Real Estate</fullName>
+                <default>false</default>
+                <label>Engineering, Construction and Real Estate</label>
+            </value>
+            <value>
+                <fullName>Financial Services: Banking</fullName>
+                <default>false</default>
+                <label>Financial Services: Banking</label>
+            </value>
+            <value>
+                <fullName>Financial Services: Capital Markets</fullName>
+                <default>false</default>
+                <label>Financial Services: Capital Markets</label>
+            </value>
+            <value>
+                <fullName>Financial Services: Insurance</fullName>
+                <default>false</default>
+                <label>Financial Services: Insurance</label>
+            </value>
+            <value>
+                <fullName>Financial Services: Wealth Management</fullName>
+                <default>false</default>
+                <label>Financial Services: Wealth Management</label>
+            </value>
+            <value>
+                <fullName>Healthcare and Life Sciences: Medical Devices</fullName>
+                <default>false</default>
+                <label>Healthcare and Life Sciences: Medical Devices</label>
+            </value>
+            <value>
+                <fullName>Healthcare and Life Sciences: Payer</fullName>
+                <default>false</default>
+                <label>Healthcare and Life Sciences: Payer</label>
+            </value>
+            <value>
+                <fullName>Healthcare and Life Sciences: Pharma</fullName>
+                <default>false</default>
+                <label>Healthcare and Life Sciences: Pharma</label>
+            </value>
+            <value>
+                <fullName>Healthcare and Life Sciences: Provider</fullName>
+                <default>false</default>
+                <label>Healthcare and Life Sciences: Provider</label>
+            </value>
+            <value>
+                <fullName>High Tech</fullName>
+                <default>false</default>
+                <label>High Tech</label>
+            </value>
+            <value>
+                <fullName>Higher Education</fullName>
+                <default>false</default>
+                <label>Higher Education</label>
+            </value>
+            <value>
+                <fullName>Manufacturing</fullName>
+                <default>false</default>
+                <label>Manufacturing</label>
+            </value>
+            <value>
+                <fullName>Media</fullName>
+                <default>false</default>
+                <label>Media</label>
+            </value>
+            <value>
+                <fullName>Non-Profit</fullName>
+                <default>false</default>
+                <label>Non-Profit</label>
+            </value>
+            <value>
+                <fullName>Oil and Gas</fullName>
+                <default>false</default>
+                <label>Oil and Gas</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Professional Services</fullName>
+                <default>false</default>
+                <label>Professional Services</label>
+            </value>
+            <value>
+                <fullName>Public Sector: Federal</fullName>
+                <default>false</default>
+                <label>Public Sector: Federal</label>
+            </value>
+            <value>
+                <fullName>Public Sector: State/Local</fullName>
+                <default>false</default>
+                <label>Public Sector: State/Local</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Travel, Transportation &amp; Hospitality-Hospitality</fullName>
+                <default>false</default>
+                <label>Travel, Transportation &amp; Hospitality-Hospitality</label>
+            </value>
+            <value>
+                <fullName>Travel, Transportation &amp; Hospitality-Transportation</fullName>
+                <default>false</default>
+                <label>Travel, Transportation &amp; Hospitality-Transportation</label>
+            </value>
+            <value>
+                <fullName>Travel, Transportation &amp; Hospitality-Travel</fullName>
+                <default>false</default>
+                <label>Travel, Transportation &amp; Hospitality-Travel</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

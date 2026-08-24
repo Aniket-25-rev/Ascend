@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Connections__c</fullName>
+    <label>Connections</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>LinkedIn Connected</fullName>
+                <default>false</default>
+                <label>LinkedIn Connected</label>
+            </value>
+            <value>
+                <fullName>Slack Connected</fullName>
+                <default>false</default>
+                <label>Slack Connected</label>
+            </value>
+            <value>
+                <fullName>Happy Hour Attended</fullName>
+                <default>false</default>
+                <label>Happy Hour Attended</label>
+            </value>
+            <value>
+                <fullName>Lunch &amp; Learn Attended</fullName>
+                <default>false</default>
+                <label>Lunch &amp; Learn Attended</label>
+            </value>
+            <value>
+                <fullName>Webinar Attended</fullName>
+                <default>false</default>
+                <label>Webinar Attended</label>
+            </value>
+            <value>
+                <fullName>Customer Event Attended</fullName>
+                <default>false</default>
+                <label>Customer Event Attended</label>
+            </value>
+            <value>
+                <fullName>One-on-One Attended</fullName>
+                <default>false</default>
+                <label>One-on-One Attended</label>
+            </value>
+            <value>
+                <fullName>Opportunity Referred</fullName>
+                <default>false</default>
+                <label>Opportunity Referred</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>6</visibleLines>
+</CustomField>

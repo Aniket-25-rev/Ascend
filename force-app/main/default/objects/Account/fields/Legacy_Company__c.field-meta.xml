@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Legacy_Company__c</fullName>
+    <description>Picklist field used to capture the Legacy Company
+
+Case/Ticket:
+#00016018</description>
+    <label>Legacy Company</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Doextra</fullName>
+                <default>false</default>
+                <label>Doextra</label>
+            </value>
+            <value>
+                <fullName>Edafio</fullName>
+                <default>false</default>
+                <label>Edafio</label>
+            </value>
+            <value>
+                <fullName>Infogressive</fullName>
+                <default>false</default>
+                <label>Infogressive</label>
+            </value>
+            <value>
+                <fullName>NvYA</fullName>
+                <default>false</default>
+                <label>NvYA</label>
+            </value>
+            <value>
+                <fullName>Peters</fullName>
+                <default>false</default>
+                <label>Peters</label>
+            </value>
+            <value>
+                <fullName>Stratosphere</fullName>
+                <default>false</default>
+                <label>Stratosphere</label>
+            </value>
+            <value>
+                <fullName>Switchfast</fullName>
+                <default>false</default>
+                <label>Switchfast</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

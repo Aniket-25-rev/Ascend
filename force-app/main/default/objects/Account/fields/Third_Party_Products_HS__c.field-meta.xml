@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Third_Party_Products_HS__c</fullName>
+    <description>Rich Text Area field used to capture Third-Party Products for HubSpot
+
+Case/Ticket:
+W-002548</description>
+    <inlineHelpText>Third-Party Products for HubSpot</inlineHelpText>
+    <label>Third-Party Products (HS)</label>
+    <length>1250</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Html</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

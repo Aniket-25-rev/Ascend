@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Created_in_Queue_Review__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This field allow a flow to make a review case record when the case is created in a queue review.</description>
+    <label>Created in Queue Review</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

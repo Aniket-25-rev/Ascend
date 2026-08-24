@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Number_of_Users</fullName>
+    <active>false</active>
+    <description>Requires Number_of_Users__c to be populated when Status is In Review, Approved, Rejected, Presented, Accepted, or Denied. Prevents users from saving the record without a value in Number of Users once it reaches these statuses. (before submit for approval)</description>
+    <errorConditionFormula>AND(
+    OR(
+        ISPICKVAL(Status, &quot;In Review&quot;),
+        ISPICKVAL(Status, &quot;Approved&quot;),
+        ISPICKVAL(Status, &quot;Rejected&quot;),
+        ISPICKVAL(Status, &quot;Presented&quot;),
+        ISPICKVAL(Status, &quot;Accepted&quot;),
+        ISPICKVAL(Status, &quot;Denied&quot;)
+    ),
+    ISBLANK(Number_of_Users__c)
+)</errorConditionFormula>
+    <errorMessage>Number of Users is required when before submitting the quote for approval</errorMessage>
+</ValidationRule>

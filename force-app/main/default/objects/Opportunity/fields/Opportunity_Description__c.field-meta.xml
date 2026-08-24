@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opportunity_Description__c</fullName>
+    <defaultValue>&apos;No Description&apos;</defaultValue>
+    <description>Brief description of the work/product being sold</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter a brief description of the work being sold (30 characters max). Include the line of business and/or business outcome (Ex. Cyber and Desk, Cloud Migration, SF FSC Optimization)</inlineHelpText>
+    <label>Opportunity Description</label>
+    <length>30</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

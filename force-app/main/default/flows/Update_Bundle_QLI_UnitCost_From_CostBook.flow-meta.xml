@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Set_Parent_Quantity_From_Parent</name>
+        <label>Bundle Parent Quantity = parent line Quantity</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Bundle_Parent_Quantiy__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Parent_Line.Quantity</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Quote_Action</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Quantity_From_Config</name>
+        <label>Static Component Quantity = Configured Quantity</label>
+        <locationX>560</locationX>
+        <locationY>770</locationY>
+        <!--
+          Restores the static (Constant-scaled) component quantity that an
+          amendment zeroes out, taking it from the bundle definition on
+          ProductRelatedComponent.
+
+          On an amendment the platform re-derives Proportional components from
+          the bundle quantity but brings Constant ones through at 0. Verified on
+          quote 0Q0VF000003cjbu0AA: all 16 Constant components at Quantity 0,
+          all 11 Proportional at their scaled value, no exceptions.
+
+          ProductRelatedComponent.Quantity is used rather than StartQuantity
+          because the two are different things. StartQuantity is what the
+          ORIGINAL quote carried - on that same quote SAPX-KNB4 and ASDF-SHLD
+          show StartQuantity 5 against a configured quantity of 1, because the
+          bundle was first sold at quantity 5. The two only coincide for
+          Constant components, so the bundle definition is the authoritative
+          source for a static quantity.
+
+          The guard on QuoteAction.Type is not optional. On a line whose action
+          is "No Change" the platform refuses any non-zero Quantity outright -
+          "Specify 0 in Quantity of the Quote Line Item record with the action
+          of type No Change" - and that failure aborts the entire save, not just
+          the line. The condition therefore requires a POSITIVE match on
+          "Amend": if Get_Quote_Action returns nothing, Type is null, the match
+          fails and Quantity is left alone. A negative test such as
+          Type != "No Change" would evaluate true on that null and reintroduce
+          the very failure it is meant to prevent.
+        -->
+        <assignmentItems>
+            <assignToReference>$Record.Quantity</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Component_Config.Quantity</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Default_CostBook</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Parent_Quantity_Self</name>
+        <label>Bundle Parent Quantity = own Quantity</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Bundle_Parent_Quantiy__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Quantity</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Default_CostBook</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_UnitCost_From_CostBook</name>
+        <label>Set UnitCost From CostBook Entry</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.UnitCost</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_CostBook_Entry.Cost</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Set_UnitCost_From_Default_CostBook</name>
+        <label>Set UnitCost From Default Cost Book Entry</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.UnitCost</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_CostBook_Entry_Default.Cost</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Is_Zeroed_Static_Line</name>
+        <label>Static Component Zeroed By Amendment?</label>
+        <locationX>440</locationX>
+        <locationY>590</locationY>
+        <defaultConnectorLabel>No - Leave Quantity Alone</defaultConnectorLabel>
+        <defaultConnector>
+            <targetReference>Get_Default_CostBook</targetReference>
+        </defaultConnector>
+        <rules>
+            <name>Zeroed_Static</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Quantity</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Component_Config.QuantityScaleMethod</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Constant</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Component_Config.Quantity</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Quote_Action.Type</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Amend</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Quantity_From_Config</targetReference>
+            </connector>
+            <label>Yes - Restore From Bundle Config</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Cost_Entry_Found</name>
+        <label>Cost Book Entry Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No Entry - Leave UnitCost Blank</defaultConnectorLabel>
+        <rules>
+            <name>Entry_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_CostBook_Entry</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_UnitCost_From_CostBook</targetReference>
+            </connector>
+            <label>Yes - Entry Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Bundle_Parent</name>
+        <label>Is This The Bundle Parent?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Parent_Line</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No - Child Line</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Bundle_Parent</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Is_Bundle_Parent__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Parent_Quantity_Self</targetReference>
+            </connector>
+            <label>Yes - Bundle Parent</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Default_Entry_Found</name>
+        <label>Default Cost Book Entry Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <!--
+          Cost book precedence, mirroring
+          QuoteMarginRollupPostHook.costBookCostByProduct: the DEFAULT cost book
+          wins, and a non-default book only ever fills a gap. Falling through to
+          Get_CostBook_Entry leaves the previous behaviour intact for every
+          product that has no default-book entry, so nothing that priced
+          correctly before changes.
+        -->
+        <defaultConnector>
+            <targetReference>Get_CostBook_Entry</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No - Fall Back To Any Cost Book</defaultConnectorLabel>
+        <rules>
+            <name>Default_Entry_Exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_CostBook_Entry_Default</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_UnitCost_From_Default_CostBook</targetReference>
+            </connector>
+            <label>Yes - Use Default Cost Book</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Update Bundle QLI UnitCost From CostBook {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Update Bundle QLI UnitCost From CostBook</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Quote_Action</name>
+        <label>Get Quote Action</label>
+        <locationX>440</locationX>
+        <locationY>530</locationY>
+        <!--
+          Needed only to read Type. A "No Change" line must keep Quantity 0 or
+          the save is rejected outright, so the restore below requires this
+          lookup to positively return "Amend".
+        -->
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Component_Config</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.QuoteActionId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>QuoteAction</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Component_Config</name>
+        <label>Get Bundle Component Config</label>
+        <locationX>440</locationX>
+        <locationY>650</locationY>
+        <!--
+          The bundle definition row for THIS component: its configured quantity
+          and whether that quantity is Constant or Proportional. Keyed on the
+          bundle root's product (from Get_Parent_Line) plus this line's product.
+        -->
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Is_Zeroed_Static_Line</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ParentProductId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Parent_Line.Product2Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ChildProductId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Product2Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ProductRelatedComponent</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_CostBook_Entry</name>
+        <label>Get CostBook Entry For Product</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Cost_Entry_Found</targetReference>
+        </connector>
+        <!--
+          FALLBACK lookup — reached only when the product has no entry in the
+          DEFAULT cost book (see Get_CostBook_Entry_Default). Any cost book is
+          accepted here, but the effective-date window below still applies.
+
+          The window is not optional. This lookup takes the first record sorted
+          by EffectiveFrom DESC, so without it a FUTURE-dated entry outranks the
+          currently effective one and gets stamped onto UnitCost — and because
+          TotalCost is derived by the platform as UnitCost x Quantity, the wrong
+          cost propagates straight into TotalCost and into every margin built on
+          it. Matches QuoteMarginRollupPostHook.costBookCostByProduct, which has
+          always filtered this way; the two implementations used to disagree.
+
+          Blank EffectiveFrom/EffectiveTo mean "open ended", so each side is
+          matched OR IsNull rather than dropped.
+        -->
+        <filterLogic>1 AND 2 AND (3 OR 4) AND (5 OR 6)</filterLogic>
+        <filters>
+            <field>ProductId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Product2Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Cost</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveFrom</field>
+            <operator>LessThanOrEqualTo</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveFrom</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveTo</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveTo</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>CostBookEntry</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Cost</queriedFields>
+        <queriedFields>CostBookId</queriedFields>
+        <sortField>EffectiveFrom</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Parent_Line</name>
+        <label>Get Bundle Parent Line</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Set_Parent_Quantity_From_Parent</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>QuoteId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.QuoteId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Is_Part_Of_Bundle__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>ParentQuoteLineItemId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>QuoteLineItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Default_CostBook</name>
+        <label>Get Default Cost Book</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <!--
+          CostBookEntry cannot be filtered on CostBook.IsDefault directly — a
+          record filter cannot traverse to a related object — so the default
+          book's Id is resolved first and used as a plain CostBookId filter on
+          Get_CostBook_Entry_Default.
+
+          If no default cost book exists this returns nothing, the CostBookId
+          filter matches nothing, and the flow falls through to the
+          any-cost-book lookup. That is the pre-existing behaviour, so an org
+          without a default book prices exactly as it did before.
+        -->
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_CostBook_Entry_Default</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>IsDefault</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>CostBook</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_CostBook_Entry_Default</name>
+        <label>Get Default Cost Book Entry For Product</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <!--
+          Preferred cost source: this product's entry in the default cost book,
+          restricted to the currently effective window. Same filters as the
+          fallback lookup plus the CostBookId restriction.
+        -->
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Default_Entry_Found</targetReference>
+        </connector>
+        <filterLogic>1 AND 2 AND 3 AND (4 OR 5) AND (6 OR 7)</filterLogic>
+        <filters>
+            <field>ProductId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Product2Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>CostBookId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Default_CostBook.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Cost</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveFrom</field>
+            <operator>LessThanOrEqualTo</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveFrom</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveTo</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveTo</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>CostBookEntry</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Cost</queriedFields>
+        <queriedFields>CostBookId</queriedFields>
+        <sortField>EffectiveFrom</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Bundle_Parent</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Is_Part_Of_Bundle__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>QuoteLineItem</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

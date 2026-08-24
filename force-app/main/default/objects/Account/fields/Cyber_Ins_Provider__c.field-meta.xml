@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cyber_Ins_Provider__c</fullName>
+    <description>&quot;Text&quot; field used to capture the &quot;Cyber Insurance Provider&quot; for the Edafio merger
+
+JIRA Ticket:
+AEOM-61</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Does client or prospect carry active Cyber insurance? Who is their provider?</inlineHelpText>
+    <label>Cyber Ins Provider</label>
+    <length>100</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

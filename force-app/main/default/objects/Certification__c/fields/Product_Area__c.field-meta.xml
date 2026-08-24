@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Product_Area__c</fullName>
+    <description>Identifies the product, cloud, or solution area that the certification is associated with. This field is used to categorize certifications within a platform and drive the available Certification picklist values.</description>
+    <inlineHelpText>Select the product or solution area associated with the certification. Available values vary by Platform and determine which certifications are available for selection.</inlineHelpText>
+    <label>Product Area</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Platform__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Agentforce</fullName>
+                <default>false</default>
+                <label>Agentforce</label>
+            </value>
+            <value>
+                <fullName>AI</fullName>
+                <default>false</default>
+                <label>AI</label>
+            </value>
+            <value>
+                <fullName>Analytics</fullName>
+                <default>false</default>
+                <label>Analytics</label>
+            </value>
+            <value>
+                <fullName>Architecture</fullName>
+                <default>false</default>
+                <label>Architecture</label>
+            </value>
+            <value>
+                <fullName>Automotive Cloud</fullName>
+                <default>false</default>
+                <label>Automotive Cloud</label>
+            </value>
+            <value>
+                <fullName>CMS Hub</fullName>
+                <default>false</default>
+                <label>CMS Hub</label>
+            </value>
+            <value>
+                <fullName>Commerce Cloud</fullName>
+                <default>false</default>
+                <label>Commerce Cloud</label>
+            </value>
+            <value>
+                <fullName>Communications Cloud</fullName>
+                <default>false</default>
+                <label>Communications Cloud</label>
+            </value>
+            <value>
+                <fullName>Consumer Goods Cloud</fullName>
+                <default>false</default>
+                <label>Consumer Goods Cloud</label>
+            </value>
+            <value>
+                <fullName>Content Hub</fullName>
+                <default>false</default>
+                <label>Content Hub</label>
+            </value>
+            <value>
+                <fullName>Data Cloud</fullName>
+                <default>false</default>
+                <label>Data Cloud</label>
+            </value>
+            <value>
+                <fullName>Development</fullName>
+                <default>false</default>
+                <label>Development</label>
+            </value>
+            <value>
+                <fullName>Education Cloud</fullName>
+                <default>false</default>
+                <label>Education Cloud</label>
+            </value>
+            <value>
+                <fullName>Energy &amp; Utilities Cloud</fullName>
+                <default>false</default>
+                <label>Energy &amp; Utilities Cloud</label>
+            </value>
+            <value>
+                <fullName>Experience Cloud</fullName>
+                <default>false</default>
+                <label>Experience Cloud</label>
+            </value>
+            <value>
+                <fullName>Field Service</fullName>
+                <default>false</default>
+                <label>Field Service</label>
+            </value>
+            <value>
+                <fullName>Financial Services Cloud</fullName>
+                <default>false</default>
+                <label>Financial Services Cloud</label>
+            </value>
+            <value>
+                <fullName>Health Cloud</fullName>
+                <default>false</default>
+                <label>Health Cloud</label>
+            </value>
+            <value>
+                <fullName>Heroku</fullName>
+                <default>false</default>
+                <label>Heroku</label>
+            </value>
+            <value>
+                <fullName>Life Sciences</fullName>
+                <default>false</default>
+                <label>Life Sciences</label>
+            </value>
+            <value>
+                <fullName>Manufacturing Cloud</fullName>
+                <default>false</default>
+                <label>Manufacturing Cloud</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud</fullName>
+                <default>false</default>
+                <label>Marketing Cloud</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Account Engagement</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Account Engagement</label>
+            </value>
+            <value>
+                <fullName>Marketing Hub</fullName>
+                <default>false</default>
+                <label>Marketing Hub</label>
+            </value>
+            <value>
+                <fullName>Media Cloud</fullName>
+                <default>false</default>
+                <label>Media Cloud</label>
+            </value>
+            <value>
+                <fullName>MuleSoft</fullName>
+                <default>false</default>
+                <label>MuleSoft</label>
+            </value>
+            <value>
+                <fullName>Net Zero Cloud</fullName>
+                <default>false</default>
+                <label>Net Zero Cloud</label>
+            </value>
+            <value>
+                <fullName>Nonprofit</fullName>
+                <default>false</default>
+                <label>Nonprofit</label>
+            </value>
+            <value>
+                <fullName>OmniStudio</fullName>
+                <default>false</default>
+                <label>OmniStudio</label>
+            </value>
+            <value>
+                <fullName>Operations Hub</fullName>
+                <default>false</default>
+                <label>Operations Hub</label>
+            </value>
+            <value>
+                <fullName>Order Management</fullName>
+                <default>false</default>
+                <label>Order Management</label>
+            </value>
+            <value>
+                <fullName>Platform</fullName>
+                <default>false</default>
+                <label>Platform</label>
+            </value>
+            <value>
+                <fullName>Public Sector</fullName>
+                <default>false</default>
+                <label>Public Sector</label>
+            </value>
+            <value>
+                <fullName>Revenue Cloud</fullName>
+                <default>false</default>
+                <label>Revenue Cloud</label>
+            </value>
+            <value>
+                <fullName>Sales Cloud</fullName>
+                <default>false</default>
+                <label>Sales Cloud</label>
+            </value>
+            <value>
+                <fullName>Sales Hub</fullName>
+                <default>false</default>
+                <label>Sales Hub</label>
+            </value>
+            <value>
+                <fullName>Service Cloud</fullName>
+                <default>false</default>
+                <label>Service Cloud</label>
+            </value>
+            <value>
+                <fullName>Service Hub</fullName>
+                <default>false</default>
+                <label>Service Hub</label>
+            </value>
+            <value>
+                <fullName>Slack</fullName>
+                <default>false</default>
+                <label>Slack</label>
+            </value>
+            <value>
+                <fullName>Tableau</fullName>
+                <default>false</default>
+                <label>Tableau</label>
+            </value>
+            <value>
+                <fullName>Trailhead</fullName>
+                <default>false</default>
+                <label>Trailhead</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>AI</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>CMS Hub</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>Content Hub</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Development</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>Marketing Hub</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>Operations Hub</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Platform</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>Sales Hub</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>HubSpot</controllingFieldValue>
+            <valueName>Service Hub</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Agentforce</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Analytics</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Architecture</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Automotive Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Commerce Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Communications Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Consumer Goods Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Data Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Education Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Energy &amp; Utilities Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Experience Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Field Service</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Financial Services Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Health Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Heroku</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Life Sciences</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Manufacturing Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Marketing Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Marketing Cloud Account Engagement</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Media Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>MuleSoft</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Net Zero Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Nonprofit</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>OmniStudio</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Order Management</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Public Sector</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Revenue Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Sales Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Service Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Slack</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Tableau</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Salesforce</controllingFieldValue>
+            <valueName>Trailhead</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

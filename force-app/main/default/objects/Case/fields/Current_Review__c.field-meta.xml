@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Current_Review__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Used to link the case to the current review(most recent). This allows the Single List View app exchange package to query the records</description>
+    <label>Current Review</label>
+    <referenceTo>Review__c</referenceTo>
+    <relationshipLabel>Cases</relationshipLabel>
+    <relationshipName>Cases</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

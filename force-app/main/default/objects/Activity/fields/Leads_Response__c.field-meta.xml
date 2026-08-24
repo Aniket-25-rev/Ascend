@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Leads_Response__c</fullName>
+    <label>Leads Response</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Hung Up</fullName>
+                <default>false</default>
+                <label>Hung Up</label>
+            </value>
+            <value>
+                <fullName>Left Message</fullName>
+                <default>false</default>
+                <label>Left Message</label>
+            </value>
+            <value>
+                <fullName>Blocked by Gatekeeper</fullName>
+                <default>false</default>
+                <label>Blocked by Gatekeeper</label>
+            </value>
+            <value>
+                <fullName>Good conversation no immediate followup</fullName>
+                <default>false</default>
+                <label>Good conversation no immediate followup</label>
+            </value>
+            <value>
+                <fullName>Scheduled Sales Call</fullName>
+                <default>false</default>
+                <label>Scheduled Sales Call</label>
+            </value>
+            <value>
+                <fullName>Scheduled BDR Followup</fullName>
+                <default>false</default>
+                <label>Scheduled BDR Followup</label>
+            </value>
+            <value>
+                <fullName>Conversation but not a fit</fullName>
+                <default>false</default>
+                <label>Conversation but not a fit</label>
+            </value>
+            <value>
+                <fullName>Retired/Not with Company</fullName>
+                <default>false</default>
+                <label>Retired/Not with Company</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

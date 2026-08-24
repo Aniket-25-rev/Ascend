@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reviewed_By__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>User that has reviewed and approved the Opportunity before moving to Win.</description>
+    <label>Reviewed By</label>
+    <referenceTo>User</referenceTo>
+    <relationshipName>Opportunities4</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

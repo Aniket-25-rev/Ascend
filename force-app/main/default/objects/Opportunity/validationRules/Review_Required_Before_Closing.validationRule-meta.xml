@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Review_Required_Before_Closing</fullName>
+    <active>false</active>
+    <errorConditionFormula>NOT(ISCLONE()) 
+&amp;&amp; 
+ISBLANK( Reviewed_By__c) 
+&amp;&amp; ( ISPICKVAL(StageName, &quot;Approve&quot;) 
+||ISPICKVAL(StageName, &quot;Closed Won&quot;))
+&amp;&amp;  CloseDate &gt;  DATE(2021,11,12)
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorMessage>Please check &quot;Needs Review&quot; and provide an SOW Folder link for this Opportunity to be Reviewed. Once Dana, Justin, Michael, Christina or Brian review and approve the Opportunity you will be able to progress the Opportunity</errorMessage>
+</ValidationRule>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Qty_Firewall_Products__c</fullName>
+    <label>Qty Firewall Products</label>
+    <summarizedField>OpportunityLineItem.Units__c</summarizedField>
+    <summaryFilterItems>
+        <field>OpportunityLineItem.Product_Name__c</field>
+        <operation>contains</operation>
+        <value>Firewall</value>
+    </summaryFilterItems>
+    <summaryForeignKey>OpportunityLineItem.OpportunityId</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>

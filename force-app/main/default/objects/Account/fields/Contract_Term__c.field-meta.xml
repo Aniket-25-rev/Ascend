@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Term__c</fullName>
+    <description>Number field used to capture Contract Term
+
+Case/Ticket:
+W-002559</description>
+    <externalId>false</externalId>
+    <inlineHelpText>MRR Contract Term, rounded to the nearest year</inlineHelpText>
+    <label>Contract Term</label>
+    <precision>1</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

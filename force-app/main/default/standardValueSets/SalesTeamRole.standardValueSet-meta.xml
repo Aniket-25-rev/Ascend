@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Sales Rep</fullName>
+        <default>false</default>
+        <label>Sales Rep</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Opportunity Owner</fullName>
+        <default>false</default>
+        <label>Account Owner</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Executive</fullName>
+        <default>false</default>
+        <label>Executive</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sales Engineer</fullName>
+        <default>false</default>
+        <label>Sales Engineer</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Lead Sales Engineer</fullName>
+        <default>false</default>
+        <label>Lead Sales Engineer</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Secondary Business Developer</fullName>
+        <default>false</default>
+        <label>Secondary Business Developer</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Primary Business Developer</fullName>
+        <default>false</default>
+        <label>Primary Business Developer</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Architect</fullName>
+        <default>false</default>
+        <label>Architect</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Customer Success Manager</fullName>
+        <default>false</default>
+        <label>Client Success Manager</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Service Operations Analyst</fullName>
+        <default>false</default>
+        <label>Service Operations Analyst</label>
+    </standardValue>
+    <standardValue>
+        <fullName>TAM</fullName>
+        <default>false</default>
+        <label>TAM</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Account Executive</fullName>
+        <default>false</default>
+        <label>Account Executive</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Procurement</fullName>
+        <default>false</default>
+        <label>Procurement</label>
+    </standardValue>
+</StandardValueSet>

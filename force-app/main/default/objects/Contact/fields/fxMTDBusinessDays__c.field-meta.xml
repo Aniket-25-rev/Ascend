@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>fxMTDBusinessDays__c</fullName>
+    <description>Calculates the current number of Business Days during the current month</description>
+    <externalId>false</externalId>
+    <formula>IF(fxCurrentMonthStartDate__c &lt; Resource_User_Record__r.StartDate__c &amp;&amp; Resource_User_Record__r.StartDate__c &lt; fxCurrentMonthEndDate__c,  
+
+(5*(FLOOR((fxLatestWorkDay__c - DATE(1900,1,8))/7 )) + MIN(5,MOD(fxLatestWorkDay__c - DATE(1900,1,8),7))) -  
+(5*(FLOOR((Resource_User_Record__r.StartDate__c - DATE(1900,1,8))/7)) + MIN(5,MOD(Resource_User_Record__r.StartDate__c - DATE(1900,1,8),7)))+1 ,  
+
+/*calculates # business days if Resource starts during month*/ 
+
+(5*(FLOOR((fxLatestWorkDay__c - DATE(1900,1,8))/7 )) + MIN(5,MOD(fxLatestWorkDay__c - DATE(1900,1,8),7))) -  
+(5*(FLOOR((fxCurrentMonthStartDate__c - DATE(1900,1,8))/7)) + MIN(5,MOD(fxCurrentMonthStartDate__c - DATE(1900,1,8),7)))+1) 
+
+/*calculates standard # business days during month*/</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>MTD Business Days</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

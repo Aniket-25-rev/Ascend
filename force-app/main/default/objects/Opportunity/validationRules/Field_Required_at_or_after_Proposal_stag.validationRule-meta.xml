@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Field_Required_at_or_after_Proposal_stag</fullName>
+    <active>true</active>
+    <description>Field: Use Case, Challenges, Goals/Benefit - required at Stage of Propose or later
+
+11/12/25 - 00016877 - removed Pains &amp; Goals from Or section that has Description still.
+1/26/25 - Updated message to only says Use Case is required.</description>
+    <errorConditionFormula>AND ( 
+OR ( 
+ISPICKVAL(StageName, &quot;Propose&quot;), 
+ISPICKVAL(StageName, &quot;Contract&quot;),
+ISPICKVAL(StageName, &quot;Approve&quot;), 
+ISPICKVAL(StageName, &quot;Closed Won&quot;)
+), 
+OR (
+   ISBLANK( Description )
+)
+, ISBLANK( Project__c )
+, NOT(RecordType.DeveloperName = &apos;True_Up&apos;)
+)
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)
+&amp;&amp; NOT(ISCHANGED(Project__c))</errorConditionFormula>
+    <errorMessage>Use Case cannot be blank after Stage of Propose or later.</errorMessage>
+</ValidationRule>

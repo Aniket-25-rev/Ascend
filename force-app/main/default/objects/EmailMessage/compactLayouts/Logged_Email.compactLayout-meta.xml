@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Logged_Email</fullName>
+    <fields>Subject</fields>
+    <fields>FromAddress</fields>
+    <fields>ToAddress</fields>
+    <fields>RelatedToId</fields>
+    <fields>Activity_Purpose__c</fields>
+    <label>Logged Email</label>
+</CompactLayout>

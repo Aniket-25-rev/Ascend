@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MRR_Change_Desk__c</fullName>
+    <description>Displays the percentage change in Desk MRR between the current contract and the renewal quote. Positive values indicate growth; negative values indicate contraction.</description>
+    <inlineHelpText>Displays the percentage change in Desk MRR between the current contract and the renewal quote. Positive values indicate growth; negative values indicate contraction.</inlineHelpText>
+    <label>MRR Change (%) - Desk</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

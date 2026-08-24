@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ascend_Solution_Team__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox field used to capture if Opportunity Team Member is associated with the &quot;Ascend Solution Team&quot; role
+
+Case/Ticket:
+#00016257</description>
+    <label>Ascend Solution Team</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

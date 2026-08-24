@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StreamingAppDataConnector xmlns="http://soap.sforce.com/2006/04/metadata">
+    <appIdentifier>fa129c7d-069b-4cce-8acb-6e7a5ef6c6cf</appIdentifier>
+    <connectorParameters>
+        <paramName>moduleConfig</paramName>
+        <paramValue>[{&quot;moduleName&quot;:&quot;personalization&quot;,&quot;path&quot;:&quot;&quot;,&quot;enabled&quot;:false,&quot;moduleConfiguration&quot;:&quot;&quot;}]</paramValue>
+    </connectorParameters>
+    <dataConnectorType>StreamingApp</dataConnectorType>
+    <masterLabel>Sales_Documentation_UDMO_harmonize_tly</masterLabel>
+    <streamingAppDataConnectorType>MobileApp</streamingAppDataConnectorType>
+</StreamingAppDataConnector>

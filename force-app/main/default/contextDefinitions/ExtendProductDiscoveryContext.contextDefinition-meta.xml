@@ -669,6 +669,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Account/id</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>id</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -683,6 +684,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Account/AccountId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>AccountId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -697,6 +699,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Account/ContactId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ContactId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -711,6 +714,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Account/CurrencyIsoCode</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CurrencyIsoCode</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -736,6 +740,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/id__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>id__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -750,6 +755,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/Name__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Name__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -764,6 +770,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/DisplayName__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>DisplayName__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -778,6 +785,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/Description__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Description__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -792,6 +800,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/TermsAndConditions__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>TermsAndConditions__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -806,6 +815,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/StartDateTime__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>StartDateTime__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -820,6 +830,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/EndDateTime__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>EndDateTime__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -834,6 +845,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/PriorityNumber__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PriorityNumber__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -848,6 +860,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/IsAutomatic__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsAutomatic__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -862,6 +875,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/CouponCode__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CouponCode__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -887,6 +901,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/CatalogId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CatalogId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -901,6 +916,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/CurrentDate</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CurrentDate</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -926,6 +942,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/PromotionProduct__std/PromotionProductId__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PromotionProductId__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -937,6 +954,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/PromotionProduct__std/ParentReference</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -962,6 +980,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/PromotionCategory__std/PromotionCategoryId__std</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PromotionCategoryId__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -973,6 +992,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Promotion__std/PromotionCategory__std/ParentReference</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -998,6 +1018,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CategoryId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1012,6 +1033,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/IsCategoryQualified</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsCategoryQualified</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1026,6 +1048,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryDisqualifiedReason</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CategoryDisqualifiedReason</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1037,6 +1060,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/ParentReference</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1062,6 +1086,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/Id</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Id</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1076,6 +1101,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/ProductId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1090,6 +1116,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/RootProductId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>RootProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1104,6 +1131,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/ParentProductId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1118,6 +1146,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/CategoryId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CategoryId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1128,6 +1157,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/CatalogId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CatalogId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1138,6 +1168,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/Name</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Name</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1148,6 +1179,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/Code</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Code</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1158,6 +1190,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/MaxQuantity</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>MaxQuantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1168,6 +1201,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/MinQuantity</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>MinQuantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1178,6 +1212,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/Quantity</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Quantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1192,6 +1227,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/IsQualified</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsQualified</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1206,6 +1242,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/Reason</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Reason</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1220,6 +1257,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/AdditionalProductInformation</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>AdditionalProductInformation</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1231,6 +1269,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/CategoryProduct/ParentReference</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1243,6 +1282,7 @@
                 <dataType>picklist</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductLifeCycleStatus__c</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1255,6 +1295,7 @@
                 <dataType>datetime</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>EndOfLifeDate__c</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1280,6 +1321,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PricingId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1294,6 +1336,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PricingProductId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1308,6 +1351,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/ProductSellingModelId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductSellingModelId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1322,6 +1366,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/ProductQuantity</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductQuantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1336,6 +1381,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PricebookId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricebookId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1350,6 +1396,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PricingCurrencyCode</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingCurrencyCode</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1364,6 +1411,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/UnitPrice</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>UnitPrice</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1378,6 +1426,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/IsDerived</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsDerived</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1392,6 +1441,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/NetUnitPrice</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>NetUnitPrice</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1406,6 +1456,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/SubTotal</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>SubTotal</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1420,6 +1471,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PriceBookEntryId</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PriceBookEntryId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1434,6 +1486,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PriceWaterFall</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PriceWaterFall</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1448,6 +1501,7 @@
                 <fieldType>output</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/PricingErrorMessage</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingErrorMessage</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1462,6 +1516,7 @@
                 <fieldType>inputoutput</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/AdditionalPricingInformation</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>AdditionalPricingInformation</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1473,6 +1528,7 @@
                 <fieldType>input</fieldType>
                 <inheritedFrom>ProductDiscoveryContext__stdctx/version/Catalog/Category/PricingProduct/ParentReference</inheritedFrom>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1496,6 +1552,7 @@
                 <dataType>picklist</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>OriginalActionType__c</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1517,6 +1574,8 @@
     <inheritedFrom>ProductDiscoveryContext__stdctx</inheritedFrom>
     <inheritedFromVersion>1.2</inheritedFromVersion>
     <isProtected>false</isProtected>
+    <isTransformationEnabled>false</isTransformationEnabled>
     <masterLabel>ExtendProductDiscoveryContext</masterLabel>
+    <releaseVersion>262.13.10</releaseVersion>
     <title>ExtendProductDiscoveryContext</title>
 </ContextDefinition>

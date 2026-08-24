@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>rel_1783100609136_end__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>ADL_Library_Sales_chunk_SourceRecord_rel</label>
+    <referenceTo>ADL_Library_Sales__dlm</referenceTo>
+    <relationshipLabel>ADL_Library_Sales_chunk_SourceRecord_rel</relationshipLabel>
+    <relationshipName>rel_1783100609136_end</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

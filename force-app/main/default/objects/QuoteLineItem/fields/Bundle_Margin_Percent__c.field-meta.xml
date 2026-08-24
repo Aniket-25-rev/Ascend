@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bundle_Margin_Percent__c</fullName>
+    <description>Bundle SKU margin percent: (Sum of Bundle Revenue across the bundle group - Sum of Total Per User Per SKU across the bundle group) / Sum of Bundle Revenue across the bundle group. Set via Apex (QuoteMarginRollupPostHook.applyBundleMarginPercent) — the same value is written to every line item (parent + children) in a bundle group, grouped by ParentQuoteLineItemId. Left blank on non-bundle line items.</description>
+    <label>Bundle Margin Percent</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

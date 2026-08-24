@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Edit_CW_Integration__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox field used to give a User the ability to edit the Opportunity &quot;ConnectWise Integration&quot; checkbox field and bypass the associated Validation Rule
+
+JIRA Ticket:
+AEOM-70</description>
+    <inlineHelpText>Check this box if User needs the ability edit the Opportunity &quot;ConnectWise Integration&quot; checkbox field and bypass the associated Validation Rule</inlineHelpText>
+    <label>Edit CW Integration</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

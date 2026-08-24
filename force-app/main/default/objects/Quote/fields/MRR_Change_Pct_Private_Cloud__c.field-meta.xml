@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MRR_Change_Pct_Private_Cloud__c</fullName>
+    <description>Net Private Cloud MRR as a percentage of the Existing baseline. Blank when there is no baseline, which is the zero-division guard.</description>
+    <formula>IF(
+  NULLVALUE(Existing_MRR_Private_Cloud__c, 0) = 0,
+  NULL,
+  Net_MRR_Private_Cloud__c / Existing_MRR_Private_Cloud__c
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>MRR Change % - Private Cloud</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

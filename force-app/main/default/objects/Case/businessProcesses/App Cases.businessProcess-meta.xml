@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BusinessProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>App Cases</fullName>
+    <isActive>true</isActive>
+    <values>
+        <fullName>Assigned - In Progress</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Backlog</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Canceled by Client</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Closed</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Duplicate</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Escalated</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Grooming</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>New</fullName>
+        <default>true</default>
+    </values>
+    <values>
+        <fullName>On Hold</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Ready for Release</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Solution Delivered</fullName>
+        <default>false</default>
+    </values>
+</BusinessProcess>

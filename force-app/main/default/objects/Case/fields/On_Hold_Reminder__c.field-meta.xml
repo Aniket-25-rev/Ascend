@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>On_Hold_Reminder__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox field used to set the &quot;On Hold&quot; Reminder
+
+Case/Ticket:
+W-002510</description>
+    <label>On Hold Reminder</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

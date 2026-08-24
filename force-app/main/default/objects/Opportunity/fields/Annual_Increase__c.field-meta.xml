@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Annual_Increase__c</fullName>
+    <description>Number field used to capture the annual % increase for annual uplift a deal has
+
+Case/Ticket:
+#00016021</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter percentage in whole numbers only</inlineHelpText>
+    <label>Annual % Increase</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

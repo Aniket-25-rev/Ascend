@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Legal_Folder__c</fullName>
+    <externalId>false</externalId>
+    <formula>HYPERLINK(&quot;https://teamascend.sharepoint.com/sites/Legal/Contracts/&quot;, &quot;SharePoint Legal Folder&quot;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Legal Folder</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

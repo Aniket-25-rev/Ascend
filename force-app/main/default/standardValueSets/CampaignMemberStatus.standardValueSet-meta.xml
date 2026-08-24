@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>true</sorted>
+    <standardValue>
+        <fullName>Added</fullName>
+        <default>false</default>
+        <label>Added</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Add to Campaign</fullName>
+        <default>false</default>
+        <label>Add to Campaign</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Appointment Scheduled</fullName>
+        <default>false</default>
+        <label>Appointment Scheduled</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Attended</fullName>
+        <default>false</default>
+        <label>Attended</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Attended Event</fullName>
+        <default>false</default>
+        <label>Attended Event</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Attending</fullName>
+        <default>false</default>
+        <label>Attending</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Attending DF</fullName>
+        <default>false</default>
+        <label>Attending DF</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Attending Event</fullName>
+        <default>false</default>
+        <label>Attending Event</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Awaiting Invitation</fullName>
+        <default>false</default>
+        <label>Awaiting Invitation</label>
+    </standardValue>
+    <standardValue>
+        <fullName>BDR Appt. Scheduled</fullName>
+        <default>false</default>
+        <label>BDR Appt. Scheduled</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Bounced</fullName>
+        <default>false</default>
+        <label>Bounced</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Call</fullName>
+        <default>false</default>
+        <label>Call</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Call/Left VM</fullName>
+        <default>false</default>
+        <label>Call/Left VM</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Call + Responded</fullName>
+        <default>false</default>
+        <label>Call + Responded</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Call Decline</fullName>
+        <default>false</default>
+        <label>Call Decline</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Called</fullName>
+        <default>false</default>
+        <label>Called</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Called/LVM</fullName>
+        <default>false</default>
+        <label>Called/LVM</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Clicked</fullName>
+        <default>false</default>
+        <label>Clicked</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Connected</fullName>
+        <default>false</default>
+        <label>Connected</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Contacted</fullName>
+        <default>false</default>
+        <label>Contacted</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Decline</fullName>
+        <default>false</default>
+        <label>Decline</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Declined</fullName>
+        <default>false</default>
+        <label>Declined</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Declined Offer</fullName>
+        <default>false</default>
+        <label>Declined Offer</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Demo Held</fullName>
+        <default>false</default>
+        <label>Demo Held</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Demo Scheduled</fullName>
+        <default>false</default>
+        <label>Demo Scheduled</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Discovery Meeting Held</fullName>
+        <default>false</default>
+        <label>Discovery Meeting Held</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Discovery Meeting Scheduled</fullName>
+        <default>false</default>
+        <label>Discovery Meeting Scheduled</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Do Not Contact</fullName>
+        <default>false</default>
+        <label>Do Not Contact</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Do Not Include</fullName>
+        <default>false</default>
+        <label>Do Not Include</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Email + Respond</fullName>
+        <default>false</default>
+        <label>Email + Respond</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Email Decline</fullName>
+        <default>false</default>
+        <label>Email Decline</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Evaluating</fullName>
+        <default>false</default>
+        <label>Evaluating</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Event Scheduled</fullName>
+        <default>false</default>
+        <label>Event Scheduled</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Final Touch</fullName>
+        <default>false</default>
+        <label>Final Touch</label>
+    </standardValue>
+    <standardValue>
+        <fullName>First Touch</fullName>
+        <default>false</default>
+        <label>First Touch</label>
+    </standardValue>
+    <standardValue>
+        <fullName>First Touch - AE</fullName>
+        <default>false</default>
+        <label>First Touch - AE</label>
+    </standardValue>
+    <standardValue>
+        <fullName>First Touch - CN/DREW</fullName>
+        <default>false</default>
+        <label>First Touch - CN/DREW</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Follow-up Sent</fullName>
+        <default>false</default>
+        <label>Follow-up Sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Include</fullName>
+        <default>false</default>
+        <label>Include</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Interseted</fullName>
+        <default>false</default>
+        <label>Interseted</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Intro Email Sent</fullName>
+        <default>false</default>
+        <label>Intro Email Sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Invited</fullName>
+        <default>false</default>
+        <label>Invited</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Invitee</fullName>
+        <default>false</default>
+        <label>Invitee</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Invitees</fullName>
+        <default>false</default>
+        <label>Invitees</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Landed Follow Up Meeting</fullName>
+        <default>false</default>
+        <label>Landed Follow Up Meeting</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Left VM</fullName>
+        <default>false</default>
+        <label>Left VM</label>
+    </standardValue>
+    <standardValue>
+        <fullName>LVM</fullName>
+        <default>false</default>
+        <label>LVM</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Maybe</fullName>
+        <default>false</default>
+        <label>Maybe</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Meaningful conversation/discovery</fullName>
+        <default>false</default>
+        <label>Meaningful conversation/discovery</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Meaningful Convo</fullName>
+        <default>false</default>
+        <label>Meaningful Convo</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Meeting</fullName>
+        <default>false</default>
+        <label>Meeting</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Meeting Booked</fullName>
+        <default>false</default>
+        <label>Meeting Booked</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Meeting Held</fullName>
+        <default>false</default>
+        <label>Meeting Held</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Meeting Scheduled</fullName>
+        <default>false</default>
+        <label>Meeting Scheduled</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Migrated to Fortinet</fullName>
+        <default>false</default>
+        <label>Migrated to Fortinet</label>
+    </standardValue>
+    <standardValue>
+        <fullName>New</fullName>
+        <default>false</default>
+        <label>New</label>
+    </standardValue>
+    <standardValue>
+        <fullName>NOT Attend</fullName>
+        <default>false</default>
+        <label>NOT Attend</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Not Attending</fullName>
+        <default>false</default>
+        <label>Not Attending</label>
+    </standardValue>
+    <standardValue>
+        <fullName>NOT Attending DF</fullName>
+        <default>false</default>
+        <label>NOT Attending DF</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Not Attending DF15</fullName>
+        <default>false</default>
+        <label>Not Attending DF15</label>
+    </standardValue>
+    <standardValue>
+        <fullName>NOT Attending Event</fullName>
+        <default>false</default>
+        <label>NOT Attending Event</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Not at this Time</fullName>
+        <default>false</default>
+        <label>Not at this Time</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Not Contacted</fullName>
+        <default>false</default>
+        <label>Not Contacted</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Not Interested</fullName>
+        <default>false</default>
+        <label>Not Interested</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Not Sent</fullName>
+        <default>false</default>
+        <label>Not Sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Offered - Accepted</fullName>
+        <default>false</default>
+        <label>Offered - Accepted</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Oppty for Discovery</fullName>
+        <default>false</default>
+        <label>Oppty for Discovery</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other role - connect to Sales</fullName>
+        <default>false</default>
+        <label>Other role - connect to Sales</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Outreach Needed</fullName>
+        <default>false</default>
+        <label>Outreach Needed</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Phone Convo</fullName>
+        <default>false</default>
+        <label>Phone Convo</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Placeholder</fullName>
+        <default>false</default>
+        <label>Placeholder</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Planned</fullName>
+        <default>false</default>
+        <label>Planned</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Planned to Call</fullName>
+        <default>false</default>
+        <label>Planned to Call</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Planned to send</fullName>
+        <default>false</default>
+        <label>Planned to send</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Positive Response</fullName>
+        <default>false</default>
+        <label>Positive Response</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Potential</fullName>
+        <default>false</default>
+        <label>Potential</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Potential Invite</fullName>
+        <default>false</default>
+        <label>Potential Invite</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Potential Invitee</fullName>
+        <default>false</default>
+        <label>Potential Invitee</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Potential Recipient</fullName>
+        <default>false</default>
+        <label>Potential Recipient</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Prior Invitees</fullName>
+        <default>false</default>
+        <label>Prior Invitees</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Refusal</fullName>
+        <default>false</default>
+        <label>Refusal</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Refused</fullName>
+        <default>false</default>
+        <label>Refused</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Registered</fullName>
+        <default>false</default>
+        <label>Registered</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Resent</fullName>
+        <default>false</default>
+        <label>Resent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded</fullName>
+        <default>false</default>
+        <label>Responded</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - 2nd email</fullName>
+        <default>false</default>
+        <label>Responded - 2nd email</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - 3rd email</fullName>
+        <default>false</default>
+        <label>Responded - 3rd email</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - Attending</fullName>
+        <default>false</default>
+        <label>Responded - Attending</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - Can not attend</fullName>
+        <default>false</default>
+        <label>Responded - Can not attend</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - Maybe</fullName>
+        <default>false</default>
+        <label>Responded - Maybe</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded No</fullName>
+        <default>false</default>
+        <label>Responded No</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - No</fullName>
+        <default>false</default>
+        <label>Responded - No</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded Yes</fullName>
+        <default>false</default>
+        <label>Responded Yes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded - Yes</fullName>
+        <default>false</default>
+        <label>Responded - Yes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP</fullName>
+        <default>false</default>
+        <label>RSVP</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP - Maybe</fullName>
+        <default>false</default>
+        <label>RSVP - Maybe</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP No</fullName>
+        <default>false</default>
+        <label>RSVP No</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP - No</fullName>
+        <default>false</default>
+        <label>RSVP - No</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP Yes</fullName>
+        <default>false</default>
+        <label>RSVP Yes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP -Yes</fullName>
+        <default>false</default>
+        <label>RSVP -Yes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP - Yes</fullName>
+        <default>false</default>
+        <label>RSVP - Yes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Second Touch</fullName>
+        <default>false</default>
+        <label>Second Touch</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Second Touch AE</fullName>
+        <default>false</default>
+        <label>Second Touch AE</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Second Touch - DREW</fullName>
+        <default>false</default>
+        <label>Second Touch - DREW</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Second Touch Sent</fullName>
+        <default>false</default>
+        <label>Second Touch Sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent</fullName>
+        <default>false</default>
+        <label>Sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent May 6</fullName>
+        <default>false</default>
+        <label>Sent May 6</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent May 7</fullName>
+        <default>false</default>
+        <label>Sent May 7</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent - Monday</fullName>
+        <default>false</default>
+        <label>Sent - Monday</label>
+    </standardValue>
+    <standardValue>
+        <fullName>sent sent sent</fullName>
+        <default>false</default>
+        <label>sent sent sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent - Thursday</fullName>
+        <default>false</default>
+        <label>Sent - Thursday</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent - Tuesday</fullName>
+        <default>false</default>
+        <label>Sent - Tuesday</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent - Wednesday</fullName>
+        <default>false</default>
+        <label>Sent - Wednesday</label>
+    </standardValue>
+    <standardValue>
+        <fullName>SFDC Admin - connect to Sales</fullName>
+        <default>false</default>
+        <label>SFDC Admin - connect to Sales</label>
+    </standardValue>
+    <standardValue>
+        <fullName>SonicWall Discontinued</fullName>
+        <default>false</default>
+        <label>SonicWall Discontinued</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Third Touch - ALLIANCE MANAGER</fullName>
+        <default>false</default>
+        <label>Third Touch - ALLIANCE MANAGER</label>
+    </standardValue>
+    <standardValue>
+        <fullName>To Be Sent</fullName>
+        <default>false</default>
+        <label>To Be Sent</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Working</fullName>
+        <default>false</default>
+        <label>Working</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Working with co-worker</fullName>
+        <default>false</default>
+        <label>Working with co-worker</label>
+    </standardValue>
+</StandardValueSet>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BDR_Credit__c</fullName>
+    <inlineHelpText>Credit for the appointment will be given to the selected BDR</inlineHelpText>
+    <label>BDR Credit</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>BDR_Names</valueSetName>
+    </valueSet>
+</CustomField>

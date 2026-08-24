@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Lifecycle_Amount__c</fullName>
+    <description>Displays the current Total Lifecycle Amount from the related Asset record. This field is read-only and updates automatically when the source Asset record changes.</description>
+    <formula>Asset__r.TotalLifecycleAmount</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The total lifecycle revenue value associated with the related Asset. This value is sourced directly from the Asset record.</inlineHelpText>
+    <label>Total Lifecycle Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

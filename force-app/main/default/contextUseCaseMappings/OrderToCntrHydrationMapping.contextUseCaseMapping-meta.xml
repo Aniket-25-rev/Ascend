@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextUseCaseMapping xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contextDefinitionName>ContractsContextDefinition__stdctx</contextDefinitionName>
+    <mappingName>OrderToCntrHydrationMapping</mappingName>
+    <mappingType>Hydration</mappingType>
+    <masterLabel>Order_Hydration_1779453339697</masterLabel>
+    <referenceObjectName>Order</referenceObjectName>
+    <targetObjectName>Contract</targetObjectName>
+    <targetObjectRecordType>ContractLifecycleManagement</targetObjectRecordType>
+    <useCaseType>ContractCreationOrUpdation</useCaseType>
+</ContextUseCaseMapping>

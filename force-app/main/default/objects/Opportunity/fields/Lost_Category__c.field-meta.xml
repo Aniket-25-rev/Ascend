@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lost_Category__c</fullName>
+    <inlineHelpText>Select what happened in the lost Opportunity</inlineHelpText>
+    <label>Lost Category</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Chose Different CRM</fullName>
+                <default>false</default>
+                <label>Chose Different Technology</label>
+            </value>
+            <value>
+                <fullName>Chose Different Partner</fullName>
+                <default>false</default>
+                <label>Chose Different Provider</label>
+            </value>
+            <value>
+                <fullName>Chose to Self Implement</fullName>
+                <default>false</default>
+                <label>Chose to Self Implement/Manage</label>
+            </value>
+            <value>
+                <fullName>Chose Not to Implement</fullName>
+                <default>false</default>
+                <label>Chose Not to Implement/Manage</label>
+            </value>
+            <value>
+                <fullName>Unknown</fullName>
+                <default>false</default>
+                <label>Unknown</label>
+            </value>
+            <value>
+                <fullName>Ascend Declined</fullName>
+                <default>false</default>
+                <label>Ascend Declined</label>
+            </value>
+            <value>
+                <fullName>Chose Different DCS Engagement</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Chose Different DCS Engagement</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

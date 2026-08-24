@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>jdarla@teamascend.com.prod</submitter>
+        <type>user</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Discount</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>jdarla@teamascend.com.prod</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Routes to manager when discount exceeds 10%</description>
+        <entryCriteria>
+            <formula>OR(
+  AND(NOT(ISBLANK(XService_Desk_Margin__c)), XService_Desk_Margin__c &lt; 0.45),
+  AND(NOT(ISBLANK(XInfrastructure_Margin__c)), XInfrastructure_Margin__c &lt; 0.50),
+  AND(NOT(ISBLANK(XCybersecurity_Margin__c)), XCybersecurity_Margin__c &lt; 0.60),
+  AND(NOT(ISBLANK(XPrivate_Cloud_Margin__c)), XPrivate_Cloud_Margin__c &lt; 0.65),
+  AND(NOT(ISBLANK(XVOIP_Margin__c)), XVOIP_Margin__c &lt; 0.35),
+  AND(NOT(ISBLANK(XOnboarding_Margin__c)), XOnboarding_Margin__c &lt; 0.45)
+)</formula>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Manager Approval</label>
+        <name>Manager_Approval</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mgilmore@teamascend.com.prod</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <formula>Discount &gt; 0.05</formula>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Executive Discount Approval</label>
+        <name>Executive_Discount_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>knelson@teamascend.com.prod</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <booleanFilter>1</booleanFilter>
+            <criteriaItems>
+                <field>Quote.Onboarding_Fee_Waived__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Onboarding Fee Waive Approval</label>
+        <name>Onboarding_Fee_Waive_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Triggers when discount exceeds 10%</description>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <formula>OR(
+  AND(NOT(ISBLANK(XService_Desk_Margin__c)), XService_Desk_Margin__c &lt; 0.45),
+  AND(NOT(ISBLANK(XInfrastructure_Margin__c)), XInfrastructure_Margin__c &lt; 0.50),
+  AND(NOT(ISBLANK(XCybersecurity_Margin__c)), XCybersecurity_Margin__c &lt; 0.60),
+  AND(NOT(ISBLANK(XPrivate_Cloud_Margin__c)), XPrivate_Cloud_Margin__c &lt; 0.65),
+  AND(NOT(ISBLANK(XVOIP_Margin__c)), XVOIP_Margin__c &lt; 0.35),
+  AND(NOT(ISBLANK(XOnboarding_Margin__c)), XOnboarding_Margin__c &lt; 0.45),
+   Discount  &gt; 0.05,
+
+  Onboarding_Fee_Waived__c = TRUE
+)</formula>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Requires_Executive_Approval_c</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Set_Status_to_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Set_Status_to_Rejected</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Set_Status_to_In_Review</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Quote Discount Approvals</label>
+    <processOrder>1</processOrder>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

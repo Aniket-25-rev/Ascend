@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Campaigns__c</fullName>
+    <label>Campaigns</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>2021 Q4 Salesforce Boston Holiday Party</fullName>
+                <default>false</default>
+                <label>2021 Q4 Salesforce Boston Holiday Party</label>
+            </value>
+            <value>
+                <fullName>2021 Q4 Dreamforce to You</fullName>
+                <default>false</default>
+                <label>2021 Q4 Dreamforce to You</label>
+            </value>
+            <value>
+                <fullName>2021 Q4 BaaS to Install Base</fullName>
+                <default>false</default>
+                <label>2021 Q4 BaaS to Install Base</label>
+            </value>
+            <value>
+                <fullName>2021 Q3 Salesforce Managed Webinar</fullName>
+                <default>false</default>
+                <label>2021 Q3 Salesforce Managed Webinar</label>
+            </value>
+            <value>
+                <fullName>2021 Q4 CSPM for O365 Clients</fullName>
+                <default>false</default>
+                <label>2021 Q4 CSPM for O365 Clients</label>
+            </value>
+            <value>
+                <fullName>2021 Q3 Virtual Bourbon Tasting</fullName>
+                <default>false</default>
+                <label>2021 Q3 Virtual Bourbon Tasting</label>
+            </value>
+            <value>
+                <fullName>2021 XDR &amp; Dark Web Launch</fullName>
+                <default>false</default>
+                <label>2021 XDR &amp; Dark Web Launch</label>
+            </value>
+            <value>
+                <fullName>2021 SF Analysis Paralysis CS</fullName>
+                <default>false</default>
+                <label>2021 SF Analysis Paralysis CS</label>
+            </value>
+            <value>
+                <fullName>2021 Netsurion 14 for 12</fullName>
+                <default>false</default>
+                <label>2021 Netsurion 14 for 12</label>
+            </value>
+            <value>
+                <fullName>2021 Incident Response Webinar</fullName>
+                <default>false</default>
+                <label>2021 Incident Response Webinar</label>
+            </value>
+            <value>
+                <fullName>2021 Doextra Insurance Carriers Customer Spotlight</fullName>
+                <default>false</default>
+                <label>2021 Doextra Insurance Carriers Customer Spotlight</label>
+            </value>
+            <value>
+                <fullName>2021 Data Management Webinar On-Demand</fullName>
+                <default>false</default>
+                <label>2021 Data Management Webinar On-Demand</label>
+            </value>
+            <value>
+                <fullName>2021 Dark Web Webinar</fullName>
+                <default>false</default>
+                <label>2021 Dark Web Webinar</label>
+            </value>
+            <value>
+                <fullName>2021 Camp IT Cloud Security</fullName>
+                <default>false</default>
+                <label>2021 Camp IT Cloud Security</label>
+            </value>
+            <value>
+                <fullName>2021 Camp IT - Cloud Security</fullName>
+                <default>false</default>
+                <label>2021 Camp IT - Cloud Security</label>
+            </value>
+            <value>
+                <fullName>2021 Ascend Managed Services Webinar</fullName>
+                <default>false</default>
+                <label>2021 Ascend Managed Services Webinar</label>
+            </value>
+            <value>
+                <fullName>2021 Ascend | Doextra Merger</fullName>
+                <default>false</default>
+                <label>2021 Ascend | Doextra Merger</label>
+            </value>
+            <value>
+                <fullName>2021 Amazon Connect &amp; Microsoft Teams Integration</fullName>
+                <default>false</default>
+                <label>2021 Amazon Connect &amp; Microsoft Teams Integration</label>
+            </value>
+            <value>
+                <fullName>2020 Top 100 MSPs TOFU</fullName>
+                <default>false</default>
+                <label>2020 Top 100 MSPs TOFU</label>
+            </value>
+            <value>
+                <fullName>2020 Texas TOFU</fullName>
+                <default>false</default>
+                <label>2020 Texas TOFU</label>
+            </value>
+            <value>
+                <fullName>2020 Team Software Client Conference</fullName>
+                <default>false</default>
+                <label>2020 Team Software Client Conference</label>
+            </value>
+            <value>
+                <fullName>2020 Taste of IT</fullName>
+                <default>false</default>
+                <label>2020 Taste of IT</label>
+            </value>
+            <value>
+                <fullName>2020 Q1 Incident Response</fullName>
+                <default>false</default>
+                <label>2020 Q1 Incident Response</label>
+            </value>
+            <value>
+                <fullName>2020 Phishing &amp; Security Awareness Webinar</fullName>
+                <default>false</default>
+                <label>2020 Phishing &amp; Security Awareness Webinar</label>
+            </value>
+            <value>
+                <fullName>2020 PE TOFU</fullName>
+                <default>false</default>
+                <label>2020 PE TOFU</label>
+            </value>
+            <value>
+                <fullName>2020 Operation Up-sell Cross-sell</fullName>
+                <default>false</default>
+                <label>2020 Operation Up-sell Cross-sell</label>
+            </value>
+            <value>
+                <fullName>2020 Operation TOFU3</fullName>
+                <default>false</default>
+                <label>2020 Operation TOFU3</label>
+            </value>
+            <value>
+                <fullName>2020 Operation TOFU2</fullName>
+                <default>false</default>
+                <label>2020 Operation TOFU2</label>
+            </value>
+            <value>
+                <fullName>2020 OPDA Spring Conference</fullName>
+                <default>false</default>
+                <label>2020 OPDA Spring Conference</label>
+            </value>
+            <value>
+                <fullName>2020 Netsurion Virtual Happy Hour</fullName>
+                <default>false</default>
+                <label>2020 Netsurion Virtual Happy Hour</label>
+            </value>
+            <value>
+                <fullName>2020 Malware Prevention Home</fullName>
+                <default>false</default>
+                <label>2020 Malware Prevention Home</label>
+            </value>
+            <value>
+                <fullName>2020 IoTSSA Scottsdale - Did Not Attend</fullName>
+                <default>false</default>
+                <label>2020 IoTSSA Scottsdale - Did Not Attend</label>
+            </value>
+            <value>
+                <fullName>2020 IoTSSA Scottsdale - Attended</fullName>
+                <default>false</default>
+                <label>2020 IoTSSA Scottsdale - Attended</label>
+            </value>
+            <value>
+                <fullName>2020 IoTSSA Houston - Did Not Attend</fullName>
+                <default>false</default>
+                <label>2020 IoTSSA Houston - Did Not Attend</label>
+            </value>
+            <value>
+                <fullName>2020 IoTSSA Houston - Attended</fullName>
+                <default>false</default>
+                <label>2020 IoTSSA Houston - Attended</label>
+            </value>
+            <value>
+                <fullName>2020 HS Prospect Tool</fullName>
+                <default>false</default>
+                <label>2020 HS Prospect Tool</label>
+            </value>
+            <value>
+                <fullName>2020 Cyber Insurance Webinar - Did Not Attend</fullName>
+                <default>false</default>
+                <label>2020 Cyber Insurance Webinar - Did Not Attend</label>
+            </value>
+            <value>
+                <fullName>2020 Cyber Insurance Webinar - Attended</fullName>
+                <default>false</default>
+                <label>2020 Cyber Insurance Webinar - Attended</label>
+            </value>
+            <value>
+                <fullName>2020 Amazon Connect Campaign</fullName>
+                <default>false</default>
+                <label>2020 Amazon Connect Campaign</label>
+            </value>
+            <value>
+                <fullName>2019 UNICO UNITEL Webinar</fullName>
+                <default>false</default>
+                <label>2019 UNICO UNITEL Webinar</label>
+            </value>
+            <value>
+                <fullName>2019 The 20 Vision</fullName>
+                <default>false</default>
+                <label>2019 The 20 Vision</label>
+            </value>
+            <value>
+                <fullName>2019 Team Client Conference</fullName>
+                <default>false</default>
+                <label>2019 Team Client Conference</label>
+            </value>
+            <value>
+                <fullName>2019 TBG Big Big Conference</fullName>
+                <default>false</default>
+                <label>2019 TBG Big Big Conference</label>
+            </value>
+            <value>
+                <fullName>2019 SANS KC - Attended Lunch &amp; Learn</fullName>
+                <default>false</default>
+                <label>2019 SANS KC - Attended Lunch &amp; Learn</label>
+            </value>
+            <value>
+                <fullName>2019 SANS KC - (Visited Booth)</fullName>
+                <default>false</default>
+                <label>2019 SANS KC - (Visited Booth)</label>
+            </value>
+            <value>
+                <fullName>2019 Q3 Multi-Touch</fullName>
+                <default>false</default>
+                <label>2019 Q3 Multi-Touch</label>
+            </value>
+            <value>
+                <fullName>2019 Q3 Finance Tablet</fullName>
+                <default>false</default>
+                <label>2019 Q3 Finance Tablet</label>
+            </value>
+            <value>
+                <fullName>2019 Q3 Direct Tablet Campaign</fullName>
+                <default>false</default>
+                <label>2019 Q3 Direct Tablet Campaign</label>
+            </value>
+            <value>
+                <fullName>2019 Q3 Cyberattack Series Sales Targets</fullName>
+                <default>false</default>
+                <label>2019 Q3 Cyberattack Series Sales Targets</label>
+            </value>
+            <value>
+                <fullName>2019 Q3 Cyberattack Series</fullName>
+                <default>false</default>
+                <label>2019 Q3 Cyberattack Series</label>
+            </value>
+            <value>
+                <fullName>2019 Q3 Channel Tablet</fullName>
+                <default>false</default>
+                <label>2019 Q3 Channel Tablet</label>
+            </value>
+            <value>
+                <fullName>2019 Q2 Sales Rock</fullName>
+                <default>false</default>
+                <label>2019 Q2 Sales Rock</label>
+            </value>
+            <value>
+                <fullName>2019 Q2 Cory</fullName>
+                <default>false</default>
+                <label>2019 Q2 Cory</label>
+            </value>
+            <value>
+                <fullName>2019 Q1 Cylance Leads</fullName>
+                <default>false</default>
+                <label>2019 Q1 Cylance Leads</label>
+            </value>
+            <value>
+                <fullName>2019 Q1 Channel Tablet</fullName>
+                <default>false</default>
+                <label>2019 Q1 Channel Tablet</label>
+            </value>
+            <value>
+                <fullName>2019 P3 Conference</fullName>
+                <default>false</default>
+                <label>2019 P3 Conference</label>
+            </value>
+            <value>
+                <fullName>2019 Operation TOFU</fullName>
+                <default>false</default>
+                <label>2019 Operation TOFU</label>
+            </value>
+            <value>
+                <fullName>2019 Omaha CIO Forum Golf Invitational</fullName>
+                <default>false</default>
+                <label>2019 Omaha CIO Forum Golf Invitational</label>
+            </value>
+            <value>
+                <fullName>2019 NAICS 622110</fullName>
+                <default>false</default>
+                <label>2019 NAICS 622110</label>
+            </value>
+            <value>
+                <fullName>2019 MSP World</fullName>
+                <default>false</default>
+                <label>2019 MSP World</label>
+            </value>
+            <value>
+                <fullName>2019 IT Nation</fullName>
+                <default>false</default>
+                <label>2019 IT Nation</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Salt Lake City</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Salt Lake City</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Mt Laurel - Did not Attend</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Mt Laurel - Did not Attend</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Mt Laurel - Attended</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Mt Laurel - Attended</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Minneappolis - Did Not Attend</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Minneappolis - Did Not Attend</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Minneappolis - Attended</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Minneappolis - Attended</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Loudoun - Did Not Attend</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Loudoun - Did Not Attend</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Loudoun - Attended</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Loudoun - Attended</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Jacksonville</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Jacksonville</label>
+            </value>
+            <value>
+                <fullName>2019 IoTSSA Columbus</fullName>
+                <default>false</default>
+                <label>2019 IoTSSA Columbus</label>
+            </value>
+            <value>
+                <fullName>2019 Inc. 5000</fullName>
+                <default>false</default>
+                <label>2019 Inc. 5000</label>
+            </value>
+            <value>
+                <fullName>2019 IG3 Mid-Atlantic</fullName>
+                <default>false</default>
+                <label>2019 IG3 Mid-Atlantic</label>
+            </value>
+            <value>
+                <fullName>2019 IAMCP Las Vegas</fullName>
+                <default>false</default>
+                <label>2019 IAMCP Las Vegas</label>
+            </value>
+            <value>
+                <fullName>2019 GM Guidelines</fullName>
+                <default>false</default>
+                <label>2019 GM Guidelines</label>
+            </value>
+            <value>
+                <fullName>2019 FutureCon Des Moines - Did Not Attend</fullName>
+                <default>false</default>
+                <label>2019 FutureCon Des Moines - Did Not Attend</label>
+            </value>
+            <value>
+                <fullName>2019 FutureCon Des Moines - Attended</fullName>
+                <default>false</default>
+                <label>2019 FutureCon Des Moines - Attended</label>
+            </value>
+            <value>
+                <fullName>2019 Finance Tablet - March</fullName>
+                <default>false</default>
+                <label>2019 Finance Tablet - March</label>
+            </value>
+            <value>
+                <fullName>2019 DattoCon</fullName>
+                <default>false</default>
+                <label>2019 DattoCon</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Tampa (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Tampa (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Tampa (Attended)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Tampa (Attended)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Sacramento (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Sacramento (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Sacramento (Attended)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Sacramento (Attended)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Hartford (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Hartford (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Hartford (Attended)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Hartford (Attended)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Dallas (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Dallas (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Dallas (Attended)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Dallas (Attended)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Chicago (Visited Booth)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Chicago (Visited Booth)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Chicago (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Chicago (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Atlanta (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Atlanta (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Atlanta (Attended)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Atlanta (Attended)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Anaheim (Did Not Attend)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Anaheim (Did Not Attend)</label>
+            </value>
+            <value>
+                <fullName>2019 Data Connectors - Anaheim (Attended)</fullName>
+                <default>false</default>
+                <label>2019 Data Connectors - Anaheim (Attended)</label>
+            </value>
+            <value>
+                <fullName>2019 Cybereason Lunch &amp; Learn</fullName>
+                <default>false</default>
+                <label>2019 Cybereason Lunch &amp; Learn</label>
+            </value>
+            <value>
+                <fullName>2019 Cities/Municipalities</fullName>
+                <default>false</default>
+                <label>2019 Cities/Municipalities</label>
+            </value>
+            <value>
+                <fullName>2019 Channel Tablet - March</fullName>
+                <default>false</default>
+                <label>2019 Channel Tablet - March</label>
+            </value>
+            <value>
+                <fullName>2019 ASI Connection - Pre-Event</fullName>
+                <default>false</default>
+                <label>2019 ASI Connection - Pre-Event</label>
+            </value>
+            <value>
+                <fullName>2019 ASI Connection - Attended</fullName>
+                <default>false</default>
+                <label>2019 ASI Connection - Attended</label>
+            </value>
+            <value>
+                <fullName>2018 TBG Big big Conference</fullName>
+                <default>false</default>
+                <label>2018 TBG Big big Conference</label>
+            </value>
+            <value>
+                <fullName>2018 Secure360</fullName>
+                <default>false</default>
+                <label>2018 Secure360</label>
+            </value>
+            <value>
+                <fullName>2018 SANS Washington</fullName>
+                <default>false</default>
+                <label>2018 SANS Washington</label>
+            </value>
+            <value>
+                <fullName>2018 P3 Conference Happy Hour</fullName>
+                <default>false</default>
+                <label>2018 P3 Conference Happy Hour</label>
+            </value>
+            <value>
+                <fullName>2018 P3 Conference</fullName>
+                <default>false</default>
+                <label>2018 P3 Conference</label>
+            </value>
+            <value>
+                <fullName>2018 NTA Spring Conference</fullName>
+                <default>false</default>
+                <label>2018 NTA Spring Conference</label>
+            </value>
+            <value>
+                <fullName>2018 NICB Management Conference</fullName>
+                <default>false</default>
+                <label>2018 NICB Management Conference</label>
+            </value>
+            <value>
+                <fullName>2018 Nebraska Cert</fullName>
+                <default>false</default>
+                <label>2018 Nebraska Cert</label>
+            </value>
+            <value>
+                <fullName>2018 NE Telehealth Summit</fullName>
+                <default>false</default>
+                <label>2018 NE Telehealth Summit</label>
+            </value>
+            <value>
+                <fullName>2018 ITO Compass</fullName>
+                <default>false</default>
+                <label>2018 ITO Compass</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSACentenial</fullName>
+                <default>false</default>
+                <label>2018 IoTSSACentenial</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA Scottsdale</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA Scottsdale</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA Ohio</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA Ohio</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA New Jersey</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA New Jersey</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA Naperville</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA Naperville</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA Chicago</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA Chicago</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA Austin</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA Austin</label>
+            </value>
+            <value>
+                <fullName>2018 IoTSSA Atlanta</fullName>
+                <default>false</default>
+                <label>2018 IoTSSA Atlanta</label>
+            </value>
+            <value>
+                <fullName>2018 HipoCon</fullName>
+                <default>false</default>
+                <label>2018 HipoCon</label>
+            </value>
+            <value>
+                <fullName>2018 GreenCloud</fullName>
+                <default>false</default>
+                <label>2018 GreenCloud</label>
+            </value>
+            <value>
+                <fullName>2018 Great Plains Cyber Summit</fullName>
+                <default>false</default>
+                <label>2018 Great Plains Cyber Summit</label>
+            </value>
+            <value>
+                <fullName>2018 Finance Tablet - November</fullName>
+                <default>false</default>
+                <label>2018 Finance Tablet - November</label>
+            </value>
+            <value>
+                <fullName>2018 Finance Tablet - July</fullName>
+                <default>false</default>
+                <label>2018 Finance Tablet - July</label>
+            </value>
+            <value>
+                <fullName>2018 DattoCon</fullName>
+                <default>false</default>
+                <label>2018 DattoCon</label>
+            </value>
+            <value>
+                <fullName>2018 CIO Forum Golf</fullName>
+                <default>false</default>
+                <label>2018 CIO Forum Golf</label>
+            </value>
+            <value>
+                <fullName>2018 ChannelCon</fullName>
+                <default>false</default>
+                <label>2018 ChannelCon</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>10</visibleLines>
+</CustomField>

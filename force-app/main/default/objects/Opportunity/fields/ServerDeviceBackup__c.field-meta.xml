@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ServerDeviceBackup__c</fullName>
+    <description>&apos;Picklist&apos;&apos; field used to capture the &apos;Server/Device Backup&apos; for the Edafio merger
+
+JIRA Ticket:
+AEOM-63</description>
+    <inlineHelpText>Indicate which backup options are desired</inlineHelpText>
+    <label>Server/Device Backup</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Opt 1 - Client Svr, Tierpoint</fullName>
+                <default>false</default>
+                <label>Opt 1 - Client Svr, Tierpoint</label>
+            </value>
+            <value>
+                <fullName>Opt 2 - Client Svr, Azure</fullName>
+                <default>false</default>
+                <label>Opt 2 - Client Svr, Azure</label>
+            </value>
+            <value>
+                <fullName>Opt 3 - Edafio Svr, Tierpoint</fullName>
+                <default>false</default>
+                <label>Opt 3 - Edafio Svr, Tierpoint</label>
+            </value>
+            <value>
+                <fullName>Opt 4 - Edafio Svr, Azure</fullName>
+                <default>false</default>
+                <label>Opt 4 - Edafio Svr, Azure</label>
+            </value>
+            <value>
+                <fullName>N/A</fullName>
+                <default>false</default>
+                <label>N/A</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

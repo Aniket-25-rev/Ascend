@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Current_MRR__c</fullName>
+    <description>Displays the current Monthly Recurring Revenue (MRR) from the related Asset record. This field reflects the latest value stored on the Asset.</description>
+    <formula>Asset__r.CurrentMrr</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The current monthly recurring revenue associated with the related Asset.</inlineHelpText>
+    <label>Current MRR</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

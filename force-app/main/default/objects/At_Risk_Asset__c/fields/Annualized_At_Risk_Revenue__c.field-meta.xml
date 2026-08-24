@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Annualized_At_Risk_Revenue__c</fullName>
+    <description>Calculates the annualized revenue at risk for the associated asset by multiplying Current MRR by 12.</description>
+    <inlineHelpText>Displays the annualized revenue at risk based on the Current MRR value for this asset.</inlineHelpText>
+    <label>Annualized At Risk Revenue</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

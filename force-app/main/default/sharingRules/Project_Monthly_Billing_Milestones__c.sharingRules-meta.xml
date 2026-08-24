@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>All_to_W2</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>All to W2</label>
+        <sharedTo>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedTo>
+        <criteriaItems>
+            <field>RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Fixed Milestones,T&amp;M Milestones</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>false</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+    <sharingOwnerRules>
+        <fullName>W2_users</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>W2 users</label>
+        <sharedTo>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedTo>
+        <sharedFrom>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedFrom>
+    </sharingOwnerRules>
+</SharingRules>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Current_Quantity__c</fullName>
+    <description>Displays the current quantity from the related Asset record. This field is automatically derived from the Asset and cannot be edited on the At Risk Asset record.</description>
+    <externalId>false</externalId>
+    <formula>Asset__r.CurrentQuantity</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The current quantity associated with the related Asset.</inlineHelpText>
+    <label>Current Quantity</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

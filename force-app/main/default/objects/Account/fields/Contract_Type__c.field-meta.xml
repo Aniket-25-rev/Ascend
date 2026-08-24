@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Type__c</fullName>
+    <description>Multi-Select Picklist field used to capture Contract Type
+
+Case/Ticket:
+W-002559</description>
+    <inlineHelpText>Classifications of MRR Contract</inlineHelpText>
+    <label>Contract Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Auto Renew</fullName>
+                <default>false</default>
+                <label>Auto Renew</label>
+            </value>
+            <value>
+                <fullName>M2M</fullName>
+                <default>false</default>
+                <label>M2M</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

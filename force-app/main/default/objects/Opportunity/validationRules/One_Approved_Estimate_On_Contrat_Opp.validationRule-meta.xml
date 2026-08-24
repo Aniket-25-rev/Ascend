@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>One_Approved_Estimate_On_Contrat_Opp</fullName>
+    <active>true</active>
+    <description>Opp can only have one Approved Estimate when Closed/Won.</description>
+    <errorConditionFormula>(ISPICKVAL( StageName , &apos;Contract&apos;)  || 
+ ISPICKVAL( StageName , &apos;Approve&apos;) ||
+ ISPICKVAL( StageName , &apos;Closed&apos;))  
+&amp;&amp; Number_of_Approves_Estimates__c   != 1  
+&amp;&amp; ISPICKVAL(  Project_Type__c  , &apos;Project&apos;) 
+&amp;&amp; CONTAINS( Service_Offering_Rollup__c , &apos;Salesforce&apos;) 
+&amp;&amp; NOT($Permission.BypassValidationRules) 
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorMessage>There should be 1 and only 1 &quot;Approved&quot; Estimate related to this Opportunity. To move past the Propose Stage in this Opportunity, make sure only one Estimate is in the &quot;Accepted&quot; Stage.</errorMessage>
+</ValidationRule>

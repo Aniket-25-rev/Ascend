@@ -37,6 +37,41 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     private static String BUNDLE_MARGIN_CONTEXT_ATTRIBUTE = 'ItemMargin__std';
 
     // =========================================================
+    // MARGIN FIELD RANGE
+    // =========================================================
+    // ItemMargin__std lands on the standard QuoteLineItem.Margin, which is a
+    // percent field of precision 5 / scale 2 — three digits before the decimal
+    // point, so it holds -999.99 through 999.99 and nothing wider.
+    //
+    // Pushing a value outside that range does NOT fail quietly on the one
+    // line. It aborts the entire pricing pass with "Margin: value outside of
+    // valid range on numeric field", and the user is told "We couldn't refresh
+    // the prices and validate the configuration." Confirmed live with
+    // -1182.05 on a bundle component.
+    //
+    // Per-line bundle margins routinely exceed this: a component's
+    // Bundle_Revenue__c is its allocated slice of the bundle price while its
+    // UnitCost is the full standalone cost, so a small slice against a real
+    // cost produces figures like -2084.47. Values are therefore pinned to the
+    // rail before being pushed rather than dropped — a dropped line keeps
+    // whatever margin an earlier pass left on it, which reads as current and
+    // is more misleading than a number visibly sitting at the limit. The true
+    // uncapped figure is written to the debug log every time a clamp happens.
+    // =========================================================
+    @TestVisible
+    private static final Decimal MARGIN_FIELD_MAX =  999.99;
+    @TestVisible
+    private static final Decimal MARGIN_FIELD_MIN = -999.99;
+
+    @TestVisible
+    private static Decimal clampToMarginField(Decimal margin) {
+        if (margin == null)               return null;
+        if (margin > MARGIN_FIELD_MAX)    return MARGIN_FIELD_MAX;
+        if (margin < MARGIN_FIELD_MIN)    return MARGIN_FIELD_MIN;
+        return margin;
+    }
+
+    // =========================================================
     // ONBOARDING FEE DISCOUNT — added constants
     // =========================================================
     private static final Decimal MONTHLY_RATE = 0.008333; // Constant_MonthlyRate from Pricing Procedure
@@ -491,16 +526,27 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     // =========================================================
     // BUNDLE SKU MARGIN  →  pushed via context as ItemMargin__std
     // Margin = (Σ Bundle_Revenue__c across the bundle's lines
-    //           − Σ Total_Per_User_Per_SKU__c across the bundle's lines)
+    //           − Σ (UnitCost × Quantity) across the bundle's lines)
     //          ÷ Σ Bundle_Revenue__c, on a 0–100 percent scale (matches
     //          calcMarginPercent, same as every other Margin_*__c on this
     //          Quote — it's a percent field, so 25.50 must mean 25.5%).
     // Groups bundle line items by their bundle parent (Is_Bundle_Parent__c's
-    // own Id, or a child's ParentQuoteLineItemId) and sums Bundle_Revenue__c
-    // and Total_Per_User_Per_SKU__c across the whole group — parent AND
-    // children — but applies the resulting margin to the bundle PARENT line
-    // only. Child lines contribute to the figure without carrying it
-    // themselves; non-bundle lines are untouched entirely.
+    // own Id, or a child's ParentQuoteLineItemId) and sums both sides across
+    // the whole group — parent AND children — but applies the resulting margin
+    // to the bundle PARENT line only. Child lines contribute to the figure
+    // without carrying it themselves; non-bundle lines are untouched entirely.
+    //
+    // SUPERSEDES the previous formula, which subtracted
+    // Σ Total_Per_User_Per_SKU__c instead of a cost. That field is a REVENUE
+    // allocation — its own description reads "component line's share of the
+    // bundle root NetUnitPrice, allocated in proportion to gross extended list
+    // price" — so the old expression subtracted revenue from revenue. Worse,
+    // because Bundle_Revenue__c is itself defined as
+    // Total_Per_User_Per_SKU__c * Quantity, the whole thing reduced
+    // algebraically to 1 - 1/Q: a pure function of quantity. Measured live on
+    // one Core Support bundle, identical 28 SKUs at identical per-unit pricing
+    // returned 0% at parent quantity 1 (quote 0Q0VF000003bkN70AI) and 98.86%
+    // at parent quantity 100 (quote 0Q0VF000003bKCY0A2).
     // =========================================================
     // Orchestrator — reads the quote's lines by SOQL (the same approach the
     // onboarding block uses in this same synchronous hook), computes one
@@ -537,40 +583,58 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                 return 'Bundle margin: no active lines in pricing context';
             }
 
-            Map<Id, Decimal> marginByParent = computeBundleMarginByParent(queryBundleLineData(quoteId));
-            if (marginByParent.isEmpty()) {
+            List<BundleLineData> lines = queryBundleLineData(quoteId);
+
+            // Stamp UnitCost onto any bundle line the pricing engine left
+            // uncosted, using the cost book value. Collected first so it goes
+            // out in the SAME updateContextAttributes call as the margins
+            // below — one round trip, and the field lands on the record.
+            List<Map<String, Object>> updates =
+                buildBundleUnitCostUpdates(lines, salesPathByLineId);
+            Integer unitCostPushes = updates.size();
+
+            // One margin per bundle LINE — the parent and each individual child
+            // SKU each carry their own figure, not a shared group number.
+            Map<Id, Decimal> marginByLine = computeBundleMarginByLine(lines);
+            if (marginByLine.isEmpty() && updates.isEmpty()) {
                 return 'Bundle margin: nothing to compute';
             }
-
-            List<Map<String, Object>> updates = new List<Map<String, Object>>();
-            for (Id parentLineId : marginByParent.keySet()) {
-                List<Object> salesPath = salesPathByLineId.get(parentLineId);
+            for (Id bundleLineId : marginByLine.keySet()) {
+                List<Object> salesPath = salesPathByLineId.get(bundleLineId);
                 if (salesPath == null) {
-                    System.debug('==Bundle margin SKIPPED== no salesPath for parent ' + parentLineId);
+                    System.debug('==Bundle margin SKIPPED== no salesPath for line ' + bundleLineId);
                     continue;
                 }
-                Decimal margin = marginByParent.get(parentLineId);
-                System.debug('==Bundle margin PUSH== parent=' + parentLineId
-                    + ' ' + BUNDLE_MARGIN_CONTEXT_ATTRIBUTE + '=' + margin);
+                Decimal margin    = marginByLine.get(bundleLineId);
+                Decimal pushValue = clampToMarginField(margin);
+                if (pushValue != margin) {
+                    // Never let an out-of-range value reach the field — it
+                    // would abort the whole pricing pass, not just this line.
+                    System.debug('==Bundle margin CLAMPED== line=' + bundleLineId
+                        + ' actual=' + margin + ' pushed=' + pushValue);
+                }
+                System.debug('==Bundle margin PUSH== line=' + bundleLineId
+                    + ' ' + BUNDLE_MARGIN_CONTEXT_ATTRIBUTE + '=' + pushValue);
 
                 updates.add(buildNodeUpdate(salesPath, new List<List<Object>>{
                     new List<Object>{
                         BUNDLE_MARGIN_CONTEXT_ATTRIBUTE,
                         BUNDLE_MARGIN_CONTEXT_ATTRIBUTE,
-                        margin
+                        pushValue
                     }
                 }));
             }
 
             if (updates.isEmpty()) {
-                return 'Bundle margin: no bundle parent lines in pricing context';
+                return 'Bundle margin: no bundle lines in pricing context';
             }
 
             ctx.updateContextAttributes(new Map<String, Object>{
                 'contextId'             => contextId,
                 'nodePathAndAttributes' => updates
             });
-            return 'Bundle margin applied to ' + updates.size() + ' parent line(s) via context';
+            return 'Bundle margin applied to ' + (updates.size() - unitCostPushes)
+                + ' line(s), UnitCost stamped on ' + unitCostPushes + ' line(s) via context';
 
         } catch (Exception e) {
             System.debug('==applyBundleMarginViaContext EXCEPTION== ' + e.getMessage());
@@ -583,88 +647,265 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     // a read-only system field — Apex can't assign either on a QuoteLineItem
     // (in-memory or via DML), so the pure logic below works off the plain
     // BundleLineData class instead, which has no such restrictions.
+    //
+    // COST SOURCE — the cost half of the formula is the line's own UnitCost,
+    // the standard Revenue Cloud per-unit cost the Pricing Procedure derives
+    // from the product's CostBookEntry.
+    //
+    // On BUNDLE lines that field is almost always blank, and not because the
+    // cost is unknown. Every Core Support component carries
+    // ProductRelatedComponent.DoesBundlePriceIncludeChild = true ("Price
+    // includes component"), so the bundle is priced as one unit: the parent
+    // holds the whole price and each child is forced to NetUnitPrice = 0. The
+    // pricing engine's cost step only stamps UnitCost on lines it actually
+    // prices, so zero-priced children are skipped. Verified with
+    // 001-CYBR-SVC-ASDF-SHLD-001, which has a CostBookEntry of 4 and reports
+    // UnitCost = 4 in every standalone quote but blank in every bundle quote.
+    //
+    // So when UnitCost is blank we resolve the cost ourselves from
+    // CostBookEntry, keyed by product. That value is both used for the margin
+    // here AND pushed back onto the line as UnitCost via the pricing context
+    // (see buildBundleUnitCostUpdates) so the field is populated on the record
+    // rather than only in memory. The context route is what the HaaS block
+    // already does — confirmed live on 001-INFR-SVC-HAAS-IMPL-001, which has
+    // no CostBookEntry at all yet shows UnitCost 2.1659 and TotalCost 21.659,
+    // both derived by the platform from a pushed 'UnitCost' attribute.
     @TestVisible
     private static List<BundleLineData> queryBundleLineData(String quoteId) {
-        List<BundleLineData> data = new List<BundleLineData>();
-        for (QuoteLineItem qli : [
-            SELECT Id, ParentQuoteLineItemId, Is_Bundle_Parent__c,
-                   Is_Part_Of_Bundle__c, Bundle_Revenue__c, Total_Per_User_Per_SKU__c
+        List<QuoteLineItem> rows = [
+            SELECT Id, Product2Id, ParentQuoteLineItemId, Is_Bundle_Parent__c,
+                   Is_Part_Of_Bundle__c, Bundle_Revenue__c, Quantity, UnitCost,
+                   Total_Per_User_Per_SKU__c, Bundle_Parent_Quantiy__c
             FROM   QuoteLineItem
             WHERE  QuoteId = :quoteId
-        ]) {
-            data.add(new BundleLineData(
+        ];
+
+        Set<Id> uncostedProductIds = new Set<Id>();
+        for (QuoteLineItem qli : rows) {
+            if (qli.UnitCost == null && qli.Product2Id != null) {
+                uncostedProductIds.add(qli.Product2Id);
+            }
+        }
+        Map<Id, Decimal> costBookCost = costBookCostByProduct(uncostedProductIds);
+
+        // Quantity of every line on the quote, so a child can read its bundle
+        // parent's quantity without a second query.
+        Map<Id, Decimal> quantityByLineId = new Map<Id, Decimal>();
+        for (QuoteLineItem qli : rows) {
+            quantityByLineId.put(qli.Id, qli.Quantity);
+        }
+
+        List<BundleLineData> data = new List<BundleLineData>();
+        for (QuoteLineItem qli : rows) {
+            Decimal costPrice   = qli.UnitCost;
+            Boolean fromCostBook = false;
+
+            if (costPrice == null && qli.Product2Id != null
+                && costBookCost.containsKey(qli.Product2Id)) {
+                costPrice    = costBookCost.get(qli.Product2Id);
+                fromCostBook = true;
+            }
+
+            // BUNDLE PARENT QUANTITY — the bundle root's quantity, which is the
+            // multiplier on BOTH sides of the margin: revenue is
+            // Total_Per_User_Per_SKU__c x this, cost is UnitCost x this.
+            //
+            // Bundle_Parent_Quantiy__c is written by the Update Bundle QLI
+            // UnitCost From CostBook flow, but that flow cannot always resolve
+            // it: $Record.ParentQuoteLineItemId reads as null inside a
+            // before-save flow even on update, so a child can end up holding
+            // its OWN quantity instead of the root's. Apex has no such
+            // limitation — ParentQuoteLineItemId is readable via SOQL — so the
+            // parent's quantity is resolved here directly and the stored field
+            // is only used when the parent cannot be located.
+            Decimal bundleParentQty = qli.Is_Bundle_Parent__c == true
+                ? qli.Quantity
+                : quantityByLineId.get(qli.ParentQuoteLineItemId);
+            if (bundleParentQty == null) {
+                bundleParentQty = qli.Bundle_Parent_Quantiy__c;
+            }
+
+            // Bundle_Revenue__c is Bundle_Parent_Quantiy__c x
+            // Total_Per_User_Per_SKU__c. With formulaTreatBlanksAs =
+            // BlankAsZero, a line whose Bundle_Parent_Quantiy__c the flow has
+            // not populated reads 0 rather than null — indistinguishable from a
+            // genuinely zero-revenue line, and it would silently suppress the
+            // margin. Recompute from the parts in that case, using the parent
+            // quantity resolved above.
+            Decimal revenue = qli.Bundle_Revenue__c;
+            if ((revenue == null || revenue == 0)
+                && qli.Total_Per_User_Per_SKU__c != null && bundleParentQty != null) {
+                revenue = qli.Total_Per_User_Per_SKU__c * bundleParentQty;
+                System.debug('==Bundle revenue derived== line=' + qli.Id
+                    + ' perUser=' + qli.Total_Per_User_Per_SKU__c
+                    + ' bundleParentQty=' + bundleParentQty + ' revenue=' + revenue);
+            }
+
+            // The quantity carried forward is the LINE'S OWN, because it is the
+            // cost multiplier: a component costs UnitCost x however many units
+            // of it are on the quote. The bundle parent quantity above is used
+            // only to derive revenue, and is deliberately NOT reused here.
+            //
+            // Those two were briefly the same thing. While every component
+            // tracked the bundle quantity, multiplying cost by the parent
+            // quantity cancelled against revenue and made the margin
+            // quantity-invariant. That stopped being true once static
+            // (Constant-scaled) components kept their own quantities: on quote
+            // 0Q0VF000003cjbu0AA the bundle sits at 10 while its components
+            // hold 1, 4, 11 and 20, so charging every line at x10 billed
+            // 001-CYBR-SVC-ASDF-SIEM-001 ten times its real cost (2,268 against
+            // an actual 226.80) and drove seven lines into the -999.99 clamp.
+            BundleLineData d = new BundleLineData(
                 qli.Id, qli.Is_Bundle_Parent__c, qli.Is_Part_Of_Bundle__c,
-                qli.ParentQuoteLineItemId, qli.Bundle_Revenue__c, qli.Total_Per_User_Per_SKU__c
-            ));
+                qli.ParentQuoteLineItemId, revenue,
+                qli.Quantity, costPrice
+            );
+            d.productId        = qli.Product2Id;
+            d.costFromCostBook = fromCostBook;
+            data.add(d);
         }
         return data;
     }
 
-    // Pure — returns one margin per bundle parent Id. Keyed by parent so the
-    // caller can address each bundle's own context node; children contribute
-    // to the sums but never appear as keys.
+    // Per-unit cost straight from CostBookEntry, for products whose line the
+    // pricing engine left uncosted. Only entries whose effective window covers
+    // today are considered. Where a product appears in more than one cost book
+    // the default book wins — CostBook.IsDefault is fetched first and used as
+    // the tie-break, so a non-default book only ever fills a gap.
     @TestVisible
-    private static Map<Id, Decimal> computeBundleMarginByParent(List<BundleLineData> lines) {
-        Map<Id, Decimal> bundleRevenueByGroup = new Map<Id, Decimal>();
-        Map<Id, Decimal> perSkuTotalByGroup   = new Map<Id, Decimal>();
-        // Only bundle PARENT lines end up carrying the margin. Child lines are
-        // still summed into their parent's aggregate (that IS the formula —
-        // Σ across the bundle's SKUs) but their own margin is left alone.
-        // Collected separately from the aggregation keys so a group whose
-        // parent line isn't present on this quote is skipped rather than
-        // keyed against a dangling Id.
-        Set<Id> parentLineIds = new Set<Id>();
-        // Bundle_Revenue__c/Total_Per_User_Per_SKU__c are populated by the
-        // platform's bundle pricing engine, which can still be mid-flight
-        // when this runs (confirmed via live testing: re-running later against
-        // the same quote, once pricing had caught up, correctly computed a
-        // non-zero margin). A group where every line's
-        // Total_Per_User_Per_SKU__c is null is a sign pricing hasn't reached
-        // it yet — tracked here so we skip emitting a misleading 0 for it.
-        Set<Id> groupsWithPricedLine = new Set<Id>();
+    private static Map<Id, Decimal> costBookCostByProduct(Set<Id> productIds) {
+        Map<Id, Decimal> costByProduct = new Map<Id, Decimal>();
+        if (productIds == null || productIds.isEmpty()) {
+            return costByProduct;
+        }
+        try {
+            Set<Id> defaultBookIds = new Set<Id>();
+            for (CostBook cb : [SELECT Id FROM CostBook WHERE IsDefault = true]) {
+                defaultBookIds.add(cb.Id);
+            }
+
+            Date today = Date.today();
+            for (CostBookEntry cbe : [
+                SELECT ProductId, CostBookId, Cost, EffectiveFrom, EffectiveTo
+                FROM   CostBookEntry
+                WHERE  ProductId IN :productIds
+                AND    Cost != null
+            ]) {
+                if (cbe.EffectiveFrom != null && cbe.EffectiveFrom.date() > today) continue;
+                if (cbe.EffectiveTo   != null && cbe.EffectiveTo.date()   < today) continue;
+
+                Boolean isDefaultBook = defaultBookIds.contains(cbe.CostBookId);
+                // First write wins unless a default-book entry displaces it.
+                if (!costByProduct.containsKey(cbe.ProductId) || isDefaultBook) {
+                    costByProduct.put(cbe.ProductId, cbe.Cost);
+                }
+            }
+        } catch (Exception e) {
+            System.debug('==costBookCostByProduct EXCEPTION== ' + e.getMessage());
+        }
+        System.debug('==costBookCostByProduct resolved== ' + costByProduct);
+        return costByProduct;
+    }
+
+    // Pushes the cost-book-derived cost back onto each line as UnitCost, so the
+    // QuoteLineItem field is actually populated instead of the value living
+    // only inside this transaction. Only lines whose UnitCost was blank AND for
+    // which a cost book value was found are touched — a line the pricing engine
+    // already costed is never overwritten. No DML: this goes out through the
+    // same pricing context as everything else in this hook.
+    @TestVisible
+    private static List<Map<String, Object>> buildBundleUnitCostUpdates(
+        List<BundleLineData> lines,
+        Map<Id, List<Object>> salesPathByLineId
+    ) {
+        List<Map<String, Object>> updates = new List<Map<String, Object>>();
+        for (BundleLineData li : lines) {
+            if (!li.costFromCostBook || li.costPrice == null) continue;
+            Boolean inBundle = li.isBundleParent == true || li.isPartOfBundle == true;
+            if (!inBundle) continue;
+
+            List<Object> salesPath = salesPathByLineId.get(li.lineId);
+            if (salesPath == null) {
+                System.debug('==Bundle UnitCost SKIPPED== no salesPath for line ' + li.lineId);
+                continue;
+            }
+            System.debug('==Bundle UnitCost PUSH== line=' + li.lineId + ' unitCost=' + li.costPrice);
+            updates.add(buildNodeUpdate(salesPath, new List<List<Object>>{
+                new List<Object>{ 'UnitCost', 'UnitCost', li.costPrice }
+            }));
+        }
+        return updates;
+    }
+
+    // Pure — returns one margin PER BUNDLE LINE, keyed by that line's own Id.
+    // Every line in a bundle (the parent and each individual child SKU) is
+    // measured on its own revenue and its own cost:
+    //
+    //     (Bundle_Revenue__c − UnitCost × Quantity) ÷ Bundle_Revenue__c
+    //
+    // Nothing is summed across the group — a child's number reflects only that
+    // child. Non-bundle lines are ignored entirely.
+    //
+    // The two sides use DIFFERENT multipliers, and that is deliberate:
+    //   revenue = Total_Per_User_Per_SKU__c x Bundle_Parent_Quantiy__c
+    //             (the line's allocated share of the bundle price, which
+    //              scales with how many bundles are sold)
+    //   cost    = UnitCost x Quantity
+    //             (what this line actually costs to deliver, which depends on
+    //              how many units of THIS component are on the quote)
+    //
+    // Cost was previously multiplied by the parent quantity too, on the
+    // reasoning that it cancelled against revenue and made the margin
+    // quantity-invariant. That held only while every component tracked the
+    // bundle quantity. Static (Constant-scaled) components keep their own
+    // quantities, so it stopped being true: on quote 0Q0VF000003cjbu0AA the
+    // bundle sits at 10 while components hold 1, 4, 11 and 20, and charging
+    // everything at x10 billed 001-CYBR-SVC-ASDF-SIEM-001 2,268 against a real
+    // cost of 226.80, pinning seven lines to the -999.99 clamp.
+    //
+    // A component can still be genuinely negative when its allocated share of
+    // the bundle price is below what it costs to deliver. That is a real
+    // finding about the bundle's pricing, not an artefact.
+    @TestVisible
+    private static Map<Id, Decimal> computeBundleMarginByLine(List<BundleLineData> lines) {
+        Map<Id, Decimal> marginByLine = new Map<Id, Decimal>();
 
         for (BundleLineData qli : lines) {
             Boolean inBundle = qli.isBundleParent == true || qli.isPartOfBundle == true;
             if (!inBundle) continue;
 
-            Id groupKey = qli.isBundleParent == true ? qli.lineId : qli.parentLineId;
-            if (groupKey == null) continue;
-
-            if (qli.isBundleParent == true) {
-                parentLineIds.add(qli.lineId);
-            }
-
-            Decimal revenue = qli.bundleRevenue      != null ? qli.bundleRevenue      : 0;
-            Decimal perSku  = qli.totalPerUserPerSku != null ? qli.totalPerUserPerSku : 0;
-
-            if (qli.totalPerUserPerSku != null) {
-                groupsWithPricedLine.add(groupKey);
-            }
-
-            bundleRevenueByGroup.put(groupKey,
-                (bundleRevenueByGroup.containsKey(groupKey) ? bundleRevenueByGroup.get(groupKey) : 0) + revenue);
-            perSkuTotalByGroup.put(groupKey,
-                (perSkuTotalByGroup.containsKey(groupKey) ? perSkuTotalByGroup.get(groupKey) : 0) + perSku);
-        }
-
-        System.debug('==computeBundleMarginByParent bundleRevenueByGroup== ' + bundleRevenueByGroup);
-        System.debug('==computeBundleMarginByParent perSkuTotalByGroup==   ' + perSkuTotalByGroup);
-        System.debug('==computeBundleMarginByParent parentLineIds==        ' + parentLineIds);
-        System.debug('==computeBundleMarginByParent groupsWithPricedLine== ' + groupsWithPricedLine);
-
-        Map<Id, Decimal> marginByParent = new Map<Id, Decimal>();
-        for (Id parentLineId : parentLineIds) {
-            if (!groupsWithPricedLine.contains(parentLineId)) {
-                System.debug('==computeBundleMarginByParent SKIPPED (pricing not ready)== parent=' + parentLineId);
+            // No cost for this line means "unknown", not "free". Emitting
+            // (revenue - 0) / revenue = 100% would be a fabricated number, so
+            // the line is skipped and keeps whatever the pricing engine gave
+            // it. The bundle PARENT normally lands here: it carries the whole
+            // price but rarely has a CostBookEntry of its own.
+            if (qli.costPrice == null) {
+                System.debug('==computeBundleMarginByLine SKIPPED (no cost)== line=' + qli.lineId);
                 continue;
             }
-            Decimal margin = calcMarginPercent(
-                bundleRevenueByGroup.get(parentLineId), perSkuTotalByGroup.get(parentLineId)
-            );
-            System.debug('==computeBundleMarginByParent parent=' + parentLineId + ' margin=' + margin);
-            marginByParent.put(parentLineId, margin);
+
+            // No revenue means there is nothing to take a percentage of.
+            if (qli.bundleRevenue == null || qli.bundleRevenue == 0) {
+                System.debug('==computeBundleMarginByLine SKIPPED (no revenue)== line=' + qli.lineId);
+                continue;
+            }
+
+            // Cost is UnitCost x the LINE'S OWN quantity. A null is treated as
+            // 1, since a line always represents at least one unit.
+            Decimal lineQty = qli.quantity != null ? qli.quantity : 1;
+            Decimal cost    = qli.costPrice * lineQty;
+
+            Decimal margin = calcMarginPercent(qli.bundleRevenue, cost);
+            System.debug('==computeBundleMarginByLine line=' + qli.lineId
+                + ' revenue=' + qli.bundleRevenue + ' unitCost=' + qli.costPrice
+                + ' lineQty=' + lineQty + ' cost=' + cost
+                + ' margin=' + margin);
+
+            marginByLine.put(qli.lineId, margin);
         }
-        return marginByParent;
+
+        System.debug('==computeBundleMarginByLine result== ' + marginByLine);
+        return marginByLine;
     }
 
     @TestVisible
@@ -674,19 +915,30 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         @TestVisible Boolean isPartOfBundle;
         @TestVisible Id      parentLineId;
         @TestVisible Decimal bundleRevenue;
-        @TestVisible Decimal totalPerUserPerSku;
+        @TestVisible Decimal quantity;
+        // Null means "this line has no known cost", which is distinct from a
+        // genuine zero — computeBundleMarginByLine relies on that difference
+        // to decide whether a bundle has any cost basis at all.
+        @TestVisible Decimal costPrice;
+        // Set by queryBundleLineData, not the constructor, so the pure-logic
+        // tests can keep using the 7-argument form.
+        @TestVisible Id      productId;
+        // True when costPrice came from CostBookEntry because the line's own
+        // UnitCost was blank — those are the lines worth stamping back.
+        @TestVisible Boolean costFromCostBook = false;
 
         @TestVisible
         BundleLineData(
             Id lineId, Boolean isBundleParent, Boolean isPartOfBundle,
-            Id parentLineId, Decimal bundleRevenue, Decimal totalPerUserPerSku
+            Id parentLineId, Decimal bundleRevenue, Decimal quantity, Decimal costPrice
         ) {
-            this.lineId             = lineId;
-            this.isBundleParent     = isBundleParent;
-            this.isPartOfBundle     = isPartOfBundle;
-            this.parentLineId       = parentLineId;
-            this.bundleRevenue      = bundleRevenue;
-            this.totalPerUserPerSku = totalPerUserPerSku;
+            this.lineId         = lineId;
+            this.isBundleParent = isBundleParent;
+            this.isPartOfBundle = isPartOfBundle;
+            this.parentLineId   = parentLineId;
+            this.bundleRevenue  = bundleRevenue;
+            this.quantity       = quantity;
+            this.costPrice      = costPrice;
         }
     }
 

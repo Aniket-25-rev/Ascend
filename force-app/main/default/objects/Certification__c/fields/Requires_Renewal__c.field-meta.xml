@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Requires_Renewal__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the certification requires periodic maintenance or renewal to remain active.</description>
+    <inlineHelpText>Check this box if the certification requires ongoing renewal or maintenance.</inlineHelpText>
+    <label>Requires Renewal</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

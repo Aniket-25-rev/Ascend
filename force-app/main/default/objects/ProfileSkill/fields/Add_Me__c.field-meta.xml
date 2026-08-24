@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Add_Me__c</fullName>
+    <externalId>false</externalId>
+    <formula>HYPERLINK(&quot;/0SM/e?retURL=%2F0Sk?fcf=000000000000000&amp;saveURL=%2F0Sk?fcf=000000000000000&quot; &amp; &quot;&amp;profileSkillId=&quot; &amp;  Id &amp; &quot;&amp;profileSkill=&quot; &amp; Name &amp; &quot;&amp;User_lkid=&quot; &amp; $User.Id &amp; &quot;&amp;User=&quot; &amp;  $User.FirstName &amp; &quot; &quot; &amp;  $User.LastName , &quot;Add Me&quot;, &quot;_self&quot; )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Add Me</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

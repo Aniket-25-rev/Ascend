@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invoice_Date_Change_DT__c</fullName>
+    <description>W-002570 - added field to be populated in Account Before flow whenever Invoice Date is changed. This field then triggers the Last MS Revenue and Last PS Revenue roll ups.</description>
+    <label>Invoice Date Change DT</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>DateTime</type>
+</CustomField>

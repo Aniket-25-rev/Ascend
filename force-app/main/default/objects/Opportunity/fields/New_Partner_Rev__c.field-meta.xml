@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Partner_Rev__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Is this opportunity driving new partner revenue and should be reflected in deal reg?</inlineHelpText>
+    <label>New Partner Rev</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

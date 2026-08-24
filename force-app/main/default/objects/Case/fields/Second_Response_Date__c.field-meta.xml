@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Second_Response_Date__c</fullName>
+    <inlineHelpText>Optional. Date Case update was provided by the Delivery Team, using the Checkpoint. Only populates when an update is provided prior to Ready to Test.</inlineHelpText>
+    <label>Second Response Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

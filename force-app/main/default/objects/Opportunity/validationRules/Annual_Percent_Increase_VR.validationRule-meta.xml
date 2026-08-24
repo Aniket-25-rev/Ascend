@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Annual_Percent_Increase_VR</fullName>
+    <active>true</active>
+    <description>Annual % Increase field is required when Opp record Stage field = Approve
+Added Amount &gt; 0 to make this rule only fire on positive dollar opps.
+
+Case/Ticket:
+#00016021
+#00016020</description>
+    <errorConditionFormula>AND(
+   Amount &gt; 0,
+   OR(
+						ISNULL(Annual_Increase__c),
+						ISBLANK(TEXT(Contract_Version__c)),
+						AND(Auto_Renew__c = True, ISNULL(Auto_Renew_Increase__c))),
+   ISCHANGED(StageName),
+   ISPICKVAL(StageName, &apos;Approve&apos;),
+   RecordType.DeveloperName = &apos;Opportunity&apos;,
+   NOT(ISPICKVAL(Type, &apos;Change Order&apos;)),
+   OR(
+      AND(
+         NOT( CONTAINS(Service_Offering_Rollup__c, &apos;Salesforce&apos;)),
+         NOT( CONTAINS(Service_Offering_Rollup__c, &apos;Zingly&apos;)),
+         NOT( CONTAINS(Service_Offering_Rollup__c, &apos;HubSpot&apos;)),
+         NOT( CONTAINS(Service_Offering_Rollup__c, &apos;Application Solutions&apos;))),
+      Service_Offering_Rollup__c = &apos;&apos;),
+   NOT($Permission.BypassValidationRules),
+   NOT( $User.Id = &apos;0053b00000CSZR6&apos;)
+)</errorConditionFormula>
+    <errorMessage>Annual % Increase, Contract Version, and Auto Renew % Increase (when Auto Renew is checked), field is required when the Opportunity record Stage field = &quot;Approve&quot;.</errorMessage>
+</ValidationRule>

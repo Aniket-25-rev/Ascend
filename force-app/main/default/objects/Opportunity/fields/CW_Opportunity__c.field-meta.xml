@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CW_Opportunity__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>&quot;Text&apos;&quot; field used to capture the &apos;CW Opportunity #&apos; for the Edafio merger
+
+JIRA Ticket:
+AEOM-63</description>
+    <externalId>true</externalId>
+    <inlineHelpText>Automatically generated from the CW opportunity during sync</inlineHelpText>
+    <label>CW Opportunity #</label>
+    <length>10</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Required_Fields_at_Analyze_Stage</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ CONTAINS(Service_Offering_Rollup__c, &apos;Salesforce&apos;), 
+ RecordType.DeveloperName = &apos;Salesforce_Consulting&apos;,
+ OR(
+  Text(StageName) = &apos;Propose&apos;,
+  Text(StageName) = &apos;Contract&apos;,
+  Text(StageName) = &apos;Approve&apos;, 
+  Text(StageName) = &apos;Closed Won&apos;),
+
+OR( 
+ ISBLANK(ProductLine__c),  
+ ISBLANK(Text(Project_Type__c)),
+ ISBLANK(TEXT(ProjectService__c)),  
+ ISBLANK(Rate__c)), 
+ISBLANK(Project__c)) 
+
+&amp;&amp; CloseDate &gt; DATE(2021,11,12)
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorMessage>To move past the Analyze stage Partner Product, Project Delivery, Project Service and Rate are required.</errorMessage>
+</ValidationRule>

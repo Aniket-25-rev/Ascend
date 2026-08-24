@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_ChannelType_Required_When_Partne</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  ISPICKVAL(Type, &quot;Channel Partner&quot;),
+  ISBLANK(Alliance_Type__c)
+)
+&amp;&amp; NOT($Permission.BypassValidationRules)</errorConditionFormula>
+    <errorDisplayField>Alliance_Type__c</errorDisplayField>
+    <errorMessage>Channel Type is required when Account Type is Partner.</errorMessage>
+</ValidationRule>

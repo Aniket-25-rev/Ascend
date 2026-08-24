@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Force_MRR</fullName>
+    <active>true</active>
+    <description>Force MRR for Renewals</description>
+    <errorConditionFormula>Renewal__c = TRUE &amp;&amp; ISNULL( Existing_MRR__c )</errorConditionFormula>
+    <errorDisplayField>Existing_MRR__c</errorDisplayField>
+    <errorMessage>You indicated this Service is a Renewal/CO, Existing MRR is required</errorMessage>
+</ValidationRule>

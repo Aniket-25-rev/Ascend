@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Managed Services - Advanced Consulting Services</fullName>
+        <default>false</default>
+        <label>Managed Services - Advanced Consulting Services</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - AI</fullName>
+        <default>false</default>
+        <label>Managed Services - AI</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Cloud/Infra/Desk</fullName>
+        <default>false</default>
+        <label>Managed Services - Cloud/Infra/Desk</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Core</fullName>
+        <default>false</default>
+        <label>Managed Services - Core</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Cybersecurity</fullName>
+        <default>false</default>
+        <label>Managed Services - Cybersecurity</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Infrastructure</fullName>
+        <default>false</default>
+        <label>Managed Services - Infrastructure</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - License Subscription</fullName>
+        <default>false</default>
+        <label>Managed Services - License Subscription</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Onboarding</fullName>
+        <default>false</default>
+        <label>Managed Services - Onboarding</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Private Cloud</fullName>
+        <default>false</default>
+        <label>Managed Services - Private Cloud</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Salesforce</fullName>
+        <default>false</default>
+        <label>Managed Services - SAS</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Service Desk</fullName>
+        <default>false</default>
+        <label>Managed Services - Service Desk</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Managed Services - Other</fullName>
+        <default>false</default>
+        <label>Managed Services - Other</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Product - Product</fullName>
+        <default>false</default>
+        <label>Product - Product</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Product - SAS</fullName>
+        <default>false</default>
+        <label>Product - SAS</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Product - Other</fullName>
+        <default>false</default>
+        <label>Product - Other</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services</fullName>
+        <default>false</default>
+        <label>Professional Services</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services - AI</fullName>
+        <default>false</default>
+        <label>Professional Services - AI</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services - Cloud/Infra/Desk</fullName>
+        <default>false</default>
+        <label>Professional Services - Cloud/Infra/Desk</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services - Cybersecurity</fullName>
+        <default>false</default>
+        <label>Professional Services - Cybersecurity</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services - Infrastructure</fullName>
+        <default>false</default>
+        <label>Professional Services - Infrastructure</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services  - Onboarding</fullName>
+        <default>false</default>
+        <label>Professional Services  - Onboarding</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Professional Services - Salesforce</fullName>
+        <default>false</default>
+        <label>Professional Services - SAS</label>
+    </standardValue>
+    <standardValue>
+        <fullName>None</fullName>
+        <default>false</default>
+        <label>None</label>
+    </standardValue>
+</StandardValueSet>

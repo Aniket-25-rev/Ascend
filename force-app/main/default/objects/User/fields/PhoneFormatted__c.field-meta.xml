@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PhoneFormatted__c</fullName>
+    <description>Formats phone field into requested format.</description>
+    <externalId>false</externalId>
+    <formula>IF(LEN(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE( Phone , &quot; &quot;, &quot;&quot;) , &quot;-&quot;, &quot;&quot;) , &quot;)&quot;, &quot;&quot;) , &quot;(&quot;, &quot;&quot;))=10, 
+
+&quot;(&quot; + LEFT(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE( Phone , &quot; &quot;, &quot;&quot;) , &quot;-&quot;, &quot;&quot;) , &quot;)&quot;, &quot;&quot;) , &quot;(&quot;, &quot;&quot;), 3) +  
+
+&quot;) &quot; +
+
+
+MID(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE( Phone , &quot; &quot;, &quot;&quot;) , &quot;-&quot;, &quot;&quot;) , &quot;)&quot;, &quot;&quot;) , &quot;(&quot;, &quot;&quot;), 4,3) + &quot;-&quot; 
+
+
++ MID(SUBSTITUTE( SUBSTITUTE(SUBSTITUTE(SUBSTITUTE( Phone , &quot; &quot;, &quot;&quot;) , &quot;-&quot;, &quot;&quot;) , &quot;)&quot;, &quot;&quot;) , &quot;(&quot;, &quot;&quot;), 7, 4)
+
+,Phone)</formula>
+    <label>Phone</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

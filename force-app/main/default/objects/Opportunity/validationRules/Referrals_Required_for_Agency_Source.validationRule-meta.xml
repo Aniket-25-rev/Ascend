@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Referrals_Required_for_Agency_Source</fullName>
+    <active>true</active>
+    <description>If “Lead Source” equals &apos;Referral - TSD&apos;, then both Referral Primary and Referral Secondary must be completed</description>
+    <errorConditionFormula>AND(
+ ISPICKVAL(LeadSource, &quot;Referral - Agency&quot;),
+  OR(
+   ISBLANK(Referred_By__c),
+   ISBLANK(Referral_Secondary__c)
+  )
+ )
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)
+&amp;&amp; NOT(RecordType.DeveloperName = &quot;Churn&quot;)</errorConditionFormula>
+    <errorMessage>Please populate &apos;Referral Primary&apos; and &apos;Referral Secondary&apos; when Lead Source = &apos;Referral - TSD&apos;</errorMessage>
+</ValidationRule>

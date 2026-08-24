@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Referral_Detail_required_on_Lead_source</fullName>
+    <active>false</active>
+    <description>Referral Primary required when Lead Source is either Referral - Client OR Referral - Vendor/Partner</description>
+    <errorConditionFormula>AND(
+	OR ( 
+             ISPICKVAL( LeadSource , &apos;Referral - Client&apos;),
+             ISPICKVAL( LeadSource , &apos;Referral - Vendor/Partner&apos;)
+            ),
+	ISBLANK(Referred_By__c)
+, ISBLANK( Project__c ))
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)
+&amp;&amp; NOT(RecordType.DeveloperName = &quot;Churn&quot;)</errorConditionFormula>
+    <errorMessage>Referral Primary required when Lead Source is either &apos;Referral-Client&apos; OR &apos;Referral-Vendor/Partner&apos;</errorMessage>
+</ValidationRule>

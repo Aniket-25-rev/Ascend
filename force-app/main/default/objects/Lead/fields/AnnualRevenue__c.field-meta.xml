@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AnnualRevenue__c</fullName>
+    <description>Replaces standard Annual Revenue (currency) field for HubSpot integration and reporting metrics</description>
+    <label>Annual Revenue</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>AnnualRevenue</valueSetName>
+    </valueSet>
+</CustomField>

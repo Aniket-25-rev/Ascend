@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BusinessProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Churn Process</fullName>
+    <description>Has the same stages as the Churn Opp</description>
+    <isActive>true</isActive>
+    <values>
+        <fullName>Churn Likely</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Closed Churn</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Closed Retained</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>High Risk</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Low Risk</fullName>
+        <default>true</default>
+    </values>
+    <values>
+        <fullName>Remediation</fullName>
+        <default>false</default>
+    </values>
+</BusinessProcess>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Line_Required_for_Opportunity</fullName>
+    <active>true</active>
+    <description>Service Line is required before an Opportunity can be moved to the &quot;Propose&quot; or &quot;Contract&quot; Stage</description>
+    <errorConditionFormula>AND( 
+  HasOpportunityLineItem = FALSE,
+  ISCHANGED( StageName ),
+ OR(
+   ISPICKVAL( StageName , &apos;Propose&apos; ),
+   ISPICKVAL( StageName , &apos;Contract&apos; )),
+  NOT( $Permission.BypassValidationRules ),
+  NOT( $User.Id = &apos;0053b00000CSZR6&apos; )
+)</errorConditionFormula>
+    <errorMessage>&quot;Service Line&quot; is required before this Opportunity can be moved to the &quot;Propose&quot; or &quot;Contract&quot; Stage</errorMessage>
+</ValidationRule>

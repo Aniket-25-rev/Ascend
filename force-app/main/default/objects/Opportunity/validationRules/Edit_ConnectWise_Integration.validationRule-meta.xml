@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Edit_ConnectWise_Integration</fullName>
+    <active>false</active>
+    <description>Prevent the ability to edit the &quot;ConnectWise Integration&quot; for non specific Users
+
+JIRA Ticket:
+AEOM-63</description>
+    <errorConditionFormula>AND(
+ ISCHANGED( ConnectWise_Integration__c ),
+ ConnectWise_Integration__c = TRUE,
+ $User.Edit_CW_Integration__c = FALSE,
+ NOT($Permission.BypassValidationRules)
+)</errorConditionFormula>
+    <errorDisplayField>ConnectWise_Integration__c</errorDisplayField>
+    <errorMessage>Access required to edit this field</errorMessage>
+</ValidationRule>

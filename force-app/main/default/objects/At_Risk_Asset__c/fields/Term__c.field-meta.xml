@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Term__c</fullName>
+    <description>Calculates the contract term for the related Asset in months using the Lifecycle Start Date and Lifecycle End Date. This field is used to indicate the duration of the asset associated with an At Risk Asset record.</description>
+    <externalId>false</externalId>
+    <formula>(
+(YEAR(DATEVALUE(Asset__r.LifecycleEndDate)) -
+YEAR(DATEVALUE(Asset__r.LifecycleStartDate))) * 12
+)
++
+(
+MONTH(DATEVALUE(Asset__r.LifecycleEndDate)) -
+MONTH(DATEVALUE(Asset__r.LifecycleStartDate))
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Displays the term of the related Asset in months, calculated from the Asset&apos;s Lifecycle Start Date and Lifecycle End Date.</inlineHelpText>
+    <label>Term</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

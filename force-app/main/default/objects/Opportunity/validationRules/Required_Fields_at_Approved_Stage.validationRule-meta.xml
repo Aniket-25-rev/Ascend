@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Required_Fields_at_Approved_Stage</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( 
+	    OR(RecordType.DeveloperName = &apos;Salesforce_Consulting&apos;, RecordType.DeveloperName = &apos;Opportunity&apos;),
+	    Text(StageName) = &apos;Closed Won&apos;,
+					ISBLANK( Est_Start_Date__c)
+				) &amp;&amp; CloseDate &gt; DATE(2021,11,12)
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorMessage>To move past the Approve stage Estimated Start Date is required</errorMessage>
+</ValidationRule>

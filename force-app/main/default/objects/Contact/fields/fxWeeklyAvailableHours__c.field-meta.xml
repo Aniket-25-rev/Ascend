@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>fxWeeklyAvailableHours__c</fullName>
+    <description>Calculates available hours during week based on Resource Start Date; leveraged in Utilization reports</description>
+    <externalId>false</externalId>
+    <formula>IF(fxCurrentWeekStartDate__c &lt;= Resource_User_Record__r.StartDate__c &amp;&amp; Resource_User_Record__r.StartDate__c &lt;= fxCurrentWeekEndDate__c, (fxCurrentWeekEndDate__c - Resource_User_Record__r.StartDate__c) * 8, 40)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Weekly Available Hours</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

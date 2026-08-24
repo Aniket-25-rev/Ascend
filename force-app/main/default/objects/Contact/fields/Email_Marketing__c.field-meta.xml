@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Marketing__c</fullName>
+    <description>Added 3.2020 to support management of email marketing lists. Default is Send</description>
+    <inlineHelpText>Please change to Do Not Send if this contact should not receive emails sent to active contacts as part of mailings sent to accounts who are active Customers or Prospects</inlineHelpText>
+    <label>Email Marketing</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Send</fullName>
+                <default>false</default>
+                <label>Send</label>
+            </value>
+            <value>
+                <fullName>Do Not Send</fullName>
+                <default>false</default>
+                <label>Do Not Send</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

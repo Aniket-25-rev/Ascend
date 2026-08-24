@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Offering__c</fullName>
+    <inlineHelpText>The Service the Prospect is interested in</inlineHelpText>
+    <label>Line of Business</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Advanced Consulting Services</fullName>
+                <default>false</default>
+                <label>Advanced Consulting Services</label>
+            </value>
+            <value>
+                <fullName>Application Solutions</fullName>
+                <default>false</default>
+                <label>Application Solutions</label>
+            </value>
+            <value>
+                <fullName>Azure Consumption</fullName>
+                <default>false</default>
+                <label>Azure Consumption</label>
+            </value>
+            <value>
+                <fullName>Cybersecurity</fullName>
+                <default>false</default>
+                <label>Cybersecurity</label>
+            </value>
+            <value>
+                <fullName>HubSpot</fullName>
+                <default>false</default>
+                <label>HubSpot</label>
+            </value>
+            <value>
+                <fullName>Infrastructure</fullName>
+                <default>false</default>
+                <label>Infrastructure</label>
+            </value>
+            <value>
+                <fullName>License Subscription</fullName>
+                <default>false</default>
+                <label>License Subscription</label>
+            </value>
+            <value>
+                <fullName>Onboarding</fullName>
+                <default>false</default>
+                <label>Onboarding</label>
+            </value>
+            <value>
+                <fullName>Private Cloud</fullName>
+                <default>false</default>
+                <label>Private Cloud</label>
+            </value>
+            <value>
+                <fullName>Product</fullName>
+                <default>false</default>
+                <label>Product</label>
+            </value>
+            <value>
+                <fullName>Salesforce</fullName>
+                <default>false</default>
+                <label>Salesforce</label>
+            </value>
+            <value>
+                <fullName>Service Desk</fullName>
+                <default>false</default>
+                <label>Service Desk</label>
+            </value>
+            <value>
+                <fullName>Zingly</fullName>
+                <default>false</default>
+                <label>Zingly</label>
+            </value>
+            <value>
+                <fullName>Application Management</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Application Management</label>
+            </value>
+            <value>
+                <fullName>Cloud/Infra/Desk</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cloud/Infra/Desk</label>
+            </value>
+            <value>
+                <fullName>Cyber Security Management</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cyber Security Management</label>
+            </value>
+            <value>
+                <fullName>Data Management</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Data Solutions</label>
+            </value>
+            <value>
+                <fullName>Infrastructure Management</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Infrastructure Management</label>
+            </value>
+            <value>
+                <fullName>NFR</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>NFR</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Salesforce/App/Data</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Salesforce/App/Data</label>
+            </value>
+            <value>
+                <fullName>Service Desk Solutions</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Service Desk Solutions</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>3</visibleLines>
+</CustomField>

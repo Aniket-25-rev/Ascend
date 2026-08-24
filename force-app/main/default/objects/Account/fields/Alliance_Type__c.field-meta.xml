@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Alliance_Type__c</fullName>
+    <label>Channel Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Re-sale Partner</fullName>
+                <default>false</default>
+                <label>Resale Partner</label>
+            </value>
+            <value>
+                <fullName>Referral Partner - Non Fee</fullName>
+                <default>false</default>
+                <label>Referral Partner - Non Fee</label>
+            </value>
+            <value>
+                <fullName>Referral Partner - Fee</fullName>
+                <default>false</default>
+                <label>Referral Partner - Fee</label>
+            </value>
+            <value>
+                <fullName>Sub-Agent</fullName>
+                <default>false</default>
+                <label>Sub-Agent</label>
+            </value>
+            <value>
+                <fullName>TSD Subagent</fullName>
+                <default>false</default>
+                <label>TSD Subagent</label>
+            </value>
+            <value>
+                <fullName>Agency</fullName>
+                <default>false</default>
+                <label>TSD</label>
+            </value>
+            <value>
+                <fullName>Platform Partner</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Platform Partner</label>
+            </value>
+            <value>
+                <fullName>Referral Partner</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Referral Partner</label>
+            </value>
+            <value>
+                <fullName>Sub-contracting Partner</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Sub-contracting Partner</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

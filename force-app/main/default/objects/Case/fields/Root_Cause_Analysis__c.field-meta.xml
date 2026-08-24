@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Root_Cause_Analysis__c</fullName>
+    <inlineHelpText>The method used for identifying the underlying reason(s) for the Case.
+- Issues: Underlying cause, How the cause was identified, Steps to reproduce the error
+- Enhancements: Requirements, Other considered Solutions, Explanation for choosing the selected Solution</inlineHelpText>
+    <label>Root Cause Analysis</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

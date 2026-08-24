@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Options1or3__c</fullName>
+    <description>Formula Checkbox field created to capture &quot;Options 1 or 3&quot; from the Edafio data migration.  Identifies if server/backup device selected is either option 1 or 3. Used for showing data in Conga merge templates.
+
+JIRA Ticket:
+AEOM-63</description>
+    <formula>OR(
+ ISPICKVAL( ServerDeviceBackup__c , &apos;Opt 1 - Client Svr, Tierpoint&apos;),
+ ISPICKVAL( ServerDeviceBackup__c , &apos;Opt 3 - Edafio Svr, Tierpoint&apos;)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Options 1 or 3</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

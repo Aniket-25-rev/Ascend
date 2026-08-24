@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Termination_Category__c</fullName>
+    <label>Termination Category</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Ascend Initiated</fullName>
+                <default>false</default>
+                <label>Ascend Initiated</label>
+            </value>
+            <value>
+                <fullName>Business Closure</fullName>
+                <default>false</default>
+                <label>Business Closure</label>
+            </value>
+            <value>
+                <fullName>Client Growth Mismatch</fullName>
+                <default>false</default>
+                <label>Client Growth Mismatch</label>
+            </value>
+            <value>
+                <fullName>Relationship Issue</fullName>
+                <default>false</default>
+                <label>Relationship Issue</label>
+            </value>
+            <value>
+                <fullName>Sales Misalignment</fullName>
+                <default>false</default>
+                <label>Sales Misalignment</label>
+            </value>
+            <value>
+                <fullName>Security or Risk Confidence</fullName>
+                <default>false</default>
+                <label>Security or Risk Confidence</label>
+            </value>
+            <value>
+                <fullName>Service Issues</fullName>
+                <default>false</default>
+                <label>Service Issues</label>
+            </value>
+            <value>
+                <fullName>Value or Price Sensitivity</fullName>
+                <default>false</default>
+                <label>Value or Price Sensitivity</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

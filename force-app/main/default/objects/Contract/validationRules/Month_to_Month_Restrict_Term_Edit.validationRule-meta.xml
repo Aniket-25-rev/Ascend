@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Month_to_Month_Restrict_Term_Edit</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND(
+    Month_to_Month__c = true,
+    ISCHANGED(ContractTerm),
+    NOT(ISNEW())
+)</errorConditionFormula>
+    <errorDisplayField>ContractTerm</errorDisplayField>
+    <errorMessage>Contract Term cannot be changed while this contract is Month-to-Month. Uncheck Month-to-Month first if a firm term needs to be set.</errorMessage>
+</ValidationRule>

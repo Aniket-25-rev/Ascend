@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_SKU_Rollup__c</fullName>
+    <description>Rollup of Service SKUs from related Service Line Items. Populated via Rollup Helper and leveraged for HubSpot integration.</description>
+    <label>Service SKU Rollup</label>
+    <length>10000</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>4</visibleLines>
+</CustomField>

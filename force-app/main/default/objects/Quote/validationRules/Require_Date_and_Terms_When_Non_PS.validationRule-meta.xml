@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Date_and_Terms_When_Non_PS</fullName>
+    <active>false</active>
+    <description>Validates that Start Date and Contract Term Months are entered when creating a Quote for non-Professional Services Opportunities.</description>
+    <errorConditionFormula>AND(
+    ISNEW(),
+    NOT(ISBLANK(OpportunityId)),
+    Opportunity.RecordType.DeveloperName = &quot;Opportunity&quot;,
+    OR(
+        ISBLANK(StartDate),
+        ISBLANK(Contract_Term_Months__c)
+    )
+)</errorConditionFormula>
+    <errorMessage>Requires Start Date and Contract Term Months to be populated when creating a Quote from an Opportunity whose record type is not Professional Services.</errorMessage>
+</ValidationRule>

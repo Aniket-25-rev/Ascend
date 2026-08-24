@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Logo_Validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+			 ISCHANGED(StageName),
+		  ISPICKVAL(Type, &quot;New Business&quot;),
+				OR(ISPICKVAL( StageName , &quot;Approve&quot;),
+       ISPICKVAL( StageName, &quot;Closed Won&quot;)),
+				(TODAY() - Account.Last_Invoice_Date__c) &lt; 365)</errorConditionFormula>
+    <errorMessage>You have marked this Opportunity as a New Logo. Due to Revenue being loaded to this Account in the past 12 months, this should not be marked as a New Logo. Please select a new Type.</errorMessage>
+</ValidationRule>

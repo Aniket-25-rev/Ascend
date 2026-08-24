@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Change_PLI_when_Project_is_PS</fullName>
+    <active>true</active>
+    <description>If the associated Project is a PS Project and Time has been added to the case then you cannot update the PLI.</description>
+    <errorConditionFormula>NOT($Permission.BypassValidationRules)
+&amp;&amp;
+ISCHANGED(Project_Line_Item__c)
+&amp;&amp;
+Project__r.RecordType.Name = &apos;Project&apos;
+&amp;&amp;
+Case_Timecard_Hours__c &gt; 0</errorConditionFormula>
+    <errorMessage>You cannot change the PLI on this Case because you have added case time. Please reach out to the Operations Team for support in changing the PLI.</errorMessage>
+</ValidationRule>

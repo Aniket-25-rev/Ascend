@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Automated_Onboard_Email_VR</fullName>
+    <active>true</active>
+    <description>Automated Onboarding Email field is required when Opp record Stage field = Approve
+
+Case/Ticket: 
+#00016004</description>
+    <errorConditionFormula>AND( 
+ TEXT(Automated_Onboarding_Email__c) = NULL,
+ ISCHANGED(StageName),
+ ISPICKVAL(StageName, &apos;Approve&apos;),
+
+ RecordType.DeveloperName != &apos;True_Up&apos;,
+ NOT(ISPICKVAL(Type, &apos;Renewal&apos;)),
+
+ Service_Offering_Rollup__c != &apos;Product&apos;,
+ Service_Offering_Rollup__c != &apos;License Subscription&apos;,
+ Service_Offering_Rollup__c != &apos;&apos;,
+
+ NOT(CONTAINS(Service_Offering_Rollup__c, &apos;Salesforce&apos;)),
+ NOT(CONTAINS(Service_Offering_Rollup__c, &apos;HubSpot&apos;)),
+ NOT(CONTAINS(Service_Offering_Rollup__c, &apos;Zingly&apos;)),
+ NOT(CONTAINS(Service_Offering_Rollup__c, &apos;Application Solutions&apos;)),
+
+ NOT($Permission.BypassValidationRules),
+ NOT( $User.Id = &apos;0053b00000CSZR6&apos;),
+ NOT($UserRole.DeveloperName = &apos;SAS_Sales_Team&apos;)
+)</errorConditionFormula>
+    <errorDisplayField>Automated_Onboarding_Email__c</errorDisplayField>
+    <errorMessage>&quot;Automated Onboarding Email&quot; field is required when the Opportunity record&apos;s Stage field = &quot;Approve&quot;</errorMessage>
+</ValidationRule>

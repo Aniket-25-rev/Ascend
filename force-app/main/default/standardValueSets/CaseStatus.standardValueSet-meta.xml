@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>New</fullName>
+        <default>true</default>
+        <label>New</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Backlog</fullName>
+        <default>false</default>
+        <label>Backlog</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Grooming</fullName>
+        <default>false</default>
+        <label>Grooming</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Assigned - In Progress</fullName>
+        <default>false</default>
+        <label>Assigned - In Progress</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>On Hold</fullName>
+        <default>false</default>
+        <label>On Hold</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Escalated</fullName>
+        <default>false</default>
+        <label>Escalated</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Ready to Test</fullName>
+        <default>false</default>
+        <label>Ready to Test</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Ready for Release</fullName>
+        <default>false</default>
+        <label>Ready for Release</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Solution Delivered</fullName>
+        <default>false</default>
+        <label>Solution Delivered</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed</fullName>
+        <default>false</default>
+        <label>Closed</label>
+        <closed>true</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Canceled by Client</fullName>
+        <default>false</default>
+        <label>Canceled by Client</label>
+        <closed>true</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Duplicate</fullName>
+        <default>false</default>
+        <label>Duplicate</label>
+        <closed>true</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Low Risk</fullName>
+        <default>false</default>
+        <label>Low Risk</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>High Risk</fullName>
+        <default>false</default>
+        <label>High Risk</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Churn Likely</fullName>
+        <default>false</default>
+        <label>Churn Likely</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Remediation</fullName>
+        <default>false</default>
+        <label>Remediation</label>
+        <closed>false</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Churn</fullName>
+        <default>false</default>
+        <label>Closed Churn</label>
+        <closed>true</closed>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Retained</fullName>
+        <default>false</default>
+        <label>Closed Retained</label>
+        <closed>true</closed>
+    </standardValue>
+</StandardValueSet>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextUseCaseMapping xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contextDefinitionName>ContractsContextDefinition__stdctx</contextDefinitionName>
+    <mappingName>OppToCntrPersistenceMapping</mappingName>
+    <mappingType>Persistence</mappingType>
+    <masterLabel>Opportunity_Persistence_1778852615616</masterLabel>
+    <referenceObjectName>Opportunity</referenceObjectName>
+    <targetObjectCustomFieldName>SourceOpportunityId</targetObjectCustomFieldName>
+    <targetObjectName>Contract</targetObjectName>
+    <useCaseType>ContractCreationOrUpdation</useCaseType>
+</ContextUseCaseMapping>

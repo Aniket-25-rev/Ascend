@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextUseCaseMapping xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contextDefinitionName>ContractsContextDefinition__stdctx</contextDefinitionName>
+    <mappingName>OrderToCntrPersistenceMapping</mappingName>
+    <mappingType>Persistence</mappingType>
+    <masterLabel>Order_Persistence_1779453349373</masterLabel>
+    <referenceObjectName>Order</referenceObjectName>
+    <targetObjectCustomFieldName>SourceOrderId</targetObjectCustomFieldName>
+    <targetObjectName>Contract</targetObjectName>
+    <targetObjectRecordType>ContractLifecycleManagement</targetObjectRecordType>
+    <useCaseType>ContractCreationOrUpdation</useCaseType>
+</ContextUseCaseMapping>

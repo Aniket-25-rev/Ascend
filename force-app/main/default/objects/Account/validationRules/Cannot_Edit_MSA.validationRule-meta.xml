@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Edit_MSA</fullName>
+    <active>false</active>
+    <description>If not SF Admin, cannot edit &quot;MSA #&quot;
+
+JIRA Ticket:
+AEOM-91</description>
+    <errorConditionFormula>AND(
+ ISCHANGED( MSAno__c ),
+ $User.Profile_Name__c  != &apos;System Administrator&apos;,
+ NOT( $Permission.BypassValidationRules )
+)</errorConditionFormula>
+    <errorDisplayField>MSAno__c</errorDisplayField>
+    <errorMessage>&quot;Salesforce Administrator&quot; access required to edit this field</errorMessage>
+</ValidationRule>

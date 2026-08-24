@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BD_Case_Closed_Enhancment</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISBLANK( Case_Resolution__c ) 
+&amp;&amp;  IsClosed 
+&amp;&amp;  ISPICKVAL(Reason , &apos;Enhancement&apos;)
+&amp;&amp; NOT($Permission.BypassValidationRules)</errorConditionFormula>
+    <errorDisplayField>Case_Resolution__c</errorDisplayField>
+    <errorMessage>When Case Reason is Enhancement you must complete the Case Resolution field before closing the case.</errorMessage>
+</ValidationRule>

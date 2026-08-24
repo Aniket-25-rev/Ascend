@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ContactRoleRequired</fullName>
+    <active>true</active>
+    <description>At least one Contact Role is required before moving Opportunity to Contract.</description>
+    <errorConditionFormula>AND(
+    ContactRole__c = False,
+    Probability &gt;= 0.35,
+				NOT(ISPICKVAL(StageName, &apos;Churn Likely&apos;)),
+				CloseDate &gt;= DATE(2022,8,9),
+			 NOT(ISNEW()),
+    NOT($Permission.BypassValidationRules)
+)</errorConditionFormula>
+    <errorMessage>At least one Contact Role is required before moving Opportunity to Analyze or Greater Probability.</errorMessage>
+</ValidationRule>

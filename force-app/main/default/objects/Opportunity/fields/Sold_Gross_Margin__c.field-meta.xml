@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sold_Gross_Margin__c</fullName>
+    <description>Percent field used to capture the Opportunity&apos;s &quot;Sold Gross Margin&quot;
+
+Case/Ticket:
+#00015044</description>
+    <inlineHelpText>TCV Deal Margin percentage from pricing tool output page, required on Core Managed Services opps</inlineHelpText>
+    <label>Expected Deal Margin</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MRR_Incremental__c</fullName>
+    <formula>If (OR(ISPICKVAL(  Opportunity.Type, &quot;Existing Business&quot;), ISPICKVAL(  Opportunity.Type, &quot;New Business&quot;)), 0,  UnitPrice -  Existing_MRR__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>If type is not New Project 
+MRR - Existing MRR</inlineHelpText>
+    <label>MRR Incremental</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Currency</type>
+</CustomField>

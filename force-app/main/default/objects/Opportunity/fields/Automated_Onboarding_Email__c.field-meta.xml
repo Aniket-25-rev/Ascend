@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Automated_Onboarding_Email__c</fullName>
+    <description>Adding this field allows for automation of onboarding emails to be sent from HubSpot one business day after a deal is closed won, leading to a positive client experience, taking the initial task off of the onboarding team.
+
+Case/Ticket: 
+#00016004</description>
+    <inlineHelpText>Please select the onboarding email that will automatically be sent to all associated opportunity contacts one business day after this deal is Closed Won.</inlineHelpText>
+    <label>Automated Onboarding Email</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New Logo Managed Services</fullName>
+                <default>false</default>
+                <label>New Logo Managed Services</label>
+            </value>
+            <value>
+                <fullName>New Logo Professional Services</fullName>
+                <default>false</default>
+                <label>New Logo Professional Services</label>
+            </value>
+            <value>
+                <fullName>New Logo Managed &amp; Professional Services</fullName>
+                <default>false</default>
+                <label>New Logo Managed &amp; Professional Services</label>
+            </value>
+            <value>
+                <fullName>Existing Client Upsell</fullName>
+                <default>false</default>
+                <label>Existing Client Upsell</label>
+            </value>
+            <value>
+                <fullName>None - Exclude Onboarding Email</fullName>
+                <default>false</default>
+                <label>None - Exclude Onboarding Email</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>First_Call__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Is this the first call to this lead?</inlineHelpText>
+    <label>First Call</label>
+    <type>Checkbox</type>
+</CustomField>

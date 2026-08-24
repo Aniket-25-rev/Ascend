@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <agentDSLEnabled>true</agentDSLEnabled>
+    <agentTemplate>sales_einstein_coach_copilot__Sales_Coach_Agent</agentTemplate>
+    <agentType>SalesEinsteinCoach</agentType>
+    <botMlDomain>
+        <label>Agentforce Sales Coach</label>
+        <name>Agentforce_Sales_Coach</name>
+    </botMlDomain>
+    <botSource>None</botSource>
+    <botUser>brachel7@vt.edu</botUser>
+    <description>Empower reps to build their skills with AI-powered targeted coaching. Agentforce Sales Coach delivers personalized, actionable, and contextual feedback on presentations and role-play sessions.</description>
+    <label>Agentforce Sales Coach</label>
+    <logPrivateConversationData>false</logPrivateConversationData>
+    <richContentEnabled>true</richContentEnabled>
+    <sessionTimeout>0</sessionTimeout>
+    <type>ExternalCopilot</type>
+</Bot>

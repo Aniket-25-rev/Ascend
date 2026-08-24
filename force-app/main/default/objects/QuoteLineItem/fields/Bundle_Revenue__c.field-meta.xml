@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bundle_Revenue__c</fullName>
+    <description>Calculates the price per unit for the bundle by dividing the MSRP Total by the Quote Line Item Quantity.</description>
+    <formula>Bundle_Parent_Quantiy__c  *  Total_Per_User_Per_SKU__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Bundle Revenue</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

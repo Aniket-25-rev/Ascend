@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Referral_Secondary__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>A secondary field to &apos;Referral Primary&apos; to allow for additional situations where two levels of referral detail needs to be captured</description>
+    <label>Referral Secondary</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Account Secondary Referrals</relationshipLabel>
+    <relationshipName>AccountReferrals2</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

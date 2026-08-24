@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Renew_Increase__c</fullName>
+    <description>Stores the percentage increase for renewals. This value is carried from the Order to the Contract and is used to determine the uplift applied during the renewal process.</description>
+    <label>Auto Renew % Increase</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

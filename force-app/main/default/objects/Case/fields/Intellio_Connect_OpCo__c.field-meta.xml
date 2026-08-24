@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Intellio_Connect_OpCo__c</fullName>
+    <inlineHelpText>Use this field to identify the specific OpCo the case will impact. Use ALL if the change impacts all OpCo&apos;s.</inlineHelpText>
+    <label>Intellio Connect OpCo</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>PHI</fullName>
+                <default>false</default>
+                <label>PHI</label>
+            </value>
+            <value>
+                <fullName>PECO</fullName>
+                <default>false</default>
+                <label>PECO</label>
+            </value>
+            <value>
+                <fullName>BGE</fullName>
+                <default>false</default>
+                <label>BGE</label>
+            </value>
+            <value>
+                <fullName>COMED</fullName>
+                <default>false</default>
+                <label>COMED</label>
+            </value>
+            <value>
+                <fullName>DG Rebate</fullName>
+                <default>false</default>
+                <label>DG Rebate</label>
+            </value>
+            <value>
+                <fullName>ALL</fullName>
+                <default>false</default>
+                <label>ALL</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OriginalActionType__c</fullName>
+    <description>Identifies the original Quote action type, such as New, Amendment, or Renewal. This field is used by Product Constraints to evaluate quote-specific rules in Constraint Model Language (CML)</description>
+    <externalId>false</externalId>
+    <formula>TEXT(OriginalActionType)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>OriginalActionType</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

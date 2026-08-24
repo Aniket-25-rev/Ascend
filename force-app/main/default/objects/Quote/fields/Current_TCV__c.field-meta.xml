@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Current_TCV__c</fullName>
+    <description>CURRENT set. Written by FinancialMetricsService from this quote own lines. For an amendment these are deltas, so they can be negative.</description>
+    <inlineHelpText>CURRENT set. Written by FinancialMetricsService from this quote own lines. For an amendment these are deltas, so they can be negative.</inlineHelpText>
+    <label>Current TCV</label>
+    <precision>16</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

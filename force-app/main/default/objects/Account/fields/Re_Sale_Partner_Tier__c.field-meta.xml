@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Re_Sale_Partner_Tier__c</fullName>
+    <inlineHelpText>Only select a tier if Channel Type is Resale Partner</inlineHelpText>
+    <label>Partner Tier</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Silver Partner</fullName>
+                <default>false</default>
+                <label>Silver Partner</label>
+            </value>
+            <value>
+                <fullName>Gold Partner</fullName>
+                <default>false</default>
+                <label>Gold Partner</label>
+            </value>
+            <value>
+                <fullName>Platinum Partner</fullName>
+                <default>false</default>
+                <label>Platinum Partner</label>
+            </value>
+            <value>
+                <fullName>Custom Partner</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Custom Partner</label>
+            </value>
+            <value>
+                <fullName>Partner</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Partner</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invoice_Date_at_Close__c</fullName>
+    <description>Holds the last invoice date when the latest opportunity is close. This is used in the Status and Type calculations.</description>
+    <label>Invoice Date at Close</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

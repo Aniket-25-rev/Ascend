@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Version__c</fullName>
+    <inlineHelpText>Select the applicable SOW version from the drop down list.</inlineHelpText>
+    <label>Contract Version</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Ascend 2.8</fullName>
+                <default>false</default>
+                <label>Ascend 2.8</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.7</fullName>
+                <default>false</default>
+                <label>Ascend 2.7</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.6</fullName>
+                <default>false</default>
+                <label>Ascend 2.6</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.5</fullName>
+                <default>false</default>
+                <label>Ascend 2.5</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.4</fullName>
+                <default>false</default>
+                <label>Ascend 2.4</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.3</fullName>
+                <default>false</default>
+                <label>Ascend 2.3</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.2</fullName>
+                <default>false</default>
+                <label>Ascend 2.2</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.1</fullName>
+                <default>false</default>
+                <label>Ascend 2.1</label>
+            </value>
+            <value>
+                <fullName>Ascend 2.0</fullName>
+                <default>false</default>
+                <label>Ascend 2.0</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.9</fullName>
+                <default>false</default>
+                <label>Ascend 1.9</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.8</fullName>
+                <default>false</default>
+                <label>Ascend 1.8</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.7</fullName>
+                <default>false</default>
+                <label>Ascend 1.7</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.6</fullName>
+                <default>false</default>
+                <label>Ascend 1.6</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.5</fullName>
+                <default>false</default>
+                <label>Ascend 1.5</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.4</fullName>
+                <default>false</default>
+                <label>Ascend 1.4</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.3</fullName>
+                <default>false</default>
+                <label>Ascend 1.3</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.2</fullName>
+                <default>false</default>
+                <label>Ascend 1.2</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.1</fullName>
+                <default>false</default>
+                <label>Ascend 1.1</label>
+            </value>
+            <value>
+                <fullName>Ascend 1.0</fullName>
+                <default>false</default>
+                <label>Ascend 1.0</label>
+            </value>
+            <value>
+                <fullName>Ascend-branded NvYA</fullName>
+                <default>false</default>
+                <label>Ascend-branded NvYA</label>
+            </value>
+            <value>
+                <fullName>Ascend-branded Edafio</fullName>
+                <default>false</default>
+                <label>Ascend-branded Edafio</label>
+            </value>
+            <value>
+                <fullName>Ascend Legacy</fullName>
+                <default>false</default>
+                <label>Ascend Legacy</label>
+            </value>
+            <value>
+                <fullName>Ascend Resale</fullName>
+                <default>false</default>
+                <label>Ascend Resale</label>
+            </value>
+            <value>
+                <fullName>Switchfast</fullName>
+                <default>false</default>
+                <label>Switchfast</label>
+            </value>
+            <value>
+                <fullName>Stratosphere</fullName>
+                <default>false</default>
+                <label>Stratosphere</label>
+            </value>
+            <value>
+                <fullName>Peters</fullName>
+                <default>false</default>
+                <label>Peters</label>
+            </value>
+            <value>
+                <fullName>NvYA</fullName>
+                <default>false</default>
+                <label>NvYA</label>
+            </value>
+            <value>
+                <fullName>Infogressive</fullName>
+                <default>false</default>
+                <label>Infogressive</label>
+            </value>
+            <value>
+                <fullName>Infogressive Resale</fullName>
+                <default>false</default>
+                <label>Infogressive Resale</label>
+            </value>
+            <value>
+                <fullName>Edafio</fullName>
+                <default>false</default>
+                <label>Edafio</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

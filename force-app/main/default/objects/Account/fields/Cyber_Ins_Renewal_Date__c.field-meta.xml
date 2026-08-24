@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cyber_Ins_Renewal_Date__c</fullName>
+    <description>Date field used to capture the &quot;Cyber Insurance Renewal Date&quot; for the Edafio merger
+
+JIRA Ticket:
+AEOM-61</description>
+    <inlineHelpText>What is their Cyber insurance renewal date?</inlineHelpText>
+    <label>Cyber Ins Renewal Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

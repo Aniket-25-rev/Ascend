@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextUseCaseMapping xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contextDefinitionName>ContractsContextDefinition__stdctx</contextDefinitionName>
+    <mappingName>QuoteToCntrPersistenceMapping</mappingName>
+    <mappingType>Persistence</mappingType>
+    <masterLabel>Quote_Persistence_1778753220947</masterLabel>
+    <referenceObjectName>Quote</referenceObjectName>
+    <targetObjectCustomFieldName>SourceQuoteId</targetObjectCustomFieldName>
+    <targetObjectName>Contract</targetObjectName>
+    <targetObjectRecordType>Standard</targetObjectRecordType>
+    <useCaseType>ContractCreationOrUpdation</useCaseType>
+</ContextUseCaseMapping>

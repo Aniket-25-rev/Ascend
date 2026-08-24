@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ConnectWise_Integration__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox field created to capture &quot;ConnectWise Integration&quot; from the Edafio data migration.  Any Opp with a Record Type of Product automatically needs that box checked for the fields we are pushing to CW.
+
+JIRA Ticket:
+AEOM-63</description>
+    <inlineHelpText>This is automatically checked if opportunity is product or if the legacy Edafio pricebook is used</inlineHelpText>
+    <label>ConnectWise Integration</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

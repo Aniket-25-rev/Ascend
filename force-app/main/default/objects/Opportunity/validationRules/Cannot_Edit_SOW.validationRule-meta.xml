@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Edit_SOW</fullName>
+    <active>true</active>
+    <description>If not SF Admin, cannot edit &quot;SOW #&quot;
+
+JIRA Ticket:
+AEOM-91</description>
+    <errorConditionFormula>AND(
+ NOT(ISBLANK(PRIORVALUE(SOW__c))),
+ ISCHANGED( SOW__c ),
+ $User.Profile_Name__c  != &apos;System Administrator&apos;,
+ NOT( $Permission.BypassValidationRules ),
+ NOT(ISCHANGED(StageName) &amp;&amp; ISPICKVAL(StageName,&quot;Propose&quot;))
+)</errorConditionFormula>
+    <errorDisplayField>SOW__c</errorDisplayField>
+    <errorMessage>&quot;Salesforce Administrator&quot; access required to edit this field</errorMessage>
+</ValidationRule>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BDR_Notes_for_Non_Approval</fullName>
+    <active>true</active>
+    <description>Requires Notes be competed if BDR Appointment not Approved</description>
+    <errorConditionFormula>AND(TEXT(BDR_Appointment_Approved__c) = &apos;False&apos;, ISBLANK(BDR_Approval_Notes__c))</errorConditionFormula>
+    <errorMessage>BDR Approval Notes Required if Appointment Approval is False</errorMessage>
+</ValidationRule>

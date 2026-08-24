@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Client_Status__c</fullName>
+    <inlineHelpText>Indicates if the Account is a Client of Ascend or not.</inlineHelpText>
+    <label>Client Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Channel - Customer Of</fullName>
+                <default>false</default>
+                <label>Channel - Customer Of</label>
+            </value>
+            <value>
+                <fullName>Channel - Lost Partner</fullName>
+                <default>false</default>
+                <label>Channel - Lost Partner</label>
+            </value>
+            <value>
+                <fullName>Channel - Partner</fullName>
+                <default>false</default>
+                <label>Channel - Partner</label>
+            </value>
+            <value>
+                <fullName>Channel - Prospect</fullName>
+                <default>false</default>
+                <label>Channel - Prospect</label>
+            </value>
+            <value>
+                <fullName>Client</fullName>
+                <default>false</default>
+                <label>Client</label>
+            </value>
+            <value>
+                <fullName>Former Client</fullName>
+                <default>false</default>
+                <label>Former Client</label>
+            </value>
+            <value>
+                <fullName>Integrator</fullName>
+                <default>false</default>
+                <label>Integrator</label>
+            </value>
+            <value>
+                <fullName>Prospect</fullName>
+                <default>false</default>
+                <label>Prospect</label>
+            </value>
+            <value>
+                <fullName>Reseller</fullName>
+                <default>false</default>
+                <label>Reseller</label>
+            </value>
+            <value>
+                <fullName>Supplier</fullName>
+                <default>false</default>
+                <label>Supplier</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

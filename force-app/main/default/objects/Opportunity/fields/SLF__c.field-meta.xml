@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SLF__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox field used to capture if opportunity should be included in a sales leader&apos;s forecast
+
+Case/Ticket:
+#00015884</description>
+    <inlineHelpText>Sales Leader Forecast - for use by sales leaders to include opportunities in forecasts</inlineHelpText>
+    <label>SLF</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

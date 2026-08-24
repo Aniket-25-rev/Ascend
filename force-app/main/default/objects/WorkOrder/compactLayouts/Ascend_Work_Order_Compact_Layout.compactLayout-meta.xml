@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ascend_Work_Order_Compact_Layout</fullName>
+    <fields>Subject</fields>
+    <fields>RecordTypeId</fields>
+    <fields>Request_Type__c</fields>
+    <fields>Resource_Type__c</fields>
+    <fields>Status</fields>
+    <fields>Assignee__c</fields>
+    <label>Ascend Work Order Compact Layout</label>
+</CompactLayout>

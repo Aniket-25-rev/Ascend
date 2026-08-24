@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingOwnerRules>
+        <fullName>Share_Internal_users_with_Portal_users</fullName>
+        <accessLevel>Read</accessLevel>
+        <label>Share Internal users with Portal users</label>
+        <sharedTo>
+            <roleAndSubordinates>AscendLeadership</roleAndSubordinates>
+        </sharedTo>
+        <sharedFrom>
+            <roleAndSubordinatesInternal>AscendLeadership</roleAndSubordinatesInternal>
+        </sharedFrom>
+    </sharingOwnerRules>
+</SharingRules>

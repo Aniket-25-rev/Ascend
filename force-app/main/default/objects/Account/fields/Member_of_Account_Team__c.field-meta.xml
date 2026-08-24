@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Member_of_Account_Team__c</fullName>
+    <description>User is a member of the account team</description>
+    <formula>CONTAINS( Account_Team__c ,  $User.FirstName &amp; &apos; &apos; &amp;  $User.LastName   )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Member of Account Team</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

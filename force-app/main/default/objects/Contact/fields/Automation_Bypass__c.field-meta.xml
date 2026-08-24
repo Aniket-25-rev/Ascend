@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Automation_Bypass__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Used in the Contact Deduplication Process. This bypasses the contact general automation. This is only visible for System Admins and will be gone once deduplication is done.</inlineHelpText>
+    <label>Automation Bypass</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

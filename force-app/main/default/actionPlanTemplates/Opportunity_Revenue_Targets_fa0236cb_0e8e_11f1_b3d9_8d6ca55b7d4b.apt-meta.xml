@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionPlanTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Define tasks &amp; events for achieving the sales goals</description>
+    <isAdHocItemCreationEnabled>false</isAdHocItemCreationEnabled>
+    <name>Opportunity Revenue Targets</name>
+    <status>Final</status>
+    <targetEntityType>AccountPlanObjective</targetEntityType>
+    <uniqueName>Opportunity_Revenue_Targets_fa0236cb_0e8e_11f1_b3d9_8d6ca55b7d4b</uniqueName>
+</ActionPlanTemplate>

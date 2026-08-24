@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trainings_Completed__c</fullName>
+    <label>Trainings Completed</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Admin Handoff Documentation</fullName>
+                <default>false</default>
+                <label>Admin Handoff Documentation</label>
+            </value>
+            <value>
+                <fullName>Config Workbook</fullName>
+                <default>false</default>
+                <label>Config Workbook</label>
+            </value>
+            <value>
+                <fullName>Data Model/ERD</fullName>
+                <default>false</default>
+                <label>Data Model/ERD</label>
+            </value>
+            <value>
+                <fullName>Discovery Sessions – Business Process Review</fullName>
+                <default>false</default>
+                <label>Discovery Sessions – Business Process Review</label>
+            </value>
+            <value>
+                <fullName>Functional Solution Design Document</fullName>
+                <default>false</default>
+                <label>Functional Solution Design Document</label>
+            </value>
+            <value>
+                <fullName>How to populate Change Log &amp; Deployment Template</fullName>
+                <default>false</default>
+                <label>How to populate Change Log &amp; Deployment Template</label>
+            </value>
+            <value>
+                <fullName>JIRA</fullName>
+                <default>false</default>
+                <label>JIRA</label>
+            </value>
+            <value>
+                <fullName>Process Flows</fullName>
+                <default>false</default>
+                <label>Process Flows</label>
+            </value>
+            <value>
+                <fullName>Project Lead</fullName>
+                <default>false</default>
+                <label>Project Lead</label>
+            </value>
+            <value>
+                <fullName>Test Scenarios</fullName>
+                <default>false</default>
+                <label>Test Scenarios</label>
+            </value>
+            <value>
+                <fullName>User Story Template</fullName>
+                <default>false</default>
+                <label>User Story Template</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>3</visibleLines>
+</CustomField>

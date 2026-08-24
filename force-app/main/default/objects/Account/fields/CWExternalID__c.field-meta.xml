@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CWExternalID__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>&quot;Text&quot; field used to capture the &quot;ConnectWise External Id&quot; for the Edafio merger
+
+JIRA Ticket:
+AEOM-61</description>
+    <externalId>true</externalId>
+    <label>CWExternalID</label>
+    <length>100</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

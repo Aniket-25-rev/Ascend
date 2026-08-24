@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextUseCaseMapping xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contextDefinitionName>Ascend_ContractsContextDef</contextDefinitionName>
+    <mappingName>QuoteToCntrHydrationMapping</mappingName>
+    <mappingType>Hydration</mappingType>
+    <masterLabel>Quote_Hydration_1779794058136</masterLabel>
+    <referenceObjectName>Quote</referenceObjectName>
+    <targetObjectName>Contract</targetObjectName>
+    <targetObjectRecordType>ContractLifecycleManagement</targetObjectRecordType>
+    <useCaseType>ContractCreationOrUpdation</useCaseType>
+</ContextUseCaseMapping>

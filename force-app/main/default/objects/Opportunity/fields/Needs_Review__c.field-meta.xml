@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Needs_Review__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Check this when the Opportunity and Service Lines are ready to be reviewed before moving to Win.</inlineHelpText>
+    <label>Needs Review</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

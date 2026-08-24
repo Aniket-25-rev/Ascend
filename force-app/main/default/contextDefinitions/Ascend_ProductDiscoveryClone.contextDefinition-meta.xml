@@ -335,6 +335,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>id</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -347,6 +348,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>AccountId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -359,6 +361,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ContactId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -371,6 +374,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CurrencyIsoCode</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -391,6 +395,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CatalogId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -403,6 +408,7 @@
                 <dataType>date</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CurrentDate</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -423,6 +429,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>id__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -435,6 +442,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Name__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -447,6 +455,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>DisplayName__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -459,6 +468,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Description__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -471,6 +481,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>TermsAndConditions__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -483,6 +494,7 @@
                 <dataType>datetime</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>StartDateTime__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -495,6 +507,7 @@
                 <dataType>datetime</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>EndDateTime__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -507,6 +520,7 @@
                 <dataType>number</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PriorityNumber__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -519,6 +533,7 @@
                 <dataType>boolean</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsAutomatic__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -531,6 +546,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CouponCode__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -551,6 +567,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CategoryId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -563,6 +580,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsCategoryQualified</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -575,6 +593,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CategoryDisqualifiedReason</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -585,6 +604,7 @@
                 <domainSet>Catalog</domainSet>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -605,6 +625,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PromotionProductId__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -615,6 +636,7 @@
                 <domainSet>Promotion__std</domainSet>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -635,6 +657,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PromotionCategoryId__std</title>
                 <transient>true</transient>
                 <value>false</value>
@@ -645,6 +668,7 @@
                 <domainSet>Promotion__std</domainSet>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -665,6 +689,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Id</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -677,6 +702,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -689,6 +715,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>RootProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -701,6 +728,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -713,6 +741,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CategoryId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -722,6 +751,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>CatalogId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -731,6 +761,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Name</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -740,6 +771,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Code</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -749,6 +781,7 @@
                 <dataType>number</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>MaxQuantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -758,6 +791,7 @@
                 <dataType>number</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>MinQuantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -767,6 +801,7 @@
                 <dataType>number</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Quantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -779,6 +814,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsQualified</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -791,6 +827,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Reason</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -803,6 +840,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>AdditionalProductInformation</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -813,6 +851,7 @@
                 <domainSet>Category</domainSet>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -825,6 +864,7 @@
                 <dataType>picklist</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>Productlifecyclestatus</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -845,6 +885,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -857,6 +898,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingProductId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -869,6 +911,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductSellingModelId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -881,6 +924,7 @@
                 <dataType>number</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ProductQuantity</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -893,6 +937,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricebookId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -905,6 +950,7 @@
                 <dataType>string</dataType>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingCurrencyCode</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -917,6 +963,7 @@
                 <dataType>currency</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>UnitPrice</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -929,6 +976,7 @@
                 <dataType>boolean</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>IsDerived</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -941,6 +989,7 @@
                 <dataType>currency</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>NetUnitPrice</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -953,6 +1002,7 @@
                 <dataType>currency</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>SubTotal</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -965,6 +1015,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PriceBookEntryId</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -977,6 +1028,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PriceWaterFall</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -989,6 +1041,7 @@
                 <dataType>string</dataType>
                 <fieldType>output</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>PricingErrorMessage</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1001,6 +1054,7 @@
                 <dataType>string</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>AdditionalPricingInformation</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1011,6 +1065,7 @@
                 <domainSet>Category</domainSet>
                 <fieldType>input</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>ParentReference</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1031,6 +1086,7 @@
                 <dataType>picklist</dataType>
                 <fieldType>inputoutput</fieldType>
                 <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
                 <title>OriginalActionType</title>
                 <transient>false</transient>
                 <value>false</value>
@@ -1051,6 +1107,8 @@
     <description>Context definition to map product discovery entities.</description>
     <hasSystemTags>false</hasSystemTags>
     <isProtected>false</isProtected>
+    <isTransformationEnabled>false</isTransformationEnabled>
     <masterLabel>Ascend_ProductDiscoveryClone</masterLabel>
+    <releaseVersion>262.13.10</releaseVersion>
     <title>Ascend_ProductDiscoveryClone</title>
 </ContextDefinition>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>fxCurrentWeekEndDate__c</fullName>
+    <description>Calculates the current week&apos;s end date; leveraged in Utilization reports</description>
+    <formula>CASE(WEEKDAY(TODAY()),
+1, TODAY()+6,
+2, TODAY()+5,
+3, TODAY()+4,
+4, TODAY()+3,
+5, TODAY()+2,
+6, TODAY()+1,
+TODAY())</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Current Week End Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

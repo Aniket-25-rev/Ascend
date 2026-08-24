@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Entitlement_Cap_Exceeded</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Entitlement_Quantity__c)),
+    Entitlement_Quantity__c &gt; Quantity
+)</errorConditionFormula>
+    <errorMessage>Entitlement Quantity cannot exceed the bundled quantity in Core Support. Add the additional units as a separate standalone product, then reset Entitlement Quantity to match the Quantity.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Automation</fullName>
+        <default>false</default>
+        <label>Automation</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Configuration: Advanced</fullName>
+        <default>false</default>
+        <label>Configuration: Advanced</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Configuration: Basic</fullName>
+        <default>false</default>
+        <label>Configuration: Basic</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Configuration: Cloud Specific</fullName>
+        <default>false</default>
+        <label>Configuration: Cloud Specific</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Custom Development: Apex, VF, LWC</fullName>
+        <default>false</default>
+        <label>Custom Development: Apex, VF, LWC</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Custom Development: Other</fullName>
+        <default>false</default>
+        <label>Custom Development: Other</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Data Migration</fullName>
+        <default>false</default>
+        <label>Data Migration</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Documentation</fullName>
+        <default>false</default>
+        <label>Documentation</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Installed Package Configuration</fullName>
+        <default>false</default>
+        <label>Installed Package Configuration</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Installed Package Customization</fullName>
+        <default>false</default>
+        <label>Installed Package Customization</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Integration - Custom Code</fullName>
+        <default>false</default>
+        <label>Integration - Custom Code</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Integration - ETL Tool</fullName>
+        <default>false</default>
+        <label>Integration - ETL Tool</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Integration - Outlook</fullName>
+        <default>false</default>
+        <label>Integration - Outlook</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Marketing Cloud</fullName>
+        <default>false</default>
+        <label>Marketing Cloud</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Org Health Check</fullName>
+        <default>false</default>
+        <label>Org Health Check</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Record Deletion</fullName>
+        <default>false</default>
+        <label>Record Deletion</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Reports and Dashboards</fullName>
+        <default>false</default>
+        <label>Reports and Dashboards</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Security Configuration</fullName>
+        <default>false</default>
+        <label>Security Configuration</label>
+    </standardValue>
+    <standardValue>
+        <fullName>User Management</fullName>
+        <default>false</default>
+        <label>User Management</label>
+    </standardValue>
+    <standardValue>
+        <fullName>User Permissions</fullName>
+        <default>false</default>
+        <label>User Permissions</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <label>Other</label>
+    </standardValue>
+    <standardValue>
+        <fullName>AlertWarning</fullName>
+        <default>false</default>
+        <label>Alert/Warning</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Bug - System Issue</fullName>
+        <default>false</default>
+        <label>Bug - System Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>DataContent</fullName>
+        <default>false</default>
+        <label>Data/Content</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Defect - Configuration Issue</fullName>
+        <default>false</default>
+        <label>Defect - Configuration Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>ErrorFailure</fullName>
+        <default>false</default>
+        <label>Error/Failure</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Performance Issue</fullName>
+        <default>false</default>
+        <label>Performance Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>New Feature</fullName>
+        <default>false</default>
+        <label>New Feature</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Product Enhancement</fullName>
+        <default>false</default>
+        <label>Product Enhancement</label>
+    </standardValue>
+    <standardValue>
+        <fullName>System Logic</fullName>
+        <default>false</default>
+        <label>System Logic</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Resource Threshold</fullName>
+        <default>false</default>
+        <label>Resource Threshold</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Hypercare</fullName>
+        <default>false</default>
+        <label>Hypercare</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Incorrect/Outdated Application Data</fullName>
+        <default>false</default>
+        <label>Incorrect/Outdated Application Data</label>
+    </standardValue>
+    <standardValue>
+        <fullName>API System Error/Bug</fullName>
+        <default>false</default>
+        <label>API System Error/Bug</label>
+    </standardValue>
+    <standardValue>
+        <fullName>API Client Error</fullName>
+        <default>false</default>
+        <label>API Client Error</label>
+    </standardValue>
+    <standardValue>
+        <fullName>UI Error/Bug</fullName>
+        <default>false</default>
+        <label>UI Error/Bug</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Client-side Issue</fullName>
+        <default>false</default>
+        <label>Client-side Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Database/Infrastructure Error</fullName>
+        <default>false</default>
+        <label>Database/Infrastructure Error</label>
+    </standardValue>
+    <standardValue>
+        <fullName>System Performance Issue</fullName>
+        <default>false</default>
+        <label>System Performance Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Validation/Business Rule Error</fullName>
+        <default>false</default>
+        <label>Validation/Business Rule Error</label>
+    </standardValue>
+    <standardValue>
+        <fullName>User Permissions Issue</fullName>
+        <default>false</default>
+        <label>User Permissions Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>User Login/Authentication Issue</fullName>
+        <default>false</default>
+        <label>User Login/Authentication Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Configuration/Setup Issue</fullName>
+        <default>false</default>
+        <label>Configuration/Setup Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Reporting/Analytics Data Issue</fullName>
+        <default>false</default>
+        <label>Reporting/Analytics Data Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Email/Messaging/Notification Issue</fullName>
+        <default>false</default>
+        <label>Email/Messaging/Notification Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Workflow/Status/Alert Issue</fullName>
+        <default>false</default>
+        <label>Workflow/Status/Alert Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Automation/Batch Processing Issue</fullName>
+        <default>false</default>
+        <label>Automation/Batch Processing Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>External Dependency Issue</fullName>
+        <default>false</default>
+        <label>External Dependency Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>User Training/Usability Issue</fullName>
+        <default>false</default>
+        <label>User Training/Usability Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Full Churn</fullName>
+        <default>false</default>
+        <label>Full Churn</label>
+    </standardValue>
+    <standardValue>
+        <fullName>LOB Churn</fullName>
+        <default>false</default>
+        <label>LOB Churn</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Services Reduction</fullName>
+        <default>false</default>
+        <label>Services Reduction</label>
+    </standardValue>
+</StandardValueSet>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Previous_MRR_Desk__c</fullName>
+    <description>The contract Desk MRR baseline as it stood immediately before the last order activation. Shifted from Current MRR - Desk at activation.</description>
+    <inlineHelpText>The contract Desk MRR baseline as it stood immediately before the last order activation. Shifted from Current MRR - Desk at activation.</inlineHelpText>
+    <label>Previous MRR - Desk</label>
+    <precision>16</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

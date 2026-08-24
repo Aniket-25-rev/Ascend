@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BD_Case_Closed_Issue</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(ISBLANK( Case_Resolution__c )
+			, ISBLANK( Root_Cause_Analysis__c )
+			, ISBLANK( TEXT(Type) ))
+&amp;&amp;  IsClosed 
+&amp;&amp;  ISPICKVAL(Reason , &apos;Issue&apos;)
+&amp;&amp; NOT(ISPICKVAL(Type , &apos;Record Deletion&apos;))
+&amp;&amp; NOT(ISPICKVAL(Type , &apos;User Management&apos;))
+&amp;&amp; NOT($Permission.BypassValidationRules)</errorConditionFormula>
+    <errorDisplayField>Reason</errorDisplayField>
+    <errorMessage>When Case Reason is Issue you must complete the Case Resolution, Root Cause Analysis, and Type fields before closing the case.</errorMessage>
+</ValidationRule>

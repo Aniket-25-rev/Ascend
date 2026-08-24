@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_revert_case_process</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISCHANGED(Status)
+&amp;&amp;
+OR(
+			AND(NOT(ISBLANK(Acknowledge_Date__c)),
+						ISPICKVAL(Status, &apos;New&apos;)),
+			AND(
+							ISPICKVAL(Status, &apos;Backlog&apos;),
+							OR(NOT(ISBLANK(Ready_for_Testing__c)),
+										NOT(ISBLANK(Solution_Provided__c)))),
+			AND(
+							ISPICKVAL(Status, &apos;On Hold&apos;),
+							OR(NOT(ISBLANK(Ready_for_Testing__c)),
+							   NOT(ISBLANK(Solution_Provided__c)))),
+			AND(
+							ISPICKVAL(Status, &apos;Assigned - In Progress&apos;),
+							OR(NOT(ISBLANK(Ready_for_Testing__c)),
+							   NOT(ISBLANK(Solution_Provided__c)))),
+				AND(
+								ISPICKVAL(Status, &apos;Ready to Test&apos;),
+								NOT(ISBLANK(Solution_Provided__c))),
+				AND(
+								ISPICKVAL(Status, &apos;Escalated&apos;),
+								OR(NOT(ISBLANK(Ready_for_Testing__c)),
+								   NOT(ISBLANK(Solution_Provided__c))))
+  )
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $Permission.Operations_Access)</errorConditionFormula>
+    <errorMessage>Please use the Revert Status process to move the status.</errorMessage>
+</ValidationRule>

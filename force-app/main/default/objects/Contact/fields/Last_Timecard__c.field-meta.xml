@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Timecard__c</fullName>
+    <inlineHelpText>The date the last timecard was entered. Can also be updated when the reminder email is sent so that additional reminders are triggered.</inlineHelpText>
+    <label>Last Timecard</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

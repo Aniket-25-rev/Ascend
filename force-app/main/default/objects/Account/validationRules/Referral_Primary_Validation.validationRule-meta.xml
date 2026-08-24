@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Referral_Primary_Validation</fullName>
+    <active>false</active>
+    <description>If Account Source is &apos;Referral Agency&apos;, then the Referral Primary needs to be a Contact associated to an Account with a Channel Type of &apos;Agency&apos;</description>
+    <errorConditionFormula>AND(
+  ISPICKVAL( AccountSource , &apos;Referral - Agency&apos;),
+  NOT(INCLUDES( Referral_Detail__r.Account.Alliance_Type__c, &apos;Agency&apos;)))
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorDisplayField>Referral_Detail__c</errorDisplayField>
+    <errorMessage>If Account Source is &apos;Referral Agency&apos;, then the Referral Primary needs to be a Contact associated to an Account with a Channel Type of &apos;Agency&apos;</errorMessage>
+</ValidationRule>

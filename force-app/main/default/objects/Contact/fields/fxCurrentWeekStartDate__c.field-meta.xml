@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>fxCurrentWeekStartDate__c</fullName>
+    <formula>CASE(WEEKDAY(TODAY()),
+7, TODAY()-6,
+6, TODAY()-5,
+5, TODAY()-4,
+4, TODAY()-3,
+3, TODAY()-2,
+2, TODAY()-1,
+TODAY())</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Calculates the current week&apos;s start date; leveraged in Utilization reports</inlineHelpText>
+    <label>Current Week Start Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

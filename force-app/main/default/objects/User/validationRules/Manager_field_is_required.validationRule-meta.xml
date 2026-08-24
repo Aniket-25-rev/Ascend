@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Manager_field_is_required</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISBLANK( ManagerId ) &amp;&amp;
+IsActive &amp;&amp;
+LastName != &apos;OPENTEST&apos;</errorConditionFormula>
+    <errorMessage>The manager field must be populated with the correct manager to save the record.</errorMessage>
+</ValidationRule>

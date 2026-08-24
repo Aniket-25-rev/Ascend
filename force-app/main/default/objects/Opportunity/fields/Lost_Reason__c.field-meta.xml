@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lost_Reason__c</fullName>
+    <inlineHelpText>Use the multi-select pick list to document the reasons for losing the Opportunity</inlineHelpText>
+    <label>Lost Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Authority - Lack of Buyer Group Support</fullName>
+                <default>false</default>
+                <label>Authority - Lack of Buyer Group Support</label>
+            </value>
+            <value>
+                <fullName>Business Priorities Changed</fullName>
+                <default>false</default>
+                <label>Business Priorities Changed</label>
+            </value>
+            <value>
+                <fullName>Incumbent Relationship</fullName>
+                <default>false</default>
+                <label>Incumbent Relationship</label>
+            </value>
+            <value>
+                <fullName>Internal Delays</fullName>
+                <default>false</default>
+                <label>Internal Delays</label>
+            </value>
+            <value>
+                <fullName>Lack of References</fullName>
+                <default>false</default>
+                <label>Lack of References</label>
+            </value>
+            <value>
+                <fullName>Location Issue</fullName>
+                <default>false</default>
+                <label>Location Issue</label>
+            </value>
+            <value>
+                <fullName>Lost Momentum (Stopped Responding)</fullName>
+                <default>false</default>
+                <label>Lost Momentum (Stopped Responding)</label>
+            </value>
+            <value>
+                <fullName>Management Change/Reorg</fullName>
+                <default>false</default>
+                <label>Management Change/Reorg</label>
+            </value>
+            <value>
+                <fullName>Budget Issue</fullName>
+                <default>false</default>
+                <label>Price - Budget Availability</label>
+            </value>
+            <value>
+                <fullName>Rate/Scope Issue</fullName>
+                <default>false</default>
+                <label>Price - Cost/Rate</label>
+            </value>
+            <value>
+                <fullName>Prospect Not Qualified/ Not Target Customer Profile</fullName>
+                <default>false</default>
+                <label>Prospect Not Qualified/ Not Target Customer Profile</label>
+            </value>
+            <value>
+                <fullName>Referred to Alliance</fullName>
+                <default>false</default>
+                <label>Referred to Alliance</label>
+            </value>
+            <value>
+                <fullName>Experience Issue</fullName>
+                <default>false</default>
+                <label>Relevant Expertise</label>
+            </value>
+            <value>
+                <fullName>Terms of Contract</fullName>
+                <default>false</default>
+                <label>Terms of Contract</label>
+            </value>
+            <value>
+                <fullName>Timeline Expectations</fullName>
+                <default>false</default>
+                <label>Timeline Expectations</label>
+            </value>
+            <value>
+                <fullName>Unable to Provide Service or Solution</fullName>
+                <default>false</default>
+                <label>Unable to Provide Service or Solution</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Client did not have a budget</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Client did not have a budget</label>
+            </value>
+            <value>
+                <fullName>DCS Decided Not to Pursue</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>DCS Decided Not to Pursue</label>
+            </value>
+            <value>
+                <fullName>DCS and client did not gel</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>DCS and client did not gel</label>
+            </value>
+            <value>
+                <fullName>DCS did not have enough experience in industry</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>DCS did not have enough experience in industry</label>
+            </value>
+            <value>
+                <fullName>DCS rate was too high</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>DCS rate was too high</label>
+            </value>
+            <value>
+                <fullName>Decided not to implement any solution.</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Decided not to implement any solution.</label>
+            </value>
+            <value>
+                <fullName>Opportunity became inactive</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Opportunity became inactive</label>
+            </value>
+            <value>
+                <fullName>Unqualified</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Unqualified</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

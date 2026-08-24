@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Need_Approved_Date</fullName>
+    <active>true</active>
+    <description>Need an Approved Date before being able to go past Approved/Rejected</description>
+    <errorConditionFormula>AND(
+    ISBLANK(Approval_Scenario__c),
+    OR(
+        ISPICKVAL(Status, &quot;Approved&quot;),
+        ISPICKVAL(Status, &quot;Presented&quot;),
+        ISPICKVAL(Status, &quot;Accepted&quot;),
+        ISPICKVAL(Status, &quot;Denied&quot;)
+    )
+)</errorConditionFormula>
+    <errorMessage>This Quote needs to be submitted for approval before proceeding</errorMessage>
+</ValidationRule>

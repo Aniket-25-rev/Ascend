@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_Owner__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Used as a background field in a Contact Team flow to take the Relationship Owner User and upload that to Hubspot</description>
+    <label>Relationship Owner Lookup</label>
+    <referenceTo>User</referenceTo>
+    <relationshipName>Contacts1</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Lookup</type>
+</CustomField>

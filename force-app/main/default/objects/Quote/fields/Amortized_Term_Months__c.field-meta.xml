@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Amortized_Term_Months__c</fullName>
+    <description>Number of months the onboarding fee will be amortized</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of months the onboarding fee will be amortized</inlineHelpText>
+    <label>Onboarding Amortized Term (Months)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

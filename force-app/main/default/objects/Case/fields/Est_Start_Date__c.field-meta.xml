@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Est_Start_Date__c</fullName>
+    <description>Expected Date of Engagement / Revenue to Start (or End for Churn)</description>
+    <inlineHelpText>Expected Date of Engagement / Revenue to Start (or End for Churn)</inlineHelpText>
+    <label>Est. Start Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

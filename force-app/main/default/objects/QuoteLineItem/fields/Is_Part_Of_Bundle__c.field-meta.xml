@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Part_Of_Bundle__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the Quote Line Item is part of a product bundle.</description>
+    <label>Is Part Of Bundle</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

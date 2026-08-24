@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Additional_at_or_after_Proposal_ProdOrPS</fullName>
+    <active>true</active>
+    <description>Fields: TCV, Est. Start Date - required at Stage of Propose or later for Product or Professional Services record types
+Case00016020 - removed requirement for Amount to allow negative and zero dollar opps.</description>
+    <errorConditionFormula>AND ( 
+OR( 
+ RecordType.DeveloperName = &apos;True_Up&apos;,
+ RecordType.DeveloperName = &apos;Salesforce_Consulting&apos;
+),
+OR ( 
+ ISPICKVAL(StageName, &quot;Propose&quot;), 
+ ISPICKVAL(StageName, &quot;Contract&quot;),
+ ISPICKVAL(StageName, &quot;Approve&quot;), 
+ ISPICKVAL(StageName, &quot;Closed Won&quot;)
+), 
+ISBLANK( Est_Start_Date__c )
+, ISBLANK( Project__c )
+)
+&amp;&amp; NOT($Permission.BypassValidationRules)
+&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorMessage>The following fields are required to move this Opportunity to the next stage: Estimated Start Date, TCV. (If this is meant to be a zero dollar opportunity then please select Change Order for the Type field.)</errorMessage>
+</ValidationRule>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parent_a0L__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>SFDC_Assignment</label>
+    <referenceTo>SFDC_Assignment__c</referenceTo>
+    <relationshipName>APXT_CongaSign_Transactions</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

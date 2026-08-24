@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Offering_Rollup_Abbr__c</fullName>
+    <description>Used to truncate Service Offering Rollup to Successfully work as criteria for identifying the correct template group on Conga buttons.</description>
+    <externalId>false</externalId>
+    <formula>CASE(SUBSTITUTE(Service_Offering_Rollup__c,&quot; &quot;,&quot;&quot;),
+&quot;Other,Cloud/Infra/Desk&quot;,&quot;Cloud/Infra/Desk&quot;,
+&quot;Cloud/Infra/Desk,Other&quot;,&quot;Cloud/Infra/Desk&quot;,
+&quot;Cloud/Infra/Desk,Cybersecurity&quot;,&quot;CL.CY&quot;,
+&quot;Other,Cloud/Infra/Desk,Cybersecurity&quot;,&quot;CL.CY&quot;,
+&quot;Cloud/Infra/Desk,Other,Cybersecurity&quot;,&quot;CL.CY&quot;,
+&quot;Cloud/Infra/Desk,Cybersecurity,Other&quot;,&quot;CL.CY&quot;,
+&quot;Other,Cybersecurity&quot;,&quot;Cybersecurity&quot;,
+&quot;Cybersecurity,Other&quot;,&quot;Cybersecurity&quot;,
+&quot;Cybersecurity,Cloud/Infra/Desk&quot;,&quot;CL.CY&quot;,
+&quot;Other,Cybersecurity,Cloud/Infra/Desk&quot;,&quot;CL.CY&quot;,
+&quot;Cybersecurity,Other,Cloud/Infra/Desk&quot;,&quot;CL.CY&quot;,
+&quot;Cybersecurity,Cloud/Infra/Desk,Other&quot;,&quot;CL.CY&quot;,
+&quot;Other&quot;,&quot;&quot;,
+&quot;Salesforce/App/Data,Other&quot;,&quot;Salesforce/App/Data&quot;,
+&quot;Other,Salesforce/App/Data&quot;,&quot;Salesforce/App/Data&quot;,
+Service_Offering_Rollup__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Service Offering Rollup Abbr</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

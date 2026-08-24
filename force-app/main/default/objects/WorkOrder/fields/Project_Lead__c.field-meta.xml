@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Lead__c</fullName>
+    <label>Project Manager?</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>No</fullName>
+                <default>false</default>
+                <label>No</label>
+            </value>
+            <value>
+                <fullName>Yes - Previously Trained</fullName>
+                <default>false</default>
+                <label>Yes - Previously Trained</label>
+            </value>
+            <value>
+                <fullName>Yes - Training Needed</fullName>
+                <default>false</default>
+                <label>Yes - Training Needed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

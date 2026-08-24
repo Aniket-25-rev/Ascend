@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Certification_Name__c</fullName>
+    <description>Identifies the specific certification earned or being pursued. Select the official certification name associated with the employee&apos;s credential.</description>
+    <inlineHelpText>Select the certification earned or currently being pursued. If the certification is not listed, select Other (if available) or contact your Salesforce Administrator to have it added.</inlineHelpText>
+    <label>Certification Name</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Product_Area__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Agentblazer Champion</fullName>
+                <default>false</default>
+                <label>Agentblazer Champion</label>
+            </value>
+            <value>
+                <fullName>Agentblazer Innovator</fullName>
+                <default>false</default>
+                <label>Agentblazer Innovator</label>
+            </value>
+            <value>
+                <fullName>Agentblazer Legend</fullName>
+                <default>false</default>
+                <label>Agentblazer Legend</label>
+            </value>
+            <value>
+                <fullName>Agentforce Life Sciences Consultant</fullName>
+                <default>false</default>
+                <label>Agentforce Life Sciences Consultant</label>
+            </value>
+            <value>
+                <fullName>Agentforce Specialist</fullName>
+                <default>false</default>
+                <label>Agentforce Specialist</label>
+            </value>
+            <value>
+                <fullName>AI Associate</fullName>
+                <default>false</default>
+                <label>AI Associate</label>
+            </value>
+            <value>
+                <fullName>Application Architect</fullName>
+                <default>false</default>
+                <label>Application Architect</label>
+            </value>
+            <value>
+                <fullName>Automotive Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Automotive Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>B2B Commerce for Developers Accredited Professional</fullName>
+                <default>false</default>
+                <label>B2B Commerce for Developers Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>B2B Solution Architect</fullName>
+                <default>false</default>
+                <label>B2B Solution Architect</label>
+            </value>
+            <value>
+                <fullName>B2C Commerce Architect</fullName>
+                <default>false</default>
+                <label>B2C Commerce Architect</label>
+            </value>
+            <value>
+                <fullName>B2C Solution Architect</fullName>
+                <default>false</default>
+                <label>B2C Solution Architect</label>
+            </value>
+            <value>
+                <fullName>Business Analyst</fullName>
+                <default>false</default>
+                <label>Business Analyst</label>
+            </value>
+            <value>
+                <fullName>Communications Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Communications Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Consumer Goods Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Consumer Goods Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>CPQ Administrator</fullName>
+                <default>false</default>
+                <label>CPQ Administrator</label>
+            </value>
+            <value>
+                <fullName>CRM Analytics and Einstein Discovery Consultant</fullName>
+                <default>false</default>
+                <label>CRM Analytics and Einstein Discovery Consultant</label>
+            </value>
+            <value>
+                <fullName>Data 360 Consultant</fullName>
+                <default>false</default>
+                <label>Data 360 Consultant</label>
+            </value>
+            <value>
+                <fullName>Education Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Education Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Education Cloud Consultant</fullName>
+                <default>false</default>
+                <label>Education Cloud Consultant</label>
+            </value>
+            <value>
+                <fullName>Energy &amp; Utilities Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Energy &amp; Utilities Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Experience Cloud Consultant</fullName>
+                <default>false</default>
+                <label>Experience Cloud Consultant</label>
+            </value>
+            <value>
+                <fullName>Field Service Consultant</fullName>
+                <default>false</default>
+                <label>Field Service Consultant</label>
+            </value>
+            <value>
+                <fullName>Financial Services Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Financial Services Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Health Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Health Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Heroku Architect</fullName>
+                <default>false</default>
+                <label>Heroku Architect</label>
+            </value>
+            <value>
+                <fullName>HubSpot AEO Fundamentals</fullName>
+                <default>false</default>
+                <label>HubSpot AEO Fundamentals</label>
+            </value>
+            <value>
+                <fullName>HubSpot AI for Business Builders</fullName>
+                <default>false</default>
+                <label>HubSpot AI for Business Builders</label>
+            </value>
+            <value>
+                <fullName>HubSpot AI for Marketers</fullName>
+                <default>false</default>
+                <label>HubSpot AI for Marketers</label>
+            </value>
+            <value>
+                <fullName>HubSpot CMS for Developers</fullName>
+                <default>false</default>
+                <label>HubSpot CMS for Developers</label>
+            </value>
+            <value>
+                <fullName>HubSpot CMS for Marketers</fullName>
+                <default>false</default>
+                <label>HubSpot CMS for Marketers</label>
+            </value>
+            <value>
+                <fullName>HubSpot Content Hub Software</fullName>
+                <default>false</default>
+                <label>HubSpot Content Hub Software</label>
+            </value>
+            <value>
+                <fullName>HubSpot Content Marketing</fullName>
+                <default>false</default>
+                <label>HubSpot Content Marketing</label>
+            </value>
+            <value>
+                <fullName>HubSpot Contextual Marketing</fullName>
+                <default>false</default>
+                <label>HubSpot Contextual Marketing</label>
+            </value>
+            <value>
+                <fullName>HubSpot Digital Advertising</fullName>
+                <default>false</default>
+                <label>HubSpot Digital Advertising</label>
+            </value>
+            <value>
+                <fullName>HubSpot Digital Marketing</fullName>
+                <default>false</default>
+                <label>HubSpot Digital Marketing</label>
+            </value>
+            <value>
+                <fullName>HubSpot Email Marketing Software</fullName>
+                <default>false</default>
+                <label>HubSpot Email Marketing Software</label>
+            </value>
+            <value>
+                <fullName>HubSpot Frictionless Sales</fullName>
+                <default>false</default>
+                <label>HubSpot Frictionless Sales</label>
+            </value>
+            <value>
+                <fullName>HubSpot Growth-Driven Design</fullName>
+                <default>false</default>
+                <label>HubSpot Growth-Driven Design</label>
+            </value>
+            <value>
+                <fullName>HubSpot Implementing AEO with HubSpot</fullName>
+                <default>false</default>
+                <label>HubSpot Implementing AEO with HubSpot</label>
+            </value>
+            <value>
+                <fullName>HubSpot Inbound</fullName>
+                <default>false</default>
+                <label>HubSpot Inbound</label>
+            </value>
+            <value>
+                <fullName>HubSpot Inbound Marketing</fullName>
+                <default>false</default>
+                <label>HubSpot Inbound Marketing</label>
+            </value>
+            <value>
+                <fullName>HubSpot Inbound Marketing Optimization</fullName>
+                <default>false</default>
+                <label>HubSpot Inbound Marketing Optimization</label>
+            </value>
+            <value>
+                <fullName>HubSpot Inbound Sales</fullName>
+                <default>false</default>
+                <label>HubSpot Inbound Sales</label>
+            </value>
+            <value>
+                <fullName>HubSpot Integrating With HubSpot I: Foundations</fullName>
+                <default>false</default>
+                <label>HubSpot Integrating With HubSpot I: Foundations</label>
+            </value>
+            <value>
+                <fullName>HubSpot Marketing Hub Software</fullName>
+                <default>false</default>
+                <label>HubSpot Marketing Hub Software</label>
+            </value>
+            <value>
+                <fullName>HubSpot Operations Hub Software</fullName>
+                <default>false</default>
+                <label>HubSpot Operations Hub Software</label>
+            </value>
+            <value>
+                <fullName>HubSpot Reporting</fullName>
+                <default>false</default>
+                <label>HubSpot Reporting</label>
+            </value>
+            <value>
+                <fullName>HubSpot Revenue Operations</fullName>
+                <default>false</default>
+                <label>HubSpot Revenue Operations</label>
+            </value>
+            <value>
+                <fullName>HubSpot Sales Hub Software</fullName>
+                <default>false</default>
+                <label>HubSpot Sales Hub Software</label>
+            </value>
+            <value>
+                <fullName>HubSpot Sales Management</fullName>
+                <default>false</default>
+                <label>HubSpot Sales Management</label>
+            </value>
+            <value>
+                <fullName>HubSpot SEO</fullName>
+                <default>false</default>
+                <label>HubSpot SEO</label>
+            </value>
+            <value>
+                <fullName>HubSpot Social Media Marketing</fullName>
+                <default>false</default>
+                <label>HubSpot Social Media Marketing</label>
+            </value>
+            <value>
+                <fullName>HubSpot Social Media Marketing II</fullName>
+                <default>false</default>
+                <label>HubSpot Social Media Marketing II</label>
+            </value>
+            <value>
+                <fullName>JavaScript Developer I</fullName>
+                <default>false</default>
+                <label>JavaScript Developer I</label>
+            </value>
+            <value>
+                <fullName>Life Sciences Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Life Sciences Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Manufacturing Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Manufacturing Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Account Engagement Consultant</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Account Engagement Consultant</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Account Engagement Foundations</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Account Engagement Foundations</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Account Engagement Specialist</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Account Engagement Specialist</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Email Specialist</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Email Specialist</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Engagement Administrator</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Engagement Administrator</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Engagement Consultant</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Engagement Consultant</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Engagement Developer</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Engagement Developer</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Engagement Foundations</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Engagement Foundations</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Intelligence Accredited Professional</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Intelligence Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Marketing Cloud Personalization Accredited Professional</fullName>
+                <default>false</default>
+                <label>Marketing Cloud Personalization Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Media Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Media Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>MuleSoft Catalyst Consultant</fullName>
+                <default>false</default>
+                <label>MuleSoft Catalyst Consultant</label>
+            </value>
+            <value>
+                <fullName>MuleSoft Developer I</fullName>
+                <default>false</default>
+                <label>MuleSoft Developer I</label>
+            </value>
+            <value>
+                <fullName>MuleSoft Developer II</fullName>
+                <default>false</default>
+                <label>MuleSoft Developer II</label>
+            </value>
+            <value>
+                <fullName>MuleSoft Integration Foundations</fullName>
+                <default>false</default>
+                <label>MuleSoft Integration Foundations</label>
+            </value>
+            <value>
+                <fullName>MuleSoft Platform Architect</fullName>
+                <default>false</default>
+                <label>MuleSoft Platform Architect</label>
+            </value>
+            <value>
+                <fullName>MuleSoft Platform Integration Architect</fullName>
+                <default>false</default>
+                <label>MuleSoft Platform Integration Architect</label>
+            </value>
+            <value>
+                <fullName>Net Zero Cloud Accredited Professional</fullName>
+                <default>false</default>
+                <label>Net Zero Cloud Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Nonprofit Cloud Consultant</fullName>
+                <default>false</default>
+                <label>Nonprofit Cloud Consultant</label>
+            </value>
+            <value>
+                <fullName>Nonprofit Success Pack Consultant</fullName>
+                <default>false</default>
+                <label>Nonprofit Success Pack Consultant</label>
+            </value>
+            <value>
+                <fullName>OmniStudio Consultant</fullName>
+                <default>false</default>
+                <label>OmniStudio Consultant</label>
+            </value>
+            <value>
+                <fullName>OmniStudio Developer</fullName>
+                <default>false</default>
+                <label>OmniStudio Developer</label>
+            </value>
+            <value>
+                <fullName>Order Management Accredited Professional</fullName>
+                <default>false</default>
+                <label>Order Management Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Platform Administrator</fullName>
+                <default>false</default>
+                <label>Platform Administrator</label>
+            </value>
+            <value>
+                <fullName>Platform Administrator II</fullName>
+                <default>false</default>
+                <label>Platform Administrator II</label>
+            </value>
+            <value>
+                <fullName>Platform App Builder</fullName>
+                <default>false</default>
+                <label>Platform App Builder</label>
+            </value>
+            <value>
+                <fullName>Platform Data Architect</fullName>
+                <default>false</default>
+                <label>Platform Data Architect</label>
+            </value>
+            <value>
+                <fullName>Platform Developer I</fullName>
+                <default>false</default>
+                <label>Platform Developer I</label>
+            </value>
+            <value>
+                <fullName>Platform Developer II</fullName>
+                <default>false</default>
+                <label>Platform Developer II</label>
+            </value>
+            <value>
+                <fullName>Platform Development Lifecycle and Deployment Architect</fullName>
+                <default>false</default>
+                <label>Platform Development Lifecycle and Deployment Architect</label>
+            </value>
+            <value>
+                <fullName>Platform Foundations</fullName>
+                <default>false</default>
+                <label>Platform Foundations</label>
+            </value>
+            <value>
+                <fullName>Platform Identity and Access Management Architect</fullName>
+                <default>false</default>
+                <label>Platform Identity and Access Management Architect</label>
+            </value>
+            <value>
+                <fullName>Platform Integration Architect</fullName>
+                <default>false</default>
+                <label>Platform Integration Architect</label>
+            </value>
+            <value>
+                <fullName>Platform Sharing and Visibility Architect</fullName>
+                <default>false</default>
+                <label>Platform Sharing and Visibility Architect</label>
+            </value>
+            <value>
+                <fullName>Platform Strategy Designer</fullName>
+                <default>false</default>
+                <label>Platform Strategy Designer</label>
+            </value>
+            <value>
+                <fullName>Platform User Experience Designer</fullName>
+                <default>false</default>
+                <label>Platform User Experience Designer</label>
+            </value>
+            <value>
+                <fullName>Public Sector Solutions Accredited Professional</fullName>
+                <default>false</default>
+                <label>Public Sector Solutions Accredited Professional</label>
+            </value>
+            <value>
+                <fullName>Revenue Cloud Consultant</fullName>
+                <default>false</default>
+                <label>Revenue Cloud Consultant</label>
+            </value>
+            <value>
+                <fullName>Sales Cloud Consultant</fullName>
+                <default>false</default>
+                <label>Sales Cloud Consultant</label>
+            </value>
+            <value>
+                <fullName>Service Cloud Consultant</fullName>
+                <default>false</default>
+                <label>Service Cloud Consultant</label>
+            </value>
+            <value>
+                <fullName>Service Hub Software</fullName>
+                <default>false</default>
+                <label>Service Hub Software</label>
+            </value>
+            <value>
+                <fullName>Slack Administrator</fullName>
+                <default>false</default>
+                <label>Slack Administrator</label>
+            </value>
+            <value>
+                <fullName>Slack Consultant</fullName>
+                <default>false</default>
+                <label>Slack Consultant</label>
+            </value>
+            <value>
+                <fullName>Slack Developer</fullName>
+                <default>false</default>
+                <label>Slack Developer</label>
+            </value>
+            <value>
+                <fullName>System Architect</fullName>
+                <default>false</default>
+                <label>System Architect</label>
+            </value>
+            <value>
+                <fullName>Tableau Consultant</fullName>
+                <default>false</default>
+                <label>Tableau Consultant</label>
+            </value>
+            <value>
+                <fullName>Tableau Data Analyst</fullName>
+                <default>false</default>
+                <label>Tableau Data Analyst</label>
+            </value>
+            <value>
+                <fullName>Tableau Desktop Foundations</fullName>
+                <default>false</default>
+                <label>Tableau Desktop Foundations</label>
+            </value>
+            <value>
+                <fullName>Tableau Server Administrator</fullName>
+                <default>false</default>
+                <label>Tableau Server Administrator</label>
+            </value>
+            <value>
+                <fullName>Technical Architect</fullName>
+                <default>false</default>
+                <label>Technical Architect</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Sales Cloud</controllingFieldValue>
+            <valueName>Sales Cloud Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Trailhead</controllingFieldValue>
+            <valueName>Agentblazer Champion</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Trailhead</controllingFieldValue>
+            <valueName>Agentblazer Innovator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Trailhead</controllingFieldValue>
+            <valueName>Agentblazer Legend</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sales Hub</controllingFieldValue>
+            <valueName>HubSpot Frictionless Sales</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sales Hub</controllingFieldValue>
+            <valueName>HubSpot Inbound Sales</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sales Hub</controllingFieldValue>
+            <valueName>HubSpot Sales Hub Software</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sales Hub</controllingFieldValue>
+            <valueName>HubSpot Sales Management</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Service Cloud</controllingFieldValue>
+            <valueName>Service Cloud Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Service Hub</controllingFieldValue>
+            <valueName>Service Hub Software</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Slack</controllingFieldValue>
+            <valueName>Slack Administrator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Slack</controllingFieldValue>
+            <valueName>Slack Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Slack</controllingFieldValue>
+            <valueName>Slack Developer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tableau</controllingFieldValue>
+            <valueName>Tableau Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tableau</controllingFieldValue>
+            <valueName>Tableau Data Analyst</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tableau</controllingFieldValue>
+            <valueName>Tableau Desktop Foundations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tableau</controllingFieldValue>
+            <valueName>Tableau Server Administrator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud Account Engagement</controllingFieldValue>
+            <valueName>Marketing Cloud Account Engagement Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud Account Engagement</controllingFieldValue>
+            <valueName>Marketing Cloud Account Engagement Foundations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud Account Engagement</controllingFieldValue>
+            <valueName>Marketing Cloud Account Engagement Specialist</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Automotive Cloud</controllingFieldValue>
+            <valueName>Automotive Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Communications Cloud</controllingFieldValue>
+            <valueName>Communications Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Education Cloud</controllingFieldValue>
+            <valueName>Education Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Education Cloud</controllingFieldValue>
+            <valueName>Education Cloud Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Consumer Goods Cloud</controllingFieldValue>
+            <valueName>Consumer Goods Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Experience Cloud</controllingFieldValue>
+            <valueName>Experience Cloud Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Energy &amp; Utilities Cloud</controllingFieldValue>
+            <valueName>Energy &amp; Utilities Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Field Service</controllingFieldValue>
+            <valueName>Field Service Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial Services Cloud</controllingFieldValue>
+            <valueName>Financial Services Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Heroku</controllingFieldValue>
+            <valueName>Heroku Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Health Cloud</controllingFieldValue>
+            <valueName>Health Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud</controllingFieldValue>
+            <valueName>Marketing Cloud Email Specialist</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud</controllingFieldValue>
+            <valueName>Marketing Cloud Engagement Administrator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud</controllingFieldValue>
+            <valueName>Marketing Cloud Engagement Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud</controllingFieldValue>
+            <valueName>Marketing Cloud Engagement Developer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Cloud</controllingFieldValue>
+            <valueName>Marketing Cloud Engagement Foundations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Life Sciences</controllingFieldValue>
+            <valueName>Agentforce Life Sciences Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Life Sciences</controllingFieldValue>
+            <valueName>Life Sciences Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Contextual Marketing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Digital Advertising</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Digital Marketing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Email Marketing Software</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Inbound</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Inbound Marketing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Inbound Marketing Optimization</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Marketing Hub Software</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Social Media Marketing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marketing Hub</controllingFieldValue>
+            <valueName>HubSpot Social Media Marketing II</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Manufacturing Cloud</controllingFieldValue>
+            <valueName>Manufacturing Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MuleSoft</controllingFieldValue>
+            <valueName>MuleSoft Catalyst Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MuleSoft</controllingFieldValue>
+            <valueName>MuleSoft Developer I</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MuleSoft</controllingFieldValue>
+            <valueName>MuleSoft Developer II</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MuleSoft</controllingFieldValue>
+            <valueName>MuleSoft Integration Foundations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MuleSoft</controllingFieldValue>
+            <valueName>MuleSoft Platform Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MuleSoft</controllingFieldValue>
+            <valueName>MuleSoft Platform Integration Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Media Cloud</controllingFieldValue>
+            <valueName>Media Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Nonprofit</controllingFieldValue>
+            <valueName>Nonprofit Cloud Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Nonprofit</controllingFieldValue>
+            <valueName>Nonprofit Success Pack Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Net Zero Cloud</controllingFieldValue>
+            <valueName>Net Zero Cloud Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Operations Hub</controllingFieldValue>
+            <valueName>HubSpot Operations Hub Software</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Operations Hub</controllingFieldValue>
+            <valueName>HubSpot Revenue Operations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Business Analyst</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Platform Administrator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Platform Administrator II</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Platform App Builder</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Platform Foundations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Platform Strategy Designer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Platform</controllingFieldValue>
+            <valueName>Platform User Experience Designer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Agentforce</controllingFieldValue>
+            <valueName>Agentforce Specialist</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Agentforce</controllingFieldValue>
+            <valueName>AI Associate</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>AI</controllingFieldValue>
+            <valueName>HubSpot AEO Fundamentals</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>AI</controllingFieldValue>
+            <valueName>HubSpot AI for Business Builders</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>AI</controllingFieldValue>
+            <valueName>HubSpot AI for Marketers</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>AI</controllingFieldValue>
+            <valueName>HubSpot Implementing AEO with HubSpot</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Analytics</controllingFieldValue>
+            <valueName>CRM Analytics and Einstein Discovery Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Analytics</controllingFieldValue>
+            <valueName>HubSpot Reporting</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Application Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>B2B Solution Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>B2C Commerce Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>B2C Solution Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Platform Data Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Platform Development Lifecycle and Deployment Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Platform Identity and Access Management Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Platform Integration Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Platform Sharing and Visibility Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>System Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architecture</controllingFieldValue>
+            <valueName>Technical Architect</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CMS Hub</controllingFieldValue>
+            <valueName>HubSpot CMS for Developers</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CMS Hub</controllingFieldValue>
+            <valueName>HubSpot CMS for Marketers</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CMS Hub</controllingFieldValue>
+            <valueName>HubSpot Growth-Driven Design</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Content Hub</controllingFieldValue>
+            <valueName>HubSpot Content Hub Software</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Content Hub</controllingFieldValue>
+            <valueName>HubSpot Content Marketing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Content Hub</controllingFieldValue>
+            <valueName>HubSpot SEO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Data Cloud</controllingFieldValue>
+            <valueName>Data 360 Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Development</controllingFieldValue>
+            <valueName>HubSpot Integrating With HubSpot I: Foundations</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Development</controllingFieldValue>
+            <valueName>JavaScript Developer I</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Development</controllingFieldValue>
+            <valueName>Platform Developer I</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Development</controllingFieldValue>
+            <valueName>Platform Developer II</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public Sector</controllingFieldValue>
+            <valueName>Public Sector Solutions Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Commerce Cloud</controllingFieldValue>
+            <valueName>B2B Commerce for Developers Accredited Professional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>OmniStudio</controllingFieldValue>
+            <valueName>OmniStudio Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>OmniStudio</controllingFieldValue>
+            <valueName>OmniStudio Developer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Revenue Cloud</controllingFieldValue>
+            <valueName>CPQ Administrator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Revenue Cloud</controllingFieldValue>
+            <valueName>Revenue Cloud Consultant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Order Management</controllingFieldValue>
+            <valueName>Order Management Accredited Professional</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

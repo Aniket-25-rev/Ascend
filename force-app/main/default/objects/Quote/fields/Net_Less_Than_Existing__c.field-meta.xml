@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Net_Less_Than_Existing__c</fullName>
+    <description>True when the quote Net TCV falls below the Existing baseline, which is the revenue loss flag the report filters on.</description>
+    <formula>Net_TCV__c &lt; Existing_TCV__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Net Less Than Existing</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

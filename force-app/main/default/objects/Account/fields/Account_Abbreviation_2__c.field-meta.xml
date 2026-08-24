@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Abbreviation_2__c</fullName>
+    <description>Short abbreviation of the account name</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter a short abbreviation of the account name (15 characters max). Use common company acronyms (Ex. World&apos;s Finest Chocolate; WFC); no special characters.</inlineHelpText>
+    <label>Account Abbreviation</label>
+    <length>15</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

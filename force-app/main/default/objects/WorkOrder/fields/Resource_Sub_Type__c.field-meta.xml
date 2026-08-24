@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resource_Sub_Type__c</fullName>
+    <label>Resource Sub-Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Resource_Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Server/Cloud</fullName>
+                <default>false</default>
+                <label>Server/Cloud</label>
+            </value>
+            <value>
+                <fullName>Network</fullName>
+                <default>false</default>
+                <label>Network</label>
+            </value>
+            <value>
+                <fullName>End User/Desktop</fullName>
+                <default>false</default>
+                <label>End User/Desktop</label>
+            </value>
+            <value>
+                <fullName>Storage</fullName>
+                <default>false</default>
+                <label>Storage</label>
+            </value>
+            <value>
+                <fullName>Virtual Desktop</fullName>
+                <default>false</default>
+                <label>Virtual Desktop</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Architect</controllingFieldValue>
+            <controllingFieldValue>Engineer</controllingFieldValue>
+            <valueName>Server/Cloud</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architect</controllingFieldValue>
+            <controllingFieldValue>Engineer</controllingFieldValue>
+            <valueName>Network</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architect</controllingFieldValue>
+            <controllingFieldValue>Engineer</controllingFieldValue>
+            <valueName>End User/Desktop</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architect</controllingFieldValue>
+            <controllingFieldValue>Engineer</controllingFieldValue>
+            <valueName>Storage</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Architect</controllingFieldValue>
+            <controllingFieldValue>Engineer</controllingFieldValue>
+            <valueName>Virtual Desktop</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

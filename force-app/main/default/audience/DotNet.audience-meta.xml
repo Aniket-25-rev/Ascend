@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Audience xmlns="http://soap.sforce.com/2006/04/metadata">
+    <audienceName>DotNet</audienceName>
+    <container>CustomerSupport</container>
+    <criteria>
+        <criterion>
+            <criteriaNumber>1</criteriaNumber>
+            <criterionValue>
+                <entityField>UserRole.Name</entityField>
+                <entityType>User</entityType>
+                <fieldValue>Chicago Parking Meters</fieldValue>
+            </criterionValue>
+            <operator>Contains</operator>
+            <type>FieldBased</type>
+        </criterion>
+    </criteria>
+    <formulaFilterType>AllCriteriaMatch</formulaFilterType>
+    <isDefaultAudience>false</isDefaultAudience>
+    <targets>
+        <target>
+            <groupName>dd6fb602-f10f-4a3b-b779-8391d767d0d2$#$ec3357b9-ead0-4702-8281-39d7fee10dfd</groupName>
+            <priority>1</priority>
+            <targetType>ExperienceVariation</targetType>
+            <targetValue>Default_Navigation_Menu_Component_Properties</targetValue>
+        </target>
+    </targets>
+</Audience>
