@@ -83,6 +83,30 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     // record directly (page layout, reports, Conga) doesn't go stale.
     // oneTimeMultiplier is the multiplier for the non-amortized (one-time) SKU's
     // formula — most LOBs use 1.5, Private Cloud uses 0.5.
+    //
+    // principalCategories is the set of Product2.Category__c values whose lines
+    // make up that LOB's principal.
+    //
+    // Service Desk, Infrastructure and Cybersecurity sell their recurring work
+    // as Category = 'Services', so that single value is the right filter there.
+    // PRIVATE CLOUD DOES NOT. Its entire catalogue (verified against the org:
+    // every 001-HOST-* SKU) is Licensing, Resources, Informational, Adjustment
+    // or Renewal — the ONLY two Private Cloud products carrying Category =
+    // 'Services' are the two onboarding fee SKUs themselves, which are excluded
+    // from every principal by definition. A 'Services'-only filter therefore
+    // summed nothing for Private Cloud, giving principalAmount = 0,
+    // principalMonthly = 0 and an onboarding fee of 0.00 on every quote.
+    //
+    // Private Cloud uses PRINCIPAL_CATEGORIES_ALL (no category filter) —
+    // "the total amount of all Private Cloud products included on the Quote",
+    // which is exactly how Private_Cloud_Principal_Amount__c describes itself.
+    // If Informational (vCPU / VM count) or Adjustment lines should be kept out
+    // of the figure, narrow it to an explicit set here — it is the only place
+    // the rule lives, and both the pricing pass and the Quote-level Principal
+    // fields read it.
+    private static final Set<String> PRINCIPAL_CATEGORIES_SERVICES = new Set<String>{ 'Services' };
+    private static final Set<String> PRINCIPAL_CATEGORIES_ALL      = null;
+
     private static final List<OnboardingLobConfig> LOB_CONFIGS = new List<OnboardingLobConfig>{
         new OnboardingLobConfig(
             'Service Desk', '001-DESK-SVC-DESK-MONB-001', '001-DESK-SVC-DESK-ONOB-001',
@@ -98,7 +122,8 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         ),
         new OnboardingLobConfig(
             'Private Cloud', '001-HOST-SVC-HOST-MONB-001', '001-HOST-SVC-HOST-ONOB-001',
-            'Private_Cloud_Principal_Amount__c', 'Private_Cloud_Principal_Monthly__c', 0.5
+            'Private_Cloud_Principal_Amount__c', 'Private_Cloud_Principal_Monthly__c', 0.5,
+            PRINCIPAL_CATEGORIES_ALL
         )
     };
 
@@ -121,6 +146,9 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     private static final String HAAS_IMPLEMENTATION_SKU = '001-INFR-SVC-HAAS-IMPL-001';
     private static final Decimal HAAS_IMPL_SELL_RATE    = 223.00;
     private static final Decimal HAAS_IMPL_COST_RATE    = 78.88;
+    private static final Set<String> HAAS_SKUS = new Set<String>{
+        HAAS_HARDWARE_SKU, HAAS_IMPLEMENTATION_SKU
+    };
 
     private static Set<String> buildOnboardingSkuSet() {
         Set<String> skus = new Set<String>();
@@ -235,19 +263,24 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // and the cost side, so numerator and denominator stay on the same
         // population of lines.
         //
-        // HaaS Hardware (ARM-108) is deliberately excluded here — it should
-        // still contribute to MRR/TCV (see the unfiltered mrrLines query
-        // below, which this exclusion does NOT apply to) but never to any
-        // LOB's margin percentage, since it has no defined cost basis. Only
-        // the Hardware SKU is excluded — Implementation still contributes
-        // normally to Onboarding margin.
+        // BOTH HaaS SKUs (ARM-108) are deliberately excluded here — per
+        // explicit instruction, neither Hardware nor Implementation shall
+        // contribute to ANY margin figure (Margin_Infra__c,
+        // Margin_Onboarding__c, or Margin_Total__c — Margin_Total__c is
+        // summed from this same lobMrrSum/lobCostSum, so excluding both
+        // SKUs here covers it too). They still contribute to MRR/TCV as
+        // normal — see the unfiltered mrrLines query below, which this
+        // exclusion does NOT apply to. (Previously only Hardware was
+        // excluded; Implementation's real cost basis was left contributing
+        // to Onboarding margin — that scope was explicitly widened to
+        // exclude both.)
         List<QuoteLineItem> qliList = [
             SELECT Id, Line_of_Business__c, MRR__c, TotalCost
             FROM   QuoteLineItem
             WHERE  QuoteId = :quoteId
             AND    Line_of_Business__c != null
             AND    SellingModelType    != 'OneTime'
-            AND    Product2.StockKeepingUnit != :HAAS_HARDWARE_SKU
+            AND    Product2.StockKeepingUnit NOT IN :HAAS_SKUS
         ];
 
         System.debug('==processMarginUpdate booked QLI count== ' + qliList.size());
@@ -402,17 +435,25 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
             ];
             Decimal contractTermMonths = quoteRec.Contract_Term_Months__c;
 
+            // The category rule is per-LOB (Private Cloud has no Category =
+            // 'Services' products at all — see LOB_CONFIGS), so it is applied
+            // in memory via countsTowardPrincipal rather than as a fixed SOQL
+            // predicate. This must stay in step with buildOnboardingUpdates,
+            // which prices the onboarding fee off the same principal.
             List<QuoteLineItem> principalLines = [
-                SELECT Line_of_Business__c, NetTotalPrice
+                SELECT Line_of_Business__c, NetTotalPrice, Product2.Category__c
                 FROM   QuoteLineItem
                 WHERE  QuoteId                   = :quoteId
-                AND    Product2.Category__c      = 'Services'
                 AND    Product2.StockKeepingUnit NOT IN :ONBOARDING_SKUS
+                AND    Product2.StockKeepingUnit NOT IN :HAAS_SKUS
                 AND    Line_of_Business__c       != null
             ];
 
             Map<String, Decimal> principalByLob = new Map<String, Decimal>();
             for (QuoteLineItem qli : principalLines) {
+                String category = qli.Product2 != null ? qli.Product2.Category__c : null;
+                if (!countsTowardPrincipal(qli.Line_of_Business__c, category)) continue;
+
                 Decimal current = principalByLob.containsKey(qli.Line_of_Business__c)
                     ? principalByLob.get(qli.Line_of_Business__c) : 0;
                 principalByLob.put(
@@ -585,44 +626,73 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
             List<BundleLineData> lines = queryBundleLineData(quoteId);
 
-            // Stamp UnitCost onto any bundle line the pricing engine left
-            // uncosted, using the cost book value. Collected first so it goes
-            // out in the SAME updateContextAttributes call as the margins
-            // below — one round trip, and the field lands on the record.
-            List<Map<String, Object>> updates =
-                buildBundleUnitCostUpdates(lines, salesPathByLineId);
-            Integer unitCostPushes = updates.size();
+            // Cost-book UnitCost for any bundle line the pricing engine left
+            // uncosted, plus that line's margin, are collected into ONE entry
+            // per line rather than two.
+            //
+            // They used to go out as two separate elements of
+            // nodePathAndAttributes naming the SAME nodePath. That is exactly
+            // the shape produced when a bundle and its children are configured
+            // in one save: a freshly configured child has a blank UnitCost (so
+            // it earns a UnitCost push) AND a computable margin (so it earns a
+            // margin push), and the same node then appeared twice in a single
+            // updateContextAttributes call. Merging the attributes into one
+            // node update keeps every value and removes the duplicate.
+            Map<Id, Decimal> unitCostByLine =
+                buildBundleUnitCostByLine(lines, salesPathByLineId);
 
             // One margin per bundle LINE — the parent and each individual child
             // SKU each carry their own figure, not a shared group number.
             Map<Id, Decimal> marginByLine = computeBundleMarginByLine(lines);
-            if (marginByLine.isEmpty() && updates.isEmpty()) {
+            if (marginByLine.isEmpty() && unitCostByLine.isEmpty()) {
                 return 'Bundle margin: nothing to compute';
             }
-            for (Id bundleLineId : marginByLine.keySet()) {
+
+            Set<Id> touchedLineIds = new Set<Id>(unitCostByLine.keySet());
+            touchedLineIds.addAll(marginByLine.keySet());
+
+            List<Map<String, Object>> updates = new List<Map<String, Object>>();
+            Integer unitCostPushes = 0;
+            Integer marginPushes   = 0;
+
+            for (Id bundleLineId : touchedLineIds) {
                 List<Object> salesPath = salesPathByLineId.get(bundleLineId);
                 if (salesPath == null) {
                     System.debug('==Bundle margin SKIPPED== no salesPath for line ' + bundleLineId);
                     continue;
                 }
-                Decimal margin    = marginByLine.get(bundleLineId);
-                Decimal pushValue = clampToMarginField(margin);
-                if (pushValue != margin) {
-                    // Never let an out-of-range value reach the field — it
-                    // would abort the whole pricing pass, not just this line.
-                    System.debug('==Bundle margin CLAMPED== line=' + bundleLineId
-                        + ' actual=' + margin + ' pushed=' + pushValue);
-                }
-                System.debug('==Bundle margin PUSH== line=' + bundleLineId
-                    + ' ' + BUNDLE_MARGIN_CONTEXT_ATTRIBUTE + '=' + pushValue);
 
-                updates.add(buildNodeUpdate(salesPath, new List<List<Object>>{
-                    new List<Object>{
+                List<List<Object>> attrs = new List<List<Object>>();
+
+                if (unitCostByLine.containsKey(bundleLineId)) {
+                    Decimal unitCost = unitCostByLine.get(bundleLineId);
+                    System.debug('==Bundle UnitCost PUSH== line=' + bundleLineId + ' unitCost=' + unitCost);
+                    attrs.add(new List<Object>{ 'UnitCost', 'UnitCost', unitCost });
+                    unitCostPushes++;
+                }
+
+                if (marginByLine.containsKey(bundleLineId)) {
+                    Decimal margin    = marginByLine.get(bundleLineId);
+                    Decimal pushValue = clampToMarginField(margin);
+                    if (pushValue != margin) {
+                        // Never let an out-of-range value reach the field — it
+                        // would abort the whole pricing pass, not just this line.
+                        System.debug('==Bundle margin CLAMPED== line=' + bundleLineId
+                            + ' actual=' + margin + ' pushed=' + pushValue);
+                    }
+                    System.debug('==Bundle margin PUSH== line=' + bundleLineId
+                        + ' ' + BUNDLE_MARGIN_CONTEXT_ATTRIBUTE + '=' + pushValue);
+                    attrs.add(new List<Object>{
                         BUNDLE_MARGIN_CONTEXT_ATTRIBUTE,
                         BUNDLE_MARGIN_CONTEXT_ATTRIBUTE,
                         pushValue
-                    }
-                }));
+                    });
+                    marginPushes++;
+                }
+
+                if (!attrs.isEmpty()) {
+                    updates.add(buildNodeUpdate(salesPath, attrs));
+                }
             }
 
             if (updates.isEmpty()) {
@@ -633,7 +703,7 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                 'contextId'             => contextId,
                 'nodePathAndAttributes' => updates
             });
-            return 'Bundle margin applied to ' + (updates.size() - unitCostPushes)
+            return 'Bundle margin applied to ' + marginPushes
                 + ' line(s), UnitCost stamped on ' + unitCostPushes + ' line(s) via context';
 
         } catch (Exception e) {
@@ -807,34 +877,35 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         return costByProduct;
     }
 
-    // Pushes the cost-book-derived cost back onto each line as UnitCost, so the
-    // QuoteLineItem field is actually populated instead of the value living
+    // The cost-book-derived cost to push back onto each line as UnitCost, so
+    // the QuoteLineItem field is actually populated instead of the value living
     // only inside this transaction. Only lines whose UnitCost was blank AND for
-    // which a cost book value was found are touched — a line the pricing engine
-    // already costed is never overwritten. No DML: this goes out through the
-    // same pricing context as everything else in this hook.
+    // which a cost book value was found are included — a line the pricing engine
+    // already costed is never overwritten. No DML: the caller sends these out
+    // through the same pricing context as everything else in this hook.
+    //
+    // Returns values keyed by line rather than finished node updates, so the
+    // caller can merge them with that line's margin into a SINGLE nodePath
+    // entry — see applyBundleMarginViaContext for why a duplicated nodePath
+    // broke pricing on bundles configured together with their children.
     @TestVisible
-    private static List<Map<String, Object>> buildBundleUnitCostUpdates(
+    private static Map<Id, Decimal> buildBundleUnitCostByLine(
         List<BundleLineData> lines,
         Map<Id, List<Object>> salesPathByLineId
     ) {
-        List<Map<String, Object>> updates = new List<Map<String, Object>>();
+        Map<Id, Decimal> unitCostByLine = new Map<Id, Decimal>();
         for (BundleLineData li : lines) {
             if (!li.costFromCostBook || li.costPrice == null) continue;
             Boolean inBundle = li.isBundleParent == true || li.isPartOfBundle == true;
             if (!inBundle) continue;
 
-            List<Object> salesPath = salesPathByLineId.get(li.lineId);
-            if (salesPath == null) {
+            if (!salesPathByLineId.containsKey(li.lineId)) {
                 System.debug('==Bundle UnitCost SKIPPED== no salesPath for line ' + li.lineId);
                 continue;
             }
-            System.debug('==Bundle UnitCost PUSH== line=' + li.lineId + ' unitCost=' + li.costPrice);
-            updates.add(buildNodeUpdate(salesPath, new List<List<Object>>{
-                new List<Object>{ 'UnitCost', 'UnitCost', li.costPrice }
-            }));
+            unitCostByLine.put(li.lineId, li.costPrice);
         }
-        return updates;
+        return unitCostByLine;
     }
 
     // Pure — returns one margin PER BUNDLE LINE, keyed by that line's own Id.
@@ -1116,6 +1187,10 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // Cybersecurity's principal, Private Cloud lines only feed Private
         // Cloud's principal. Onboarding fee lines themselves (any LOB) are
         // always excluded from every principal sum.
+        //
+        // WHICH lines qualify is also per-LOB, via countsTowardPrincipal — the
+        // three 'Services'-based LOBs and Private Cloud do not share a category
+        // rule. See LOB_CONFIGS for why.
         Map<String, Decimal> principalAmountByLob = new Map<String, Decimal>();
         List<QuoteLineItem> onboardingLines = new List<QuoteLineItem>();
 
@@ -1127,8 +1202,14 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                 continue;
             }
 
+            // Both HaaS SKUs (ARM-108) are explicitly excluded from ever
+            // feeding an onboarding fee principal sum, regardless of their
+            // Category__c value — they must never increase, decrease, or
+            // otherwise impact any onboarding fee amount.
+            if (sku != null && HAAS_SKUS.contains(sku)) continue;
+
             String category = qli.Product2 != null ? qli.Product2.Category__c : null;
-            if (category == 'Services' && qli.Line_of_Business__c != null) {
+            if (countsTowardPrincipal(qli.Line_of_Business__c, category)) {
                 Decimal current = principalAmountByLob.containsKey(qli.Line_of_Business__c)
                     ? principalAmountByLob.get(qli.Line_of_Business__c) : 0;
                 principalAmountByLob.put(
@@ -1217,6 +1298,28 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
         plan.updates = updates;
         return plan;
+    }
+
+    @TestVisible
+    private static OnboardingLobConfig findConfigForLob(String lob) {
+        if (lob == null) return null;
+        for (OnboardingLobConfig cfg : LOB_CONFIGS) {
+            if (cfg.lineOfBusiness == lob) return cfg;
+        }
+        return null;
+    }
+
+    // Does this line count toward its LOB's onboarding principal?
+    // Onboarding fee SKUs and HaaS SKUs are excluded by the callers before they
+    // get here; this decides the category rule, which is per-LOB. An LOB with
+    // no config at all is not an onboarding LOB, so nothing counts for it.
+    @TestVisible
+    private static Boolean countsTowardPrincipal(String lob, String category) {
+        OnboardingLobConfig cfg = findConfigForLob(lob);
+        if (cfg == null) return false;
+        // null principalCategories means "no category filter" (Private Cloud).
+        return cfg.principalCategories == null
+            || (category != null && cfg.principalCategories.contains(category));
     }
 
     @TestVisible
@@ -1655,9 +1758,23 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         @TestVisible String  principalAmountField;
         @TestVisible String  principalMonthlyField;
         @TestVisible Decimal oneTimeMultiplier;
+        // Product2.Category__c values whose lines feed this LOB's principal.
+        // null means "no category filter" — every non-onboarding line of this
+        // LOB counts. See PRINCIPAL_CATEGORIES_SERVICES / _ALL below.
+        @TestVisible Set<String> principalCategories;
+
         OnboardingLobConfig(
             String lineOfBusiness, String monthlySku, String oneTimeSku,
             String principalAmountField, String principalMonthlyField, Decimal oneTimeMultiplier
+        ) {
+            this(lineOfBusiness, monthlySku, oneTimeSku, principalAmountField,
+                 principalMonthlyField, oneTimeMultiplier, PRINCIPAL_CATEGORIES_SERVICES);
+        }
+
+        OnboardingLobConfig(
+            String lineOfBusiness, String monthlySku, String oneTimeSku,
+            String principalAmountField, String principalMonthlyField, Decimal oneTimeMultiplier,
+            Set<String> principalCategories
         ) {
             this.lineOfBusiness        = lineOfBusiness;
             this.monthlySku            = monthlySku;
@@ -1665,6 +1782,7 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
             this.principalAmountField  = principalAmountField;
             this.principalMonthlyField = principalMonthlyField;
             this.oneTimeMultiplier     = oneTimeMultiplier;
+            this.principalCategories   = principalCategories;
         }
     }
 }
