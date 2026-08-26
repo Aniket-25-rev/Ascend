@@ -1088,10 +1088,26 @@ private class QuoteMarginRollupPostHookTest {
     @IsTest
     static void findConfigForSku_oneTimeSku_returnsMatchingConfig() {
         QuoteMarginRollupPostHook.OnboardingLobConfig cfg =
-            QuoteMarginRollupPostHook.findConfigForSku('001-HOST-SVC-HOST-ONOB-001');
+            QuoteMarginRollupPostHook.findConfigForSku('001-CYBR-SVC-CYBR-ONOB-001');
         System.assertNotEquals(null, cfg);
-        System.assertEquals('Private Cloud', cfg.lineOfBusiness);
-        System.assertEquals(0.5, cfg.oneTimeMultiplier);
+        System.assertEquals('Cybersecurity', cfg.lineOfBusiness);
+        System.assertEquals(1.5, cfg.oneTimeMultiplier);
+    }
+
+    // Private Cloud's LOB_CONFIGS entry is commented out, so neither of its
+    // onboarding SKUs resolves to a config any more. This test guards that
+    // disablement — if Private Cloud onboarding is re-enabled, delete it and
+    // restore the Private Cloud assertions above.
+    @IsTest
+    static void findConfigForSku_privateCloudDisabled_returnsNull() {
+        System.assertEquals(
+            null,
+            QuoteMarginRollupPostHook.findConfigForSku('001-HOST-SVC-HOST-ONOB-001')
+        );
+        System.assertEquals(
+            null,
+            QuoteMarginRollupPostHook.findConfigForSku('001-HOST-SVC-HOST-MONB-001')
+        );
     }
 
     // =========================================================

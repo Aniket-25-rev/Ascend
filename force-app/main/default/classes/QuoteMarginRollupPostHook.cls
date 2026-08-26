@@ -119,12 +119,33 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         new OnboardingLobConfig(
             'Cybersecurity', '001-CYBR-SVC-CYBR-MONB-001', '001-CYBR-SVC-CYBR-ONOB-001',
             'Cybersecurity_Principal_Amount__c', 'Cybersecurity_Principal_Monthly__c', 1.5
-        ),
-        new OnboardingLobConfig(
-            'Private Cloud', '001-HOST-SVC-HOST-MONB-001', '001-HOST-SVC-HOST-ONOB-001',
-            'Private_Cloud_Principal_Amount__c', 'Private_Cloud_Principal_Monthly__c', 0.5,
-            PRINCIPAL_CATEGORIES_ALL
         )
+        // =====================================================
+        // PRIVATE CLOUD ONBOARDING — DISABLED
+        // Commenting this entry out switches off every Private Cloud
+        // onboarding behaviour that LOB_CONFIGS drives:
+        //   * no onboarding fee is priced onto 001-HOST-SVC-HOST-MONB-001 or
+        //     001-HOST-SVC-HOST-ONOB-001 — those lines keep whatever the
+        //     Pricing Procedure gives them;
+        //   * Private_Cloud_Principal_Amount__c / _Monthly__c are no longer
+        //     written by applyOnboardingPrincipalsToQuote (they retain their
+        //     last value — clear them on the records if a stale figure would
+        //     mislead);
+        //   * the two HOST onboarding SKUs drop out of ONBOARDING_SKUS, so
+        //     they are no longer excluded from the principal queries. Harmless
+        //     while this stays commented out, because principals are computed
+        //     per LOB and Private Cloud no longer has one.
+        // Margin_Private_Cloud__c, Est_Hours_Private_Cloud__c and the
+        // 'Private Cloud' blend rate are unaffected — none come from this list.
+        // To re-enable: restore the comma after the Cybersecurity entry above
+        // and uncomment the block below.
+        // =====================================================
+        // ,
+        // new OnboardingLobConfig(
+        //     'Private Cloud', '001-HOST-SVC-HOST-MONB-001', '001-HOST-SVC-HOST-ONOB-001',
+        //     'Private_Cloud_Principal_Amount__c', 'Private_Cloud_Principal_Monthly__c', 0.5,
+        //     PRINCIPAL_CATEGORIES_ALL
+        // )
     };
 
     private static final Set<String> ONBOARDING_SKUS = buildOnboardingSkuSet();
