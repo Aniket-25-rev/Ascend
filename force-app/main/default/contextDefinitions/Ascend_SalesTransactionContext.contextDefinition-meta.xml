@@ -4915,6 +4915,14 @@
                     <contextAttribute>Booked_MRR__c</contextAttribute>
                     <contextInputAttributeName>Booked_MRR__c</contextInputAttributeName>
                 </contextAttributeMappings>
+                <contextAttributeMappings>
+                    <contextAttrHydrationDetails>
+                        <objectName>Quote</objectName>
+                        <queryAttribute>Month_to_Month__c</queryAttribute>
+                    </contextAttrHydrationDetails>
+                    <contextAttribute>QMonth_to_Month__c</contextAttribute>
+                    <contextInputAttributeName>QMonth_to_Month__c</contextInputAttributeName>
+                </contextAttributeMappings>
                 <contextNode>SalesTransaction</contextNode>
                 <inheritedFrom>SalesTransactionContext__stdctx/version/QuoteEntitiesMapping/SalesTransaction</inheritedFrom>
                 <object>Quote</object>
@@ -19265,6 +19273,19 @@
                 <transient>false</transient>
                 <value>false</value>
             </contextAttributes>
+            <contextAttributes>
+                <contextTags>
+                    <title>QMonth_to_Month___c</title>
+                </contextTags>
+                <customMappingAllowed>false</customMappingAllowed>
+                <dataType>boolean</dataType>
+                <fieldType>inputoutput</fieldType>
+                <key>false</key>
+                <localizationDisabled>false</localizationDisabled>
+                <title>QMonth_to_Month__c</title>
+                <transient>false</transient>
+                <value>false</value>
+            </contextAttributes>
             <contextTags>
                 <inheritedFrom>SalesTransactionContext__stdctx/version/SalesTransaction/SalesTransaction</inheritedFrom>
                 <title>SalesTransaction</title>
@@ -30041,7 +30062,7 @@
         <inheritedApexVersion>67.11</inheritedApexVersion>
         <isActive>true</isActive>
         <startDate>2026-04-02 12:56:38</startDate>
-        <versionNumber>7</versionNumber>
+        <versionNumber>8</versionNumber>
     </contextDefinitionVersions>
     <contextTtl>10</contextTtl>
     <description>Ascend Sales Transaction Context</description>
@@ -30051,6 +30072,6 @@
     <isProtected>false</isProtected>
     <isTransformationEnabled>false</isTransformationEnabled>
     <masterLabel>Ascend_SalesTransactionContext</masterLabel>
-    <releaseVersion>262.13.10</releaseVersion>
+    <releaseVersion>262.14.6</releaseVersion>
     <title>Ascend_SalesTransactionContext</title>
 </ContextDefinition>

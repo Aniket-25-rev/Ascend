@@ -86,6 +86,49 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 || 'Renew'.equalsIgnoreCase(tc.quoteType);
             Boolean isCancel = 'Cancel'.equalsIgnoreCase(tc.quoteType);
 
+            // =========================================================
+            // AMEND — QUOTE START DATE / CONTRACT TERM DRIVE THE LINE DATES
+            // On an Amendment the line dates are always derived from the
+            // quote header, so a change to either Quote Start Date or
+            // Contract_Term_Months__c flows straight through on the next
+            // pricing pass:
+            //     QLI Start Date = Quote Start Date
+            //     QLI End Date   = Quote Start Date + Contract Term
+            // Writing the same derived values when nothing changed is a
+            // no-op, so no change-detection is needed. Scoped to Amend only:
+            // New Business, Renew, Cancel and every other action type are
+            // completely unaffected, as are ramp segments, One-Time lines
+            // and onboarding-fee SKUs (all skipped before this point).
+            // =========================================================
+            Boolean realignToQuoteStart = 'Amend'.equalsIgnoreCase(tc.quoteType);
+
+            // =========================================================
+            // AMEND ON A MONTH-TO-MONTH CONTRACT
+            // When the contract is flagged Month-to-Month, an amendment's
+            // lines co-term to the contract's own End Date instead of
+            // running a full term from the quote start:
+            //     QLI Start Date = Quote Start Date
+            //     QLI End Date   = Contract.EndDate + Contract Term months
+            // The quote's Contract Term is read as an EXTENSION length here
+            // (1 => one extra month past the contract end), not as a full
+            // term measured from the quote start.
+            // Null unless this really is an Amend on an MTM contract with a
+            // usable End Date after the quote start — in every other case
+            // the existing non-MTM logic runs untouched.
+            // =========================================================
+            Date mtmCoTermEndDate = null;
+            // No relationship is required between the quote start and the
+            // contract end: an extension may legitimately start on, before or
+            // after the contract's last day.
+            if (realignToQuoteStart
+                && tc.contractIsMonthToMonth
+                && tc.contractEndDate != null) {
+                mtmCoTermEndDate = tc.contractEndDate;
+            }
+            System.debug('==MTM amend co-term== isMTM=' + tc.contractIsMonthToMonth
+                + ' contractEndDate=' + tc.contractEndDate
+                + ' mtmCoTermEndDate=' + mtmCoTermEndDate);
+
             if (!isNewBusiness && !isAmendOrRenew) {
                 return pushUpdates(ctx, contextId,
                     buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus), response,
@@ -121,7 +164,8 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             List<Map<String, Object>> updates = buildLineUpdates(
                 items, startDate, endDate, coTermEndDate, isNewBusiness,
                 tc.contractTerm, persistedStartDates,
-                bundleParentSkus, bundleMemberSkus
+                bundleParentSkus, bundleMemberSkus,
+                realignToQuoteStart, mtmCoTermEndDate
             );
 
             // Anything left in these sets was skipped by the date logic
@@ -294,7 +338,8 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         if (String.isNotBlank(tc.quoteId)) {
             try {
                 Quote q = [
-                    SELECT Contract_Term_Months__c, OriginalActionType
+                    SELECT Contract_Term_Months__c, OriginalActionType,
+                           ContractId, Contract.Month_to_Month__c, Contract.EndDate
                     FROM   Quote
                     WHERE  Id = :tc.quoteId
                     LIMIT  1
@@ -303,6 +348,14 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                     tc.contractTerm = Integer.valueOf(q.Contract_Term_Months__c);
                 }
                 tc.quoteType = q.OriginalActionType;
+                // Month-to-Month amendments extend from the contract's own
+                // End Date rather than running a full term from the quote start.
+                // Null ContractId (or no contract) leaves both null, which the
+                // caller treats as "not an MTM co-term case".
+                if (q.ContractId != null && q.Contract != null) {
+                    tc.contractIsMonthToMonth = (q.Contract.Month_to_Month__c == true);
+                    tc.contractEndDate        = q.Contract.EndDate;
+                }
             } catch (Exception e) {
                 System.debug('==SOQL error== ' + e.getMessage());
             }
@@ -358,7 +411,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         return buildLineUpdates(
             items, startDate, endDate, coTermEndDate, isNewBusiness,
             null, new Map<Id, Date>(),
-            bundleParentSkus, bundleMemberSkus
+            bundleParentSkus, bundleMemberSkus, false, null
         );
     }
 
@@ -372,7 +425,11 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         Integer contractTerm,    // ARM-106 AC1: persisted Amend/Renew lines — EndDate = StartDate + Term
         Map<Id, Date> persistedStartDates,  // ARM-106 AC1: queried StartDate per persisted line, keyed by Id
         Set<String> bundleParentSkus,  // mutated: SKUs handled here are removed
-        Set<String> bundleMemberSkus   // mutated: SKUs handled here are removed
+        Set<String> bundleMemberSkus,  // mutated: SKUs handled here are removed
+        Boolean realignToQuoteStart,   // Amend: re-drive persisted line Start/End from the
+                                       // quote header date + term
+        Date mtmCoTermEndDate          // Amend on a Month-to-Month contract: co-term End Date
+                                       // (Contract.EndDate). Null for every other case.
     ) {
         List<Map<String, Object>> updates = new List<Map<String, Object>>();
 
@@ -475,6 +532,77 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 Date lineStartDate = persistedStartDates.get(Id.valueOf(String.valueOf(li.dataPath.get(2))));
                 if (lineStartDate == null && String.isNotBlank(li.startDate)) {
                     lineStartDate = Date.valueOf(li.startDate);
+                }
+
+                // AMEND: this persisted line's dates are re-driven from the quote
+                // header, so a change to either header field flows through here.
+                //
+                // Month-to-Month contract (mtmCoTermEndDate non-null):
+                //     QLI Start Date = Quote Start Date
+                //     QLI End Date   = Contract.EndDate + Contract Term months
+                //     PricingTermCount is PINNED to the term.
+                //     An MTM amendment is an EXTENSION: the contract term entered
+                //     on the quote is how many months to add past the contract's
+                //     own end (1 => one extra month), not a full term run from the
+                //     quote start. Changing the Quote Start Date moves only the
+                //     line Start Date; the extended End Date stays put.
+                //
+                // Every other Amend (non-MTM):
+                //     QLI Start Date = Quote Start Date
+                //     QLI End Date   = monthEndAligned(Quote Start Date, Contract Term)
+                //     PricingTermCount is PINNED to the contract term so the
+                //     header write-back is a no-op and editing the Start Date
+                //     never moves the term. Here the term drives the dates.
+                //
+                // The header Contract_Term_Months__c attribute is
+                // fieldType=inputoutput in Ascend_SalesTransactionContext and the
+                // platform refuses to change that on an active definition, so the
+                // write-back cannot be switched off — each path instead controls
+                // what value it carries.
+                //
+                // The AC1 branch below (EndDate from the line's OWN StartDate) still
+                // applies to Renew and to any Amend with neither input available.
+                if (realignToQuoteStart
+                    && startDate != null
+                    && contractTerm != null
+                    && contractTerm > 0) {
+
+                    Date    realignedEndDate;
+                    Decimal realignedPTC;
+
+                    if (mtmCoTermEndDate != null) {
+                        // Month-to-Month extension: the contract's own End Date is the
+                        // base, and the quote's Contract Term is the number of months to
+                        // extend BEYOND it (1 => one extra month). PTC is pinned to that
+                        // same term, never derived from the dates: a derived value would
+                        // be written back onto the header term, and the next pricing pass
+                        // would extend from Contract.EndDate by THAT number instead —
+                        // a runaway that pushes the end date out further on every save.
+                        realignedEndDate = mtmCoTermEndDate.addMonths(contractTerm);
+                        realignedPTC     = (Decimal) contractTerm;
+                    } else {
+                        realignedEndDate = monthEndAligned(startDate, contractTerm);
+                        realignedPTC     = (Decimal) contractTerm;
+                    }
+
+                    attributes.add(new List<Object>{ 'StartDate', 'EffectiveFrom', startDate });
+                    attributes.add(new List<Object>{ 'EndDate',   'EffectiveTo',   realignedEndDate });
+                    if (realignedPTC != null) {
+                        attributes.add(new List<Object>{ 'PricingTermCount', 'PricingTermCount', realignedPTC });
+                    }
+
+                    System.debug('==item[' + i + '] Amend realigned== '
+                        + 'mtmCoTerm=' + (mtmCoTermEndDate != null)
+                        + ' priorLineStart=' + lineStartDate + ' quoteStart=' + startDate
+                        + ' term=' + contractTerm + ' endDate=' + realignedEndDate
+                        + ' ptc=' + realignedPTC);
+
+                    if (isNewLine) {
+                        appendBundleAttributes(attributes, li.stockKeepingUnit,
+                            bundleParentSkus, bundleMemberSkus);
+                    }
+                    updates.add(buildNodeUpdate(li.salesPath, attributes));
+                    continue;
                 }
 
                 if (contractTerm != null && lineStartDate != null) {
@@ -856,5 +984,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         public Integer contractTerm;
         public String  quoteId;
         public String  quoteType;
+        public Boolean contractIsMonthToMonth = false;
+        public Date    contractEndDate;
     }
 }

@@ -108,18 +108,42 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     private static final Set<String> PRINCIPAL_CATEGORIES_ALL      = null;
 
     private static final List<OnboardingLobConfig> LOB_CONFIGS = new List<OnboardingLobConfig>{
-        new OnboardingLobConfig(
-            'Service Desk', '001-DESK-SVC-DESK-MONB-001', '001-DESK-SVC-DESK-ONOB-001',
-            'Service_Desk_Principal_Amount__c', 'Service_Desk_Principal_Monthly__c', 1.5
-        ),
-        new OnboardingLobConfig(
-            'Infrastructure', '001-INFR-SVC-INFR-MONB-001', '001-INFR-SVC-INFR-ONOB-001',
-            'Infrastructure_Principal_Amount__c', 'Infrastructure_Principal_Monthly__c', 1.5
-        ),
-        new OnboardingLobConfig(
-            'Cybersecurity', '001-CYBR-SVC-CYBR-MONB-001', '001-CYBR-SVC-CYBR-ONOB-001',
-            'Cybersecurity_Principal_Amount__c', 'Cybersecurity_Principal_Monthly__c', 1.5
-        )
+        // =====================================================
+        // SERVICE DESK ONBOARDING — DISABLED
+        // Same rationale as the Private Cloud entry below: the Pricing
+        // Procedure now owns this LOB end to end. List Container 25 (seq 16)
+        // computes Service_Desk_Principal_Amount__c/_Monthly__c and List
+        // Container 11 (seq 18) prices 001-DESK-SVC-DESK-ONOB-001 off it,
+        // writing NetUnitPrice via Assignment 10 inside the pricing pass.
+        // Leaving this entry active made applyOnboardingPrincipalsToQuote
+        // overwrite the principal AFTER pricing, so the corrected fee only
+        // surfaced on the NEXT reprice — the "click Reprice All" symptom.
+        // To re-enable: uncomment the block below and remove this comment.
+        // =====================================================
+        // new OnboardingLobConfig(
+        //     'Service Desk', '001-DESK-SVC-DESK-MONB-001', '001-DESK-SVC-DESK-ONOB-001',
+        //     'Service_Desk_Principal_Amount__c', 'Service_Desk_Principal_Monthly__c', 1.5
+        // ),
+        // =====================================================
+        // INFRASTRUCTURE ONBOARDING — DISABLED
+        // List Container 5 (seq 19) computes the principal; List Container 10
+        // (seq 21) prices 001-INFR-SVC-INFR-ONOB-001 off it and writes
+        // NetUnitPrice via Assignment 11, inside the pricing pass.
+        // =====================================================
+        // new OnboardingLobConfig(
+        //     'Infrastructure', '001-INFR-SVC-INFR-MONB-001', '001-INFR-SVC-INFR-ONOB-001',
+        //     'Infrastructure_Principal_Amount__c', 'Infrastructure_Principal_Monthly__c', 1.5
+        // ),
+        // =====================================================
+        // CYBERSECURITY ONBOARDING — DISABLED
+        // List Container 7 (seq 22) computes the principal; List Container 12
+        // (seq 24) prices 001-CYBR-SVC-CYBR-ONOB-001 off it and writes
+        // NetUnitPrice via Assignment 12, inside the pricing pass.
+        // =====================================================
+        // new OnboardingLobConfig(
+        //     'Cybersecurity', '001-CYBR-SVC-CYBR-MONB-001', '001-CYBR-SVC-CYBR-ONOB-001',
+        //     'Cybersecurity_Principal_Amount__c', 'Cybersecurity_Principal_Monthly__c', 1.5
+        // )
         // =====================================================
         // PRIVATE CLOUD ONBOARDING — DISABLED
         // Commenting this entry out switches off every Private Cloud
@@ -202,8 +226,10 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
             // alreadyExecuted) — pricing must reflect current inputs on every
             // pass, and the write has to land in this same transaction so
             // Subtotal / TCV / MRR recalculate against the discounted amount.
-            String onboardingStatus = applyOnboardingFeeDiscounts(contextId, ctx, quoteId);
-            System.debug('==OnboardingFeeDiscount status== ' + onboardingStatus);
+            // ONBOARDING FEE LOGIC DISABLED — commented out on request.
+            // String onboardingStatus = applyOnboardingFeeDiscounts(contextId, ctx, quoteId);
+            String onboardingStatus = 'Onboarding: disabled';
+            // System.debug('==OnboardingFeeDiscount status== ' + onboardingStatus);
 
             // ---- Net/Unit Price fallback for non-onboarding lines ----
             // Salesforce's native Pricing Procedure sometimes leaves UnitPrice/
@@ -391,7 +417,8 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // Pricing 1 steps used to write onto the Quote. Computed async/DML-safe
         // here rather than in the synchronous pricing hook.
         // ─────────────────────────────────────────────────────
-        applyOnboardingPrincipalsToQuote(q, quoteId);
+        // ONBOARDING FEE LOGIC DISABLED — commented out on request.
+        // applyOnboardingPrincipalsToQuote(q, quoteId);
 
         // NOTE: bundle margin is deliberately NOT written here. It goes out
         // through the pricing context during the synchronous hook instead —
