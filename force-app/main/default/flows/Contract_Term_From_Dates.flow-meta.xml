@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Handle_ACR_Conflict</name>
+        <label>Handle ACR EndDate Conflict (Skip)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varFaultMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Check_if_Start_Date_Term_or_EndDate_is_changed</name>
+        <label>Check if Start Date, Term or End Date changed?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>StartDate_Term_or_EndDate_changed</name>
+            <conditionLogic>(1 OR 2) AND 3</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.StartDate</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.ContractTerm</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.EndDate</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>Is_EndDate_Already_Correct</targetReference>
+            </connector>
+            <label>Yes — Start/Term changed without an explicit new EndDate</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Term_From_Dates</name>
+        <label>Check Term From Dates (EndDate Moved, or Term Written Alone)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Source_Quote</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Date-Driven — Continue</defaultConnectorLabel>
+        <rules>
+            <name>EndDate_Changed_Term_Not</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.EndDate</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.ContractTerm</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Persist_Term_From_Dates</targetReference>
+            </connector>
+            <label>EndDate Changed, Term Did Not</label>
+        </rules>
+        <rules>
+            <name>Term_Changed_Alone</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.ContractTerm</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.StartDate</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.EndDate</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Persist_Term_From_Dates</targetReference>
+            </connector>
+            <label>Term Changed Without Either Date Moving — Reject It</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Source_Quote</name>
+        <label>Has Source Quote?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Is_new_Contract</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Source Quote — skip ramp check</defaultConnectorLabel>
+        <rules>
+            <name>Source_Quote_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Source_Quote</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Ramp_QLIs</targetReference>
+            </connector>
+            <label>Source Quote Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_EndDate_Already_Correct</name>
+        <label>Is End Date Already Correct?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Update_End_Date</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No — update it</defaultConnectorLabel>
+        <rules>
+            <name>EndDate_matches_formula</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formCalculatedEndDate</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.EndDate</elementReference>
+                </rightValue>
+            </conditions>
+            <label>End Date already matches formula</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_new_Contract</name>
+        <label>Is new Contract?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Check_if_Start_Date_Term_or_EndDate_is_changed</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Update</defaultConnectorLabel>
+        <rules>
+            <name>Is_Record_New</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IsNew</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_EndDate_Already_Correct</targetReference>
+            </connector>
+            <label>Is Record New</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Ramp_Quote</name>
+        <label>Is Ramp Quote?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Is_new_Contract</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No — normal quote, continue</defaultConnectorLabel>
+        <rules>
+            <name>Is_Ramp</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Ramp_QLIs</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_End_Date_Ramp</targetReference>
+            </connector>
+            <label>Yes — ramp contract, set end date from start + term</label>
+        </rules>
+    </decisions>
+    <description>Replaces Update_End_Date_to_the_last_day_of_the_month. Keeps the Term/StartDate-to-EndDate direction (with end-of-month alignment, ramp and new-contract handling) unchanged. Fixes the EndDate-to-Term direction: uses a day-aware formula (matching formAmendContractTermFromDates&apos; proven +1-day convention) instead of a day-ignorant one, drops the Month-to-Month-only restriction so it applies to every Contract, and adds a second branch that rejects a ContractTerm written in isolation (no matching StartDate/EndDate move) by recomputing it from the Contract&apos;s own dates — closing the gap where other automation (e.g. Update_Contract_Fields copying a Quote&apos;s own incremental term) could leave ContractTerm inconsistent with the Contract&apos;s actual span.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>formAnniversaryDate</name>
+        <dataType>Date</dataType>
+        <expression>ADDMONTHS({!$Record.StartDate}, {!$Record.ContractTerm})</expression>
+    </formulas>
+    <formulas>
+        <name>formCalculatedEndDate</name>
+        <dataType>Date</dataType>
+        <expression>IF(
+DAY({!$Record.StartDate}) = 1,
+{!formAnniversaryDate} - 1,
+ADDMONTHS({!formAnniversaryDate}, 1) - DAY(ADDMONTHS({!formAnniversaryDate}, 1))
+)</expression>
+    </formulas>
+    <formulas>
+        <name>formCorrectTermFromDates</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+DAY({!$Record.StartDate}) = 1,
+(YEAR({!$Record.EndDate} + 1) - YEAR({!$Record.StartDate})) * 12 + MONTH({!$Record.EndDate} + 1) - MONTH({!$Record.StartDate}),
+(YEAR({!$Record.EndDate}) * 12 + MONTH({!$Record.EndDate})) - (YEAR({!$Record.StartDate}) * 12 + MONTH({!$Record.StartDate}))
+)</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>formRampEndDate</name>
+        <dataType>Date</dataType>
+        <expression>ADDMONTHS({!$Record.StartDate}, {!$Record.ContractTerm}) - 1</expression>
+    </formulas>
+    <formulas>
+        <name>IsNew</name>
+        <dataType>Boolean</dataType>
+        <expression>ISNEW()</expression>
+    </formulas>
+    <interviewLabel>Contract Term From Dates {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Contract Term From Dates</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Ramp_QLIs</name>
+        <label>Get Ramp Quote Line Item (SegmentName check)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Is_Ramp_Quote</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>QuoteId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Source_Quote.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>SegmentName</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>QuoteLineItem</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Source_Quote</name>
+        <label>Get Source Quote via ContractId</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Source_Quote</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ContractId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Quote</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Persist_Term_From_Dates</name>
+        <label>Persist Term From Dates</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Source_Quote</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Handle_ACR_Conflict</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>ContractTerm</field>
+            <value>
+                <elementReference>formCorrectTermFromDates</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_End_Date</name>
+        <label>Update End Date</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <faultConnector>
+            <targetReference>Handle_ACR_Conflict</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>EndDate</field>
+            <value>
+                <elementReference>formCalculatedEndDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_End_Date_Ramp</name>
+        <label>Update End Date for Ramp Contract (Start + Term)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <faultConnector>
+            <targetReference>Handle_ACR_Conflict</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>EndDate</field>
+            <value>
+                <elementReference>formRampEndDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_Term_From_Dates</targetReference>
+        </connector>
+        <object>Contract</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varFaultMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

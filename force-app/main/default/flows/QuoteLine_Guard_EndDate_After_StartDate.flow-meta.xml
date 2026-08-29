@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Correct_EndDate</name>
+        <label>Correct EndDate to Last Day of StartDate Month</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.EndDate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>formCorrectedEndDate</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Is_EndDate_Before_StartDate</name>
+        <label>Is EndDate Before StartDate?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>EndDate is valid — Stop</defaultConnectorLabel>
+        <rules>
+            <name>EndDate_Invalid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.EndDate</leftValueReference>
+                <operator>LessThan</operator>
+                <rightValue>
+                    <elementReference>$Record.StartDate</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Correct_EndDate</targetReference>
+            </connector>
+            <label>Yes — EndDate Before StartDate</label>
+        </rules>
+    </decisions>
+    <description>BeforeSave guard on QLI Update. When Instant Pricing or any other mechanism sets EndDate to a date before StartDate (e.g. fractional PricingTermCount like 0.98 causing FLOOR to 0 months), corrects EndDate to the last day of StartDate&apos;s month. Zero SOQL — pure in-memory date fix.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>formCorrectedEndDate</name>
+        <dataType>Date</dataType>
+        <expression>DATE(YEAR({!$Record.StartDate}), MONTH({!$Record.StartDate}) + 1, 1) - 1</expression>
+    </formulas>
+    <interviewLabel>QuoteLine Guard EndDate After StartDate {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>QuoteLine — Guard EndDate After StartDate</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_EndDate_Before_StartDate</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>EndDate</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StartDate</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>QuoteLineItem</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

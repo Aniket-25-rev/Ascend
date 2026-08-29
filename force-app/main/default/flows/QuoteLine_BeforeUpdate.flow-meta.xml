@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <environments>Default</environments>
+    <formulas>
+        <name>fQLIEndDate</name>
+        <dataType>Date</dataType>
+        <expression>IF(
+  AND(NOT(ISBLANK({!$Record.Quote.StartDate})), {!$Record.Quote.Contract_Term_Months__c} &gt; 0),
+  DATE(
+    YEAR({!$Record.Quote.StartDate}) + FLOOR((MONTH({!$Record.Quote.StartDate}) + {!$Record.Quote.Contract_Term_Months__c} - 1) / 12),
+    MOD(MONTH({!$Record.Quote.StartDate}) + {!$Record.Quote.Contract_Term_Months__c} - 1, 12) + 1,
+    1
+  ) - 1,
+  null
+)</expression>
+    </formulas>
+    <interviewLabel>QuoteLine (BeforeUpdate) {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>QuoteLine (BeforeUpdate)</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Description_with_SKU_Name</name>
+        <label>Update Description with SKU Name</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>StartDate</field>
+            <value>
+                <elementReference>$Record.Quote.StartDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_Description_with_SKU_Name</targetReference>
+        </connector>
+        <object>QuoteLineItem</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
