@@ -32,6 +32,14 @@ public class LineItemNodeWrapper {
     public Decimal pricingTermCount { get; set; } // reads context tag: PricingTermCount (ARM-108)
     public Decimal discount         { get; set; } // reads context tag: Discount (ARM-108, UNVERIFIED)
 
+    // Confirmed present, unlike the guesses above: 'ListPrice' is a real
+    // SalesTransactionItem context attribute on Ascend_SalesTransactionContext,
+    // hydrated from QuoteLineItem.ListPrice by the QuoteEntitiesMapping.
+    // Unlike the SOQL join in QuoteMarginRollupPostHook's NetUnitPrice
+    // fallback, this tag is readable on lines added in THIS transaction —
+    // they have no saved QuoteLineItem row to query yet.
+    public String listPrice         { get; set; } // reads context tag: ListPrice
+
     public LineItemNodeWrapper(Object node) {
 
         Map<String, Object> obj = (Map<String, Object>) node;
@@ -73,6 +81,7 @@ public class LineItemNodeWrapper {
         this.netTotalPrice      = getString('NetTotalPrice');
         this.pricingTermCount   = getDecimal('PricingTermCount');
         this.discount           = getDecimal('Discount');
+        this.listPrice          = getString('ListPrice');
     }
 
     public Boolean isValid() {

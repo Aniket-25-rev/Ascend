@@ -107,7 +107,7 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     private static final Set<String> PRINCIPAL_CATEGORIES_SERVICES = new Set<String>{ 'Services' };
     private static final Set<String> PRINCIPAL_CATEGORIES_ALL      = null;
 
-    private static final List<OnboardingLobConfig> LOB_CONFIGS = new List<OnboardingLobConfig>{
+    // private static final List<OnboardingLobConfig> LOB_CONFIGS = new List<OnboardingLobConfig>{
         // =====================================================
         // SERVICE DESK ONBOARDING — DISABLED
         // Same rationale as the Private Cloud entry below: the Pricing
@@ -170,9 +170,13 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         //     'Private_Cloud_Principal_Amount__c', 'Private_Cloud_Principal_Monthly__c', 0.5,
         //     PRINCIPAL_CATEGORIES_ALL
         // )
-    };
+    // };
 
-    private static final Set<String> ONBOARDING_SKUS = buildOnboardingSkuSet();
+    // ONBOARDING FEE LOGIC DISABLED — was buildOnboardingSkuSet(), which built
+    // this set from LOB_CONFIGS. Every LOB_CONFIGS entry is commented out, so
+    // that call already returned an empty set; kept as an empty literal because
+    // applyNetUnitPriceFallback still reads it.
+    private static final Set<String> ONBOARDING_SKUS = new Set<String>();
 
     // =========================================================
     // HAAS HARDWARE / IMPLEMENTATION PRICING (ARM-108)
@@ -195,14 +199,14 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         HAAS_HARDWARE_SKU, HAAS_IMPLEMENTATION_SKU
     };
 
-    private static Set<String> buildOnboardingSkuSet() {
-        Set<String> skus = new Set<String>();
-        for (OnboardingLobConfig cfg : LOB_CONFIGS) {
-            skus.add(cfg.monthlySku);
-            skus.add(cfg.oneTimeSku);
-        }
-        return skus;
-    }
+    // private static Set<String> buildOnboardingSkuSet() {
+        // Set<String> skus = new Set<String>();
+        // for (OnboardingLobConfig cfg : LOB_CONFIGS) {
+            // skus.add(cfg.monthlySku);
+            // skus.add(cfg.oneTimeSku);
+        // }
+        // return skus;
+    // }
 
     public RevSignaling.TransactionResponse execute(
         RevSignaling.TransactionRequest request
@@ -472,62 +476,62 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         }
     }
 
-    @TestVisible
-    private static void applyOnboardingPrincipalsToQuote(Quote q, String quoteId) {
-        try {
-            Quote quoteRec = [
-                SELECT Contract_Term_Months__c
-                FROM   Quote
-                WHERE  Id = :quoteId
-                LIMIT  1
-            ];
-            Decimal contractTermMonths = quoteRec.Contract_Term_Months__c;
+    // @TestVisible
+    // private static void applyOnboardingPrincipalsToQuote(Quote q, String quoteId) {
+        // try {
+            // Quote quoteRec = [
+                // SELECT Contract_Term_Months__c
+                // FROM   Quote
+                // WHERE  Id = :quoteId
+                // LIMIT  1
+            // ];
+            // Decimal contractTermMonths = quoteRec.Contract_Term_Months__c;
 
             // The category rule is per-LOB (Private Cloud has no Category =
             // 'Services' products at all — see LOB_CONFIGS), so it is applied
             // in memory via countsTowardPrincipal rather than as a fixed SOQL
             // predicate. This must stay in step with buildOnboardingUpdates,
             // which prices the onboarding fee off the same principal.
-            List<QuoteLineItem> principalLines = [
-                SELECT Line_of_Business__c, NetTotalPrice, Product2.Category__c
-                FROM   QuoteLineItem
-                WHERE  QuoteId                   = :quoteId
-                AND    Product2.StockKeepingUnit NOT IN :ONBOARDING_SKUS
-                AND    Product2.StockKeepingUnit NOT IN :HAAS_SKUS
-                AND    Line_of_Business__c       != null
-            ];
+            // List<QuoteLineItem> principalLines = [
+                // SELECT Line_of_Business__c, NetTotalPrice, Product2.Category__c
+                // FROM   QuoteLineItem
+                // WHERE  QuoteId                   = :quoteId
+                // AND    Product2.StockKeepingUnit NOT IN :ONBOARDING_SKUS
+                // AND    Product2.StockKeepingUnit NOT IN :HAAS_SKUS
+                // AND    Line_of_Business__c       != null
+            // ];
 
-            Map<String, Decimal> principalByLob = new Map<String, Decimal>();
-            for (QuoteLineItem qli : principalLines) {
-                String category = qli.Product2 != null ? qli.Product2.Category__c : null;
-                if (!countsTowardPrincipal(qli.Line_of_Business__c, category)) continue;
+            // Map<String, Decimal> principalByLob = new Map<String, Decimal>();
+            // for (QuoteLineItem qli : principalLines) {
+                // String category = qli.Product2 != null ? qli.Product2.Category__c : null;
+                // if (!countsTowardPrincipal(qli.Line_of_Business__c, category)) continue;
 
-                Decimal current = principalByLob.containsKey(qli.Line_of_Business__c)
-                    ? principalByLob.get(qli.Line_of_Business__c) : 0;
-                principalByLob.put(
-                    qli.Line_of_Business__c,
-                    current + (qli.NetTotalPrice == null ? 0 : qli.NetTotalPrice)
-                );
-            }
-            System.debug('==applyOnboardingPrincipalsToQuote principalByLob== ' + principalByLob);
+                // Decimal current = principalByLob.containsKey(qli.Line_of_Business__c)
+                    // ? principalByLob.get(qli.Line_of_Business__c) : 0;
+                // principalByLob.put(
+                    // qli.Line_of_Business__c,
+                    // current + (qli.NetTotalPrice == null ? 0 : qli.NetTotalPrice)
+                // );
+            // }
+            // System.debug('==applyOnboardingPrincipalsToQuote principalByLob== ' + principalByLob);
 
-            for (OnboardingLobConfig cfg : LOB_CONFIGS) {
-                Decimal principalAmt = principalByLob.containsKey(cfg.lineOfBusiness)
-                    ? principalByLob.get(cfg.lineOfBusiness) : 0;
+            // for (OnboardingLobConfig cfg : LOB_CONFIGS) {
+                // Decimal principalAmt = principalByLob.containsKey(cfg.lineOfBusiness)
+                    // ? principalByLob.get(cfg.lineOfBusiness) : 0;
 
-                if (String.isNotBlank(cfg.principalAmountField)) {
-                    q.put(cfg.principalAmountField, principalAmt);
-                }
-                if (String.isNotBlank(cfg.principalMonthlyField)
-                    && contractTermMonths != null && contractTermMonths > 0) {
-                    q.put(cfg.principalMonthlyField, (principalAmt / contractTermMonths).setScale(2));
-                }
-            }
-        } catch (Exception e) {
-            System.debug('==applyOnboardingPrincipalsToQuote EXCEPTION== ' + e.getMessage());
-            System.debug('==applyOnboardingPrincipalsToQuote STACK==     ' + e.getStackTraceString());
-        }
-    }
+                // if (String.isNotBlank(cfg.principalAmountField)) {
+                    // q.put(cfg.principalAmountField, principalAmt);
+                // }
+                // if (String.isNotBlank(cfg.principalMonthlyField)
+                    // && contractTermMonths != null && contractTermMonths > 0) {
+                    // q.put(cfg.principalMonthlyField, (principalAmt / contractTermMonths).setScale(2));
+                // }
+            // }
+        // } catch (Exception e) {
+            // System.debug('==applyOnboardingPrincipalsToQuote EXCEPTION== ' + e.getMessage());
+            // System.debug('==applyOnboardingPrincipalsToQuote STACK==     ' + e.getStackTraceString());
+        // }
+    // }
 
     @TestVisible
     private static void aggregateMrrAndCostByLOB(
@@ -1161,73 +1165,73 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     // Thin orchestrator — obtains items/quoteId-derived state via the platform
     // and delegates all matching/pricing logic to the pure, directly-testable
     // buildOnboardingUpdates below.
-    @TestVisible
-    private static String applyOnboardingFeeDiscounts(
-        String contextId,
-        Context.IndustriesContext ctx,
-        String quoteId
-    ) {
-        try {
-            if (String.isBlank(quoteId)) {
-                return 'Onboarding: no quoteId';
-            }
+    // @TestVisible
+    // private static String applyOnboardingFeeDiscounts(
+        // String contextId,
+        // Context.IndustriesContext ctx,
+        // String quoteId
+    // ) {
+        // try {
+            // if (String.isBlank(quoteId)) {
+                // return 'Onboarding: no quoteId';
+            // }
 
-            List<Object> items = queryOnboardingLineItems(contextId, ctx);
-            OnboardingPlanResult plan = buildOnboardingUpdates(items, quoteId);
+            // List<Object> items = queryOnboardingLineItems(contextId, ctx);
+            // OnboardingPlanResult plan = buildOnboardingUpdates(items, quoteId);
 
-            if (plan.message != null) {
-                return plan.message;
-            }
+            // if (plan.message != null) {
+                // return plan.message;
+            // }
 
-            return pushOnboardingUpdates(ctx, contextId, plan.updates);
+            // return pushOnboardingUpdates(ctx, contextId, plan.updates);
 
-        } catch (Exception e) {
-            System.debug('==applyOnboardingFeeDiscounts EXCEPTION== ' + e.getMessage());
-            System.debug('==applyOnboardingFeeDiscounts STACK==     ' + e.getStackTraceString());
-            return 'Onboarding: error — skipped: ' + e.getMessage();
-        }
-    }
+        // } catch (Exception e) {
+            // System.debug('==applyOnboardingFeeDiscounts EXCEPTION== ' + e.getMessage());
+            // System.debug('==applyOnboardingFeeDiscounts STACK==     ' + e.getStackTraceString());
+            // return 'Onboarding: error — skipped: ' + e.getMessage();
+        // }
+    // }
 
     // Pure matching/pricing logic, extracted verbatim from applyOnboardingFeeDiscounts
     // so it can be tested directly with fabricated items + real Quote/QuoteLineItem
     // data, without needing Context.IndustriesContext to succeed.
-    @TestVisible
-    private static OnboardingPlanResult buildOnboardingUpdates(List<Object> items, String quoteId) {
-        OnboardingPlanResult plan = new OnboardingPlanResult();
+    // @TestVisible
+    // private static OnboardingPlanResult buildOnboardingUpdates(List<Object> items, String quoteId) {
+        // OnboardingPlanResult plan = new OnboardingPlanResult();
 
-        Map<Id, List<Object>> salesPathByLineId = new Map<Id, List<Object>>();
-        for (Object itemObj : items) {
-            LineItemNodeWrapper li = new LineItemNodeWrapper(itemObj);
-            if (!li.isValid() || li.deleted) continue;
-            try {
-                Id lineId = (Id) String.valueOf(li.dataPath.get(2));
-                salesPathByLineId.put(lineId, li.salesPath);
-            } catch (Exception idEx) {
-                System.debug('==Onboarding salesPath map skip== ' + idEx.getMessage());
-            }
-        }
+        // Map<Id, List<Object>> salesPathByLineId = new Map<Id, List<Object>>();
+        // for (Object itemObj : items) {
+            // LineItemNodeWrapper li = new LineItemNodeWrapper(itemObj);
+            // if (!li.isValid() || li.deleted) continue;
+            // try {
+                // Id lineId = (Id) String.valueOf(li.dataPath.get(2));
+                // salesPathByLineId.put(lineId, li.salesPath);
+            // } catch (Exception idEx) {
+                // System.debug('==Onboarding salesPath map skip== ' + idEx.getMessage());
+            // }
+        // }
 
-        if (salesPathByLineId.isEmpty()) {
-            plan.message = 'Onboarding: no active lines in pricing context';
-            return plan;
-        }
+        // if (salesPathByLineId.isEmpty()) {
+            // plan.message = 'Onboarding: no active lines in pricing context';
+            // return plan;
+        // }
 
-        OnboardingQuoteContext qc = getOnboardingQuoteContext(quoteId);
-        System.debug('==Onboarding QuoteContext== contractTerm=' + qc.contractTermMonths
-            + ' amortizedTerm=' + qc.amortizedTermMonths
-            + ' amortizedFlag=' + qc.onboardingFeeAmortized);
+        // OnboardingQuoteContext qc = getOnboardingQuoteContext(quoteId);
+        // System.debug('==Onboarding QuoteContext== contractTerm=' + qc.contractTermMonths
+            // + ' amortizedTerm=' + qc.amortizedTermMonths
+            // + ' amortizedFlag=' + qc.onboardingFeeAmortized);
 
-        if (qc.contractTermMonths == null || qc.contractTermMonths <= 0) {
-            plan.message = 'Onboarding: Contract Term blank — skipping';
-            return plan;
-        }
+        // if (qc.contractTermMonths == null || qc.contractTermMonths <= 0) {
+            // plan.message = 'Onboarding: Contract Term blank — skipping';
+            // return plan;
+        // }
 
-        List<QuoteLineItem> allLines = [
-            SELECT Id, Line_of_Business__c, NetTotalPrice, Discount, Quantity,
-                   Product2.StockKeepingUnit, Product2.Category__c
-            FROM   QuoteLineItem
-            WHERE  QuoteId = :quoteId
-        ];
+        // List<QuoteLineItem> allLines = [
+            // SELECT Id, Line_of_Business__c, NetTotalPrice, Discount, Quantity,
+                   // Product2.StockKeepingUnit, Product2.Category__c
+            // FROM   QuoteLineItem
+            // WHERE  QuoteId = :quoteId
+        // ];
 
         // Principal is computed PER LOB — Service Desk lines only feed
         // Service Desk's principal, Infrastructure lines only feed
@@ -1239,209 +1243,209 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // WHICH lines qualify is also per-LOB, via countsTowardPrincipal — the
         // three 'Services'-based LOBs and Private Cloud do not share a category
         // rule. See LOB_CONFIGS for why.
-        Map<String, Decimal> principalAmountByLob = new Map<String, Decimal>();
-        List<QuoteLineItem> onboardingLines = new List<QuoteLineItem>();
+        // Map<String, Decimal> principalAmountByLob = new Map<String, Decimal>();
+        // List<QuoteLineItem> onboardingLines = new List<QuoteLineItem>();
 
-        for (QuoteLineItem qli : allLines) {
-            String sku = qli.Product2 != null ? qli.Product2.StockKeepingUnit : null;
+        // for (QuoteLineItem qli : allLines) {
+            // String sku = qli.Product2 != null ? qli.Product2.StockKeepingUnit : null;
 
-            if (sku != null && ONBOARDING_SKUS.contains(sku)) {
-                onboardingLines.add(qli);
-                continue;
-            }
+            // if (sku != null && ONBOARDING_SKUS.contains(sku)) {
+                // onboardingLines.add(qli);
+                // continue;
+            // }
 
             // Both HaaS SKUs (ARM-108) are explicitly excluded from ever
             // feeding an onboarding fee principal sum, regardless of their
             // Category__c value — they must never increase, decrease, or
             // otherwise impact any onboarding fee amount.
-            if (sku != null && HAAS_SKUS.contains(sku)) continue;
+            // if (sku != null && HAAS_SKUS.contains(sku)) continue;
 
-            String category = qli.Product2 != null ? qli.Product2.Category__c : null;
-            if (countsTowardPrincipal(qli.Line_of_Business__c, category)) {
-                Decimal current = principalAmountByLob.containsKey(qli.Line_of_Business__c)
-                    ? principalAmountByLob.get(qli.Line_of_Business__c) : 0;
-                principalAmountByLob.put(
-                    qli.Line_of_Business__c,
-                    current + (qli.NetTotalPrice == null ? 0 : qli.NetTotalPrice)
-                );
-            }
-        }
+            // String category = qli.Product2 != null ? qli.Product2.Category__c : null;
+            // if (countsTowardPrincipal(qli.Line_of_Business__c, category)) {
+                // Decimal current = principalAmountByLob.containsKey(qli.Line_of_Business__c)
+                    // ? principalAmountByLob.get(qli.Line_of_Business__c) : 0;
+                // principalAmountByLob.put(
+                    // qli.Line_of_Business__c,
+                    // current + (qli.NetTotalPrice == null ? 0 : qli.NetTotalPrice)
+                // );
+            // }
+        // }
 
-        System.debug('==Onboarding principalAmountByLob== ' + principalAmountByLob);
+        // System.debug('==Onboarding principalAmountByLob== ' + principalAmountByLob);
 
-        if (onboardingLines.isEmpty()) {
-            plan.message = 'Onboarding: no onboarding fee lines found via SOQL';
-            return plan;
-        }
+        // if (onboardingLines.isEmpty()) {
+            // plan.message = 'Onboarding: no onboarding fee lines found via SOQL';
+            // return plan;
+        // }
 
-        List<Map<String, Object>> updates = new List<Map<String, Object>>();
+        // List<Map<String, Object>> updates = new List<Map<String, Object>>();
 
-        for (QuoteLineItem qli : onboardingLines) {
-            List<Object> salesPath = salesPathByLineId.get(qli.Id);
-            if (salesPath == null) {
-                System.debug('==Onboarding SKIPPED== no salesPath for QLI ' + qli.Id);
-                continue;
-            }
+        // for (QuoteLineItem qli : onboardingLines) {
+            // List<Object> salesPath = salesPathByLineId.get(qli.Id);
+            // if (salesPath == null) {
+                // System.debug('==Onboarding SKIPPED== no salesPath for QLI ' + qli.Id);
+                // continue;
+            // }
 
-            String sku = qli.Product2.StockKeepingUnit;
-            OnboardingLobConfig cfg = findConfigForSku(sku);
-            if (cfg == null) {
-                System.debug('==Onboarding SKIPPED== no LOB config for sku=' + sku);
-                continue;
-            }
+            // String sku = qli.Product2.StockKeepingUnit;
+            // OnboardingLobConfig cfg = findConfigForSku(sku);
+            // if (cfg == null) {
+                // System.debug('==Onboarding SKIPPED== no LOB config for sku=' + sku);
+                // continue;
+            // }
 
-            String amortizedFlag = qc.onboardingFeeAmortized == null ? null : qc.onboardingFeeAmortized.trim();
-            Decimal principalAmount = principalAmountByLob.containsKey(cfg.lineOfBusiness)
-                ? principalAmountByLob.get(cfg.lineOfBusiness) : 0;
-            Decimal principalMonthly = principalAmount / qc.contractTermMonths;
+            // String amortizedFlag = qc.onboardingFeeAmortized == null ? null : qc.onboardingFeeAmortized.trim();
+            // Decimal principalAmount = principalAmountByLob.containsKey(cfg.lineOfBusiness)
+                // ? principalAmountByLob.get(cfg.lineOfBusiness) : 0;
+            // Decimal principalMonthly = principalAmount / qc.contractTermMonths;
 
-            try {
-                Decimal unitPrice;
-                if (sku == cfg.monthlySku && amortizedFlag == 'Yes') {
-                    unitPrice = computeAmortizedUnitPrice(
-                        principalMonthly, qc.contractTermMonths, qc.amortizedTermMonths
-                    );
-                    System.debug('==Onboarding MONTHLY branch== lob=' + cfg.lineOfBusiness
-                        + ' QLI=' + qli.Id + ' principalMonthly=' + principalMonthly + ' unitPrice=' + unitPrice);
-                } else if (sku == cfg.oneTimeSku && amortizedFlag == 'No') {
-                    unitPrice = principalMonthly * cfg.oneTimeMultiplier;
-                    System.debug('==Onboarding ONETIME branch== lob=' + cfg.lineOfBusiness
-                        + ' QLI=' + qli.Id + ' principalMonthly=' + principalMonthly
-                        + ' multiplier=' + cfg.oneTimeMultiplier + ' unitPrice=' + unitPrice);
-                } else {
-                    System.debug('==Onboarding SKIPPED== sku/flag combo did not match (sku=' + sku + ', flag=' + amortizedFlag + ')');
-                    continue;
-                }
+            // try {
+                // Decimal unitPrice;
+                // if (sku == cfg.monthlySku && amortizedFlag == 'Yes') {
+                    // unitPrice = computeAmortizedUnitPrice(
+                        // principalMonthly, qc.contractTermMonths, qc.amortizedTermMonths
+                    // );
+                    // System.debug('==Onboarding MONTHLY branch== lob=' + cfg.lineOfBusiness
+                        // + ' QLI=' + qli.Id + ' principalMonthly=' + principalMonthly + ' unitPrice=' + unitPrice);
+                // } else if (sku == cfg.oneTimeSku && amortizedFlag == 'No') {
+                    // unitPrice = principalMonthly * cfg.oneTimeMultiplier;
+                    // System.debug('==Onboarding ONETIME branch== lob=' + cfg.lineOfBusiness
+                        // + ' QLI=' + qli.Id + ' principalMonthly=' + principalMonthly
+                        // + ' multiplier=' + cfg.oneTimeMultiplier + ' unitPrice=' + unitPrice);
+                // } else {
+                    // System.debug('==Onboarding SKIPPED== sku/flag combo did not match (sku=' + sku + ', flag=' + amortizedFlag + ')');
+                    // continue;
+                // }
 
-                if (unitPrice == null) {
-                    System.debug('==Onboarding SKIPPED== unitPrice null for QLI ' + qli.Id);
-                    continue;
-                }
-                unitPrice = unitPrice.setScale(2, RoundingMode.HALF_UP);
+                // if (unitPrice == null) {
+                    // System.debug('==Onboarding SKIPPED== unitPrice null for QLI ' + qli.Id);
+                    // continue;
+                // }
+                // unitPrice = unitPrice.setScale(2, RoundingMode.HALF_UP);
 
-                Decimal discountPct = qli.Discount == null ? 0 : qli.Discount;
-                Decimal netUnitPrice = unitPrice * (1 - (discountPct / 100));
-                if (netUnitPrice < 0) netUnitPrice = 0;
-                netUnitPrice = netUnitPrice.setScale(2, RoundingMode.HALF_UP);
+                // Decimal discountPct = qli.Discount == null ? 0 : qli.Discount;
+                // Decimal netUnitPrice = unitPrice * (1 - (discountPct / 100));
+                // if (netUnitPrice < 0) netUnitPrice = 0;
+                // netUnitPrice = netUnitPrice.setScale(2, RoundingMode.HALF_UP);
 
-                Decimal quantity = qli.Quantity == null ? 1 : qli.Quantity;
-                Decimal netTotalPrice = (netUnitPrice * quantity).setScale(2, RoundingMode.HALF_UP);
+                // Decimal quantity = qli.Quantity == null ? 1 : qli.Quantity;
+                // Decimal netTotalPrice = (netUnitPrice * quantity).setScale(2, RoundingMode.HALF_UP);
 
-                updates.add(buildNodeUpdate(salesPath, new List<List<Object>>{
-                    new List<Object>{ 'UnitPrice',     'UnitPrice',     unitPrice     },
-                    new List<Object>{ 'NetUnitPrice',  'NetUnitPrice',  netUnitPrice  },
-                    new List<Object>{ 'NetTotalPrice', 'NetTotalPrice', netTotalPrice }
-                }));
+                // updates.add(buildNodeUpdate(salesPath, new List<List<Object>>{
+                    // new List<Object>{ 'UnitPrice',     'UnitPrice',     unitPrice     },
+                    // new List<Object>{ 'NetUnitPrice',  'NetUnitPrice',  netUnitPrice  },
+                    // new List<Object>{ 'NetTotalPrice', 'NetTotalPrice', netTotalPrice }
+                // }));
 
-            } catch (Exception lineEx) {
-                System.debug('==Onboarding LINE EXCEPTION== QLI=' + qli.Id + ' msg=' + lineEx.getMessage());
-                System.debug('==Onboarding LINE STACK==     ' + lineEx.getStackTraceString());
-            }
-        }
+            // } catch (Exception lineEx) {
+                // System.debug('==Onboarding LINE EXCEPTION== QLI=' + qli.Id + ' msg=' + lineEx.getMessage());
+                // System.debug('==Onboarding LINE STACK==     ' + lineEx.getStackTraceString());
+            // }
+        // }
 
-        if (updates.isEmpty()) {
-            plan.message = 'Onboarding: no onboarding fee lines to update';
-            return plan;
-        }
+        // if (updates.isEmpty()) {
+            // plan.message = 'Onboarding: no onboarding fee lines to update';
+            // return plan;
+        // }
 
-        plan.updates = updates;
-        return plan;
-    }
+        // plan.updates = updates;
+        // return plan;
+    // }
 
-    @TestVisible
-    private static OnboardingLobConfig findConfigForLob(String lob) {
-        if (lob == null) return null;
-        for (OnboardingLobConfig cfg : LOB_CONFIGS) {
-            if (cfg.lineOfBusiness == lob) return cfg;
-        }
-        return null;
-    }
+    // @TestVisible
+    // private static OnboardingLobConfig findConfigForLob(String lob) {
+        // if (lob == null) return null;
+        // for (OnboardingLobConfig cfg : LOB_CONFIGS) {
+            // if (cfg.lineOfBusiness == lob) return cfg;
+        // }
+        // return null;
+    // }
 
     // Does this line count toward its LOB's onboarding principal?
     // Onboarding fee SKUs and HaaS SKUs are excluded by the callers before they
     // get here; this decides the category rule, which is per-LOB. An LOB with
     // no config at all is not an onboarding LOB, so nothing counts for it.
-    @TestVisible
-    private static Boolean countsTowardPrincipal(String lob, String category) {
-        OnboardingLobConfig cfg = findConfigForLob(lob);
-        if (cfg == null) return false;
+    // @TestVisible
+    // private static Boolean countsTowardPrincipal(String lob, String category) {
+        // OnboardingLobConfig cfg = findConfigForLob(lob);
+        // if (cfg == null) return false;
         // null principalCategories means "no category filter" (Private Cloud).
-        return cfg.principalCategories == null
-            || (category != null && cfg.principalCategories.contains(category));
-    }
+        // return cfg.principalCategories == null
+            // || (category != null && cfg.principalCategories.contains(category));
+    // }
 
-    @TestVisible
-    private static OnboardingLobConfig findConfigForSku(String sku) {
-        if (sku == null) return null;
-        for (OnboardingLobConfig cfg : LOB_CONFIGS) {
-            if (cfg.monthlySku == sku || cfg.oneTimeSku == sku) return cfg;
-        }
-        return null;
-    }
+    // @TestVisible
+    // private static OnboardingLobConfig findConfigForSku(String sku) {
+        // if (sku == null) return null;
+        // for (OnboardingLobConfig cfg : LOB_CONFIGS) {
+            // if (cfg.monthlySku == sku || cfg.oneTimeSku == sku) return cfg;
+        // }
+        // return null;
+    // }
 
     // Var1: level monthly annuity payment amortized over n months.
     // Var2: monthlyPayment * n — multiplies back out over the term.
     // Amortized_Term_Months__c == 0 (field defaults to 0 rather than truly null
     // in some quotes) is treated the same as null — falls back to
     // Contract_Term_Months__c instead of forcing n = 0.
-    @TestVisible
-    private static Decimal computeAmortizedUnitPrice(
-        Decimal principalMonthly,
-        Decimal contractTermMonths,
-        Decimal amortizedTermMonths
-    ) {
-        Decimal n = (amortizedTermMonths == null || amortizedTermMonths == 0)
-            ? contractTermMonths
-            : amortizedTermMonths;
+    // @TestVisible
+    // private static Decimal computeAmortizedUnitPrice(
+        // Decimal principalMonthly,
+        // Decimal contractTermMonths,
+        // Decimal amortizedTermMonths
+    // ) {
+        // Decimal n = (amortizedTermMonths == null || amortizedTermMonths == 0)
+            // ? contractTermMonths
+            // : amortizedTermMonths;
 
-        System.debug('==computeAmortizedUnitPrice== principalMonthly=' + principalMonthly
-            + ' contractTermMonths=' + contractTermMonths
-            + ' amortizedTermMonths=' + amortizedTermMonths
-            + ' resolved n=' + n);
+        // System.debug('==computeAmortizedUnitPrice== principalMonthly=' + principalMonthly
+            // + ' contractTermMonths=' + contractTermMonths
+            // + ' amortizedTermMonths=' + amortizedTermMonths
+            // + ' resolved n=' + n);
 
-        if (n == null || n <= 0) {
-            System.debug('==computeAmortizedUnitPrice== n invalid, returning null');
-            return null;
-        }
+        // if (n == null || n <= 0) {
+            // System.debug('==computeAmortizedUnitPrice== n invalid, returning null');
+            // return null;
+        // }
 
-        Decimal monthlyPayment;
-        if (n == 1) {
-            monthlyPayment = principalMonthly;
-        } else if (MONTHLY_RATE == 0) {
-            monthlyPayment = principalMonthly / n;
-        } else {
-            Double onePlusR = 1 + MONTHLY_RATE.doubleValue();
-            Double factor = Math.pow(onePlusR, n.doubleValue());
-            Double annuityFactor = (MONTHLY_RATE.doubleValue() * factor) / (factor - 1);
-            monthlyPayment = (principalMonthly * Decimal.valueOf(annuityFactor)) / onePlusR;
-        }
+        // Decimal monthlyPayment;
+        // if (n == 1) {
+            // monthlyPayment = principalMonthly;
+        // } else if (MONTHLY_RATE == 0) {
+            // monthlyPayment = principalMonthly / n;
+        // } else {
+            // Double onePlusR = 1 + MONTHLY_RATE.doubleValue();
+            // Double factor = Math.pow(onePlusR, n.doubleValue());
+            // Double annuityFactor = (MONTHLY_RATE.doubleValue() * factor) / (factor - 1);
+            // monthlyPayment = (principalMonthly * Decimal.valueOf(annuityFactor)) / onePlusR;
+        // }
 
-        Decimal result = monthlyPayment * n;
-        System.debug('==computeAmortizedUnitPrice== monthlyPayment=' + monthlyPayment + ' result=' + result);
-        return result;
-    }
+        // Decimal result = monthlyPayment * n;
+        // System.debug('==computeAmortizedUnitPrice== monthlyPayment=' + monthlyPayment + ' result=' + result);
+        // return result;
+    // }
 
-    @TestVisible
-    private static OnboardingQuoteContext getOnboardingQuoteContext(String quoteId) {
-        OnboardingQuoteContext qc = new OnboardingQuoteContext();
-        if (String.isBlank(quoteId)) return qc;
-        try {
-            Quote q = [
-                SELECT Contract_Term_Months__c,
-                       Amortized_Term_Months__c,
-                       Onboarding_Fee_Amortized__c
-                FROM   Quote
-                WHERE  Id = :quoteId
-                LIMIT  1
-            ];
-            qc.contractTermMonths     = q.Contract_Term_Months__c;
-            qc.amortizedTermMonths    = q.Amortized_Term_Months__c;
-            qc.onboardingFeeAmortized = q.Onboarding_Fee_Amortized__c;
-        } catch (Exception e) {
-            System.debug('==getOnboardingQuoteContext error== ' + e.getMessage());
-        }
-        return qc;
-    }
+    // @TestVisible
+    // private static OnboardingQuoteContext getOnboardingQuoteContext(String quoteId) {
+        // OnboardingQuoteContext qc = new OnboardingQuoteContext();
+        // if (String.isBlank(quoteId)) return qc;
+        // try {
+            // Quote q = [
+                // SELECT Contract_Term_Months__c,
+                       // Amortized_Term_Months__c,
+                       // Onboarding_Fee_Amortized__c
+                // FROM   Quote
+                // WHERE  Id = :quoteId
+                // LIMIT  1
+            // ];
+            // qc.contractTermMonths     = q.Contract_Term_Months__c;
+            // qc.amortizedTermMonths    = q.Amortized_Term_Months__c;
+            // qc.onboardingFeeAmortized = q.Onboarding_Fee_Amortized__c;
+        // } catch (Exception e) {
+            // System.debug('==getOnboardingQuoteContext error== ' + e.getMessage());
+        // }
+        // return qc;
+    // }
 
     // Thin wrapper — the only line here that touches the platform is the
     // ctx.queryTags call itself; parsing lives in the pure, directly-testable
@@ -1486,23 +1490,23 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         };
     }
 
-    private static String pushOnboardingUpdates(
-        Context.IndustriesContext ctx,
-        String contextId,
-        List<Map<String, Object>> updates
-    ) {
-        try {
-            ctx.updateContextAttributes(new Map<String, Object>{
-                'contextId'             => contextId,
-                'nodePathAndAttributes' => updates
-            });
-            return 'Onboarding fee discount applied';
-        } catch (Exception e) {
-            System.debug('==pushOnboardingUpdates ERROR== ' + e.getMessage());
-            System.debug('==pushOnboardingUpdates STACK== ' + e.getStackTraceString());
-            return 'Onboarding update skipped: ' + e.getMessage();
-        }
-    }
+    // private static String pushOnboardingUpdates(
+        // Context.IndustriesContext ctx,
+        // String contextId,
+        // List<Map<String, Object>> updates
+    // ) {
+        // try {
+            // ctx.updateContextAttributes(new Map<String, Object>{
+                // 'contextId'             => contextId,
+                // 'nodePathAndAttributes' => updates
+            // });
+            // return 'Onboarding fee discount applied';
+        // } catch (Exception e) {
+            // System.debug('==pushOnboardingUpdates ERROR== ' + e.getMessage());
+            // System.debug('==pushOnboardingUpdates STACK== ' + e.getStackTraceString());
+            // return 'Onboarding update skipped: ' + e.getMessage();
+        // }
+    // }
 
     // =========================================================
     // ========  HAAS HARDWARE / IMPLEMENTATION PRICING — ADDED (ARM-108)  ========
@@ -1651,6 +1655,12 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         List<Map<String, Object>> updates       = new List<Map<String, Object>>();
         Boolean anyEligibleLine = false;
 
+        // Blank-price lines that could NOT be resolved to a saved QuoteLineItem
+        // Id, keyed so the SOQL branch below can hand back anything it also
+        // failed to resolve. See buildNodeListPriceUpdate for why these exist.
+        Map<String, LineItemNodeWrapper> unresolvedNodes =
+            new Map<String, LineItemNodeWrapper>();
+
         for (Object itemObj : items) {
             LineItemNodeWrapper li = new LineItemNodeWrapper(itemObj);
             if (!li.isValid() || li.deleted) continue;
@@ -1698,11 +1708,20 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                 continue;
             }
 
+            String nodeKey = String.valueOf(li.dataPath.get(2));
+
             try {
-                Id lineId = (Id) String.valueOf(li.dataPath.get(2));
+                Id lineId = (Id) nodeKey;
                 salesPathByLineId.put(lineId, li.salesPath);
+                unresolvedNodes.put(String.valueOf(lineId), li);
             } catch (Exception idEx) {
-                System.debug('==NetUnitPrice fallback salesPath map skip== ' + idEx.getMessage());
+                // Node key isn't an Id at all — a line added in THIS
+                // transaction (e.g. every component of a bundle the user just
+                // dropped on the quote). The SOQL branch below can never see
+                // it, so price it from the node's own ListPrice tag instead.
+                System.debug('==NetUnitPrice fallback unsaved line== nodeKey=' + nodeKey
+                    + ' — will price from node ListPrice tag');
+                unresolvedNodes.put(nodeKey, li);
             }
         }
 
@@ -1739,6 +1758,21 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                     new List<Object>{ 'UnitPrice',    'UnitPrice',    unitPrice    },
                     new List<Object>{ 'NetUnitPrice', 'NetUnitPrice', netUnitPrice }
                 }));
+
+                // Priced from the saved row — no need for the node-tag sweep.
+                unresolvedNodes.remove(String.valueOf(qli.Id));
+            }
+        }
+
+        // Whatever is left never reached a saved QuoteLineItem row: lines added
+        // in this same transaction (bundle components, above all), plus any
+        // Id-shaped node the SOQL didn't return. Price those from the node's own
+        // ListPrice tag, which the pricing context carries regardless of whether
+        // the line has been committed yet.
+        for (LineItemNodeWrapper li : unresolvedNodes.values()) {
+            Map<String, Object> nodeUpdate = buildNodeListPriceUpdate(li);
+            if (nodeUpdate != null) {
+                updates.add(nodeUpdate);
             }
         }
 
@@ -1749,6 +1783,43 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
         plan.updates = updates;
         return plan;
+    }
+
+    // Node-tag twin of the SOQL branch in buildNetUnitPriceFallbackUpdates.
+    //
+    // The SOQL branch can only price lines that already exist as QuoteLineItem
+    // rows. When a user adds a bundle, every component line is brand new in
+    // that same pricing transaction, so its context node key is a transient
+    // string rather than a real Id and the query can never match it. Any
+    // component the native Pricing Procedure happened to leave blank therefore
+    // stayed blank on screen until the user hit Reprice — by then the lines
+    // were saved, the SOQL matched, and the price appeared. Reading ListPrice
+    // off the node closes that first-pass gap.
+    //
+    // Returns null when the node carries no usable list price.
+    @TestVisible
+    private static Map<String, Object> buildNodeListPriceUpdate(LineItemNodeWrapper li) {
+        if (li == null || li.salesPath == null) return null;
+
+        Decimal listPrice = parseTagDecimal(li.listPrice);
+        if (listPrice == null) {
+            System.debug('==NetUnitPrice fallback SKIPPED (node, no ListPrice tag)== path=' + li.salesPath);
+            return null;
+        }
+
+        Decimal unitPrice    = listPrice.setScale(2, RoundingMode.HALF_UP);
+        Decimal discountPct  = li.discount == null ? 0 : li.discount;
+        Decimal netUnitPrice = unitPrice * (1 - (discountPct / 100));
+        if (netUnitPrice < 0) netUnitPrice = 0;
+        netUnitPrice = netUnitPrice.setScale(2, RoundingMode.HALF_UP);
+
+        System.debug('==NetUnitPrice fallback APPLIED (node)== path=' + li.salesPath
+            + ' unitPrice=' + unitPrice + ' netUnitPrice=' + netUnitPrice);
+
+        return buildNodeUpdate(li.salesPath, new List<List<Object>>{
+            new List<Object>{ 'UnitPrice',    'UnitPrice',    unitPrice    },
+            new List<Object>{ 'NetUnitPrice', 'NetUnitPrice', netUnitPrice }
+        });
     }
 
     @TestVisible
@@ -1785,52 +1856,54 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         @TestVisible String message; // non-null only for early-exit cases
     }
 
-    @TestVisible
-    private class OnboardingPlanResult {
-        @TestVisible List<Map<String, Object>> updates;
-        @TestVisible String message; // non-null only for early-exit cases
-    }
+    // @TestVisible
+    // private class OnboardingPlanResult {
+        // @TestVisible List<Map<String, Object>> updates;
+        // @TestVisible String message; // non-null only for early-exit cases
+    // }
 
-    @TestVisible
-    private class OnboardingQuoteContext {
-        @TestVisible Decimal contractTermMonths;
-        @TestVisible Decimal amortizedTermMonths;
-        @TestVisible String  onboardingFeeAmortized;
-    }
+    // @TestVisible
+    // private class OnboardingQuoteContext {
+        // @TestVisible Decimal contractTermMonths;
+        // @TestVisible Decimal amortizedTermMonths;
+        // @TestVisible String  onboardingFeeAmortized;
+    // }
 
-    @TestVisible
-    private class OnboardingLobConfig {
-        @TestVisible String  lineOfBusiness;
-        @TestVisible String  monthlySku;
-        @TestVisible String  oneTimeSku;
-        @TestVisible String  principalAmountField;
-        @TestVisible String  principalMonthlyField;
-        @TestVisible Decimal oneTimeMultiplier;
+    // @TestVisible
+    // private class OnboardingLobConfig {
+        // @TestVisible String  lineOfBusiness;
+        // @TestVisible String  monthlySku;
+        // @TestVisible String  oneTimeSku;
+        // @TestVisible String  principalAmountField;
+        // @TestVisible String  principalMonthlyField;
+        // @TestVisible Decimal oneTimeMultiplier;
         // Product2.Category__c values whose lines feed this LOB's principal.
         // null means "no category filter" — every non-onboarding line of this
         // LOB counts. See PRINCIPAL_CATEGORIES_SERVICES / _ALL below.
-        @TestVisible Set<String> principalCategories;
+        // @TestVisible Set<String> principalCategories;
 
-        OnboardingLobConfig(
-            String lineOfBusiness, String monthlySku, String oneTimeSku,
-            String principalAmountField, String principalMonthlyField, Decimal oneTimeMultiplier
-        ) {
-            this(lineOfBusiness, monthlySku, oneTimeSku, principalAmountField,
-                 principalMonthlyField, oneTimeMultiplier, PRINCIPAL_CATEGORIES_SERVICES);
-        }
+        // @TestVisible
+        // OnboardingLobConfig(
+            // String lineOfBusiness, String monthlySku, String oneTimeSku,
+            // String principalAmountField, String principalMonthlyField, Decimal oneTimeMultiplier
+        // ) {
+            // this(lineOfBusiness, monthlySku, oneTimeSku, principalAmountField,
+                 // principalMonthlyField, oneTimeMultiplier, PRINCIPAL_CATEGORIES_SERVICES);
+        // }
 
-        OnboardingLobConfig(
-            String lineOfBusiness, String monthlySku, String oneTimeSku,
-            String principalAmountField, String principalMonthlyField, Decimal oneTimeMultiplier,
-            Set<String> principalCategories
-        ) {
-            this.lineOfBusiness        = lineOfBusiness;
-            this.monthlySku            = monthlySku;
-            this.oneTimeSku            = oneTimeSku;
-            this.principalAmountField  = principalAmountField;
-            this.principalMonthlyField = principalMonthlyField;
-            this.oneTimeMultiplier     = oneTimeMultiplier;
-            this.principalCategories   = principalCategories;
-        }
-    }
+        // @TestVisible
+        // OnboardingLobConfig(
+            // String lineOfBusiness, String monthlySku, String oneTimeSku,
+            // String principalAmountField, String principalMonthlyField, Decimal oneTimeMultiplier,
+            // Set<String> principalCategories
+        // ) {
+            // this.lineOfBusiness        = lineOfBusiness;
+            // this.monthlySku            = monthlySku;
+            // this.oneTimeSku            = oneTimeSku;
+            // this.principalAmountField  = principalAmountField;
+            // this.principalMonthlyField = principalMonthlyField;
+            // this.oneTimeMultiplier     = oneTimeMultiplier;
+            // this.principalCategories   = principalCategories;
+        // }
+    // }
 }
