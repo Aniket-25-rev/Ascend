@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <description>Before-save replacement for the &quot;Opportunity Closed Won&quot; Process Builder. Sets Stage to Closed Won in the same DML as the triggering save so validation-rule errors surface inline on the field instead of as a flow fault modal.</description>
+    <environments>Default</environments>
+    <interviewLabel>Opportunity Set Closed Won On Approval {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Opportunity Set Closed Won On Approval</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <assignments>
+        <name>Set_Stage_Closed_Won</name>
+        <label>Set Stage Closed Won</label>
+        <locationX>176</locationX>
+        <locationY>287</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.StageName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Closed Won</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Stage_Closed_Won</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterFormula>AND(
+    ISPICKVAL({!$Record.StageApproval__c}, &apos;Approved&apos;),
+    NOT(ISPICKVAL({!$Record.StageName}, &apos;Closed Won&apos;))
+)</filterFormula>
+        <object>Opportunity</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

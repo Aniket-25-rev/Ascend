@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExpressionSetDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contextDefinitions>Ascend_SalesTransactionContext</contextDefinitions>
+    <executionMode>Cloud</executionMode>
+    <executionScale>Low</executionScale>
+    <interfaceSourceType>Constraint</interfaceSourceType>
+    <label>Dynamic Add Onboarding Fee By LOB</label>
+    <processType>Constraint</processType>
+    <resourceInitializationType>Off</resourceInitializationType>
+    <template>false</template>
+    <versions>
+        <fullName>DynamicOnboardingFeeByLOB_V1</fullName>
+        <decimalScale>2</decimalScale>
+        <expressionSetDefinition>DynamicOnboardingFeeByLOB</expressionSetDefinition>
+        <interfaceSourceType>Constraint</interfaceSourceType>
+        <label>Dynamic Add Onboarding Fee By LOB V1</label>
+        <processType>Constraint</processType>
+        <shouldShowExplExternally>false</shouldShowExplExternally>
+        <startDate>2026-08-27T04:09:28.000Z</startDate>
+        <status>Inactive</status>
+        <versionNumber>1</versionNumber>
+    </versions>
+</ExpressionSetDefinition>
