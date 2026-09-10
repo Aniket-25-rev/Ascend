@@ -5063,6 +5063,22 @@
                     <contextInputAttributeName>IsContextInUse__std</contextInputAttributeName>
                     <inheritedFrom>SalesTransactionContext__stdctx/version/QuoteEntitiesMapping/SalesTransaction/IsContextInUse__std</inheritedFrom>
                 </contextAttributeMappings>
+                <contextAttributeMappings>
+                    <contextAttrHydrationDetails>
+                        <objectName>Quote</objectName>
+                        <queryAttribute>Principal_Bundle_MRR__c</queryAttribute>
+                    </contextAttrHydrationDetails>
+                    <contextAttribute>Principal_Bundle_MRR__c</contextAttribute>
+                    <contextInputAttributeName>Principal_Bundle_MRR__c</contextInputAttributeName>
+                </contextAttributeMappings>
+                <contextAttributeMappings>
+                    <contextAttrHydrationDetails>
+                        <objectName>Quote</objectName>
+                        <queryAttribute>Principal_Bundle_Monthly__c</queryAttribute>
+                    </contextAttrHydrationDetails>
+                    <contextAttribute>Principal_Bundle_Monthly__c</contextAttribute>
+                    <contextInputAttributeName>Principal_Bundle_Monthly__c</contextInputAttributeName>
+                </contextAttributeMappings>
                 <contextNode>SalesTransaction</contextNode>
                 <inheritedFrom>SalesTransactionContext__stdctx/version/QuoteEntitiesMapping/SalesTransaction</inheritedFrom>
                 <object>Quote</object>
@@ -10544,6 +10560,22 @@
                     <contextAttribute>IsRevenueRecommendationEnabled__std</contextAttribute>
                     <contextInputAttributeName>IsRevenueRecommendationEnabled__std</contextInputAttributeName>
                     <inheritedFrom>SalesTransactionContext__stdctx/version/OrderEntitiesMapping/SalesTransaction/IsRevenueRecommendationEnabled__std</inheritedFrom>
+                </contextAttributeMappings>
+                <contextAttributeMappings>
+                    <contextAttrHydrationDetails>
+                        <objectName>Order</objectName>
+                        <queryAttribute>Principal_Bundle_MRR__c</queryAttribute>
+                    </contextAttrHydrationDetails>
+                    <contextAttribute>Principal_Bundle_MRR__c</contextAttribute>
+                    <contextInputAttributeName>Principal_Bundle_MRR__c</contextInputAttributeName>
+                </contextAttributeMappings>
+                <contextAttributeMappings>
+                    <contextAttrHydrationDetails>
+                        <objectName>Order</objectName>
+                        <queryAttribute>Principal_Bundle_Monthly__c</queryAttribute>
+                    </contextAttrHydrationDetails>
+                    <contextAttribute>Principal_Bundle_Monthly__c</contextAttribute>
+                    <contextInputAttributeName>Principal_Bundle_Monthly__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextNode>SalesTransaction</contextNode>
                 <inheritedFrom>SalesTransactionContext__stdctx/version/OrderEntitiesMapping/SalesTransaction</inheritedFrom>
@@ -19746,6 +19778,30 @@
                 <key>false</key>
                 <title>IsContextInUse__std</title>
                 <transient>true</transient>
+                <value>false</value>
+            </contextAttributes>
+            <contextAttributes>
+                <contextTags>
+                    <title>Principal_Bundle_MRR__c</title>
+                </contextTags>
+                <customMappingAllowed>false</customMappingAllowed>
+                <dataType>currency</dataType>
+                <fieldType>inputoutput</fieldType>
+                <key>false</key>
+                <title>Principal_Bundle_MRR__c</title>
+                <transient>false</transient>
+                <value>false</value>
+            </contextAttributes>
+            <contextAttributes>
+                <contextTags>
+                    <title>Principal_Bundle_Monthly__c</title>
+                </contextTags>
+                <customMappingAllowed>false</customMappingAllowed>
+                <dataType>currency</dataType>
+                <fieldType>inputoutput</fieldType>
+                <key>false</key>
+                <title>Principal_Bundle_Monthly__c</title>
+                <transient>false</transient>
                 <value>false</value>
             </contextAttributes>
             <contextTags>
@@ -30223,7 +30279,7 @@
         </contextNodes>
         <isActive>true</isActive>
         <startDate>2026-04-02 12:56:38</startDate>
-        <versionNumber>11</versionNumber>
+        <versionNumber>12</versionNumber>
     </contextDefinitionVersions>
     <contextTtl>10</contextTtl>
     <description>Ascend Sales Transaction Context</description>
