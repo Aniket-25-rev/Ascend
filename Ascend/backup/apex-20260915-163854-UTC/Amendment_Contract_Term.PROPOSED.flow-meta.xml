@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <description>Populates Contract_Term_Months__c on non Month-to-Month amendment quotes, so the field is filled at creation without waiting for a pricing pass. Term = prorated months from Quote.StartDate to the amended Contract.EndDate. Blank-only: never overwrites a value a rep entered. MTM amendments are excluded - their StartDate IS Contract.EndDate, so the span is zero.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>ProratedContractTerm</name>
+        <dataType>Number</dataType>
+        <expression>(
+  ( DAY(ADDMONTHS(DATE(YEAR({!$Record.StartDate}), MONTH({!$Record.StartDate}), 1), 1) - 1)
+    - DAY({!$Record.StartDate}) + 1 )
+  / DAY(ADDMONTHS(DATE(YEAR({!$Record.StartDate}), MONTH({!$Record.StartDate}), 1), 1) - 1)
+)
++ (
+  12 * ( YEAR({!Get_Contract.EndDate}) - YEAR({!$Record.StartDate}) )
+  + MONTH({!Get_Contract.EndDate}) - MONTH({!$Record.StartDate}) - 1
+)
++ (
+  DAY({!Get_Contract.EndDate})
+  / DAY(ADDMONTHS(DATE(YEAR({!Get_Contract.EndDate}), MONTH({!Get_Contract.EndDate}), 1), 1) - 1)
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <interviewLabel>Amendment Contract Term {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Amendment Contract Term</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Contract</name>
+        <label>Get Contract</label>
+        <locationX>176</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Contract_Has_End_Date</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ContractId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contract</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>EndDate</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <decisions>
+        <name>Contract_Has_End_Date</name>
+        <label>Contract Has End Date</label>
+        <locationX>176</locationX>
+        <locationY>396</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_End_Date_After_Start</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Contract.EndDate</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Contract.EndDate</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>$Record.StartDate</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Contract_Term</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <recordUpdates>
+        <name>Set_Contract_Term</name>
+        <label>Set Contract Term</label>
+        <locationX>176</locationX>
+        <locationY>516</locationY>
+        <inputAssignments>
+            <field>Contract_Term_Months__c</field>
+            <value>
+                <elementReference>ProratedContractTerm</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Contract</targetReference>
+        </connector>
+        <filterFormula>AND(
+  TEXT({!$Record.OriginalActionType}) = "Amend",
+  NOT({!$Record.Month_to_Month__c}),
+  ISBLANK({!$Record.Contract_Term_Months__c}),
+  NOT(ISBLANK({!$Record.ContractId})),
+  NOT(ISBLANK({!$Record.StartDate}))
+)</filterFormula>
+        <object>Quote</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>
