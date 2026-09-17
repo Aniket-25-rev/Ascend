@@ -216,7 +216,8 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             List<Map<String, Object>> updates = buildLineUpdates(
                 items, startDate, endDate, coTermEndDate, isNewBusiness,
                 tc.contractTerm, persistedStartDates, (isRenewal || isMtmAmend),
-                bundleParentSkus, bundleMemberSkus, tc.amortizedTermMonths
+                bundleParentSkus, bundleMemberSkus, tc.amortizedTermMonths,
+                derivedTermExact
             );
 
             // Anything left in these sets was skipped by the date logic
@@ -636,7 +637,31 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         return buildLineUpdates(
             items, startDate, endDate, coTermEndDate, isNewBusiness,
             null, new Map<Id, Date>(), false,
-            bundleParentSkus, bundleMemberSkus, null
+            bundleParentSkus, bundleMemberSkus, null, null
+        );
+    }
+
+    // Pre-amendTermPTC signature, kept so existing callers and tests compile.
+    // Delegates with no quote-level term: every line keeps its own
+    // per-line PricingTermCount calculation.
+    @TestVisible
+    private static List<Map<String, Object>> buildLineUpdates(
+        List<Object> items,
+        Date startDate,
+        Date endDate,
+        Date coTermEndDate,
+        Boolean isNewBusiness,
+        Integer contractTerm,
+        Map<Id, Date> persistedStartDates,
+        Boolean alignLinesToHeader,
+        Set<String> bundleParentSkus,
+        Set<String> bundleMemberSkus,
+        Integer amortizedTermMonths
+    ) {
+        return buildLineUpdates(
+            items, startDate, endDate, coTermEndDate, isNewBusiness,
+            contractTerm, persistedStartDates, alignLinesToHeader,
+            bundleParentSkus, bundleMemberSkus, amortizedTermMonths, null
         );
     }
 
@@ -653,7 +678,13 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                                      // propagates to every QLI; EndDate = that start + Term
         Set<String> bundleParentSkus,  // mutated: SKUs handled here are removed
         Set<String> bundleMemberSkus,  // mutated: SKUs handled here are removed
-        Integer amortizedTermMonths  // Quote.Amortized_Term_Months__c — MONTHLY_AMORT_SKUS only
+        Integer amortizedTermMonths,  // Quote.Amortized_Term_Months__c — MONTHLY_AMORT_SKUS only
+        Decimal amendTermPTC         // Amend (non-MTM): the quote-level Contract_Term_Months__c.
+                                     // When set, every amendment line takes THIS as its
+                                     // PricingTermCount instead of computing its own from
+                                     // dates, so line PTC and the quote term are identical.
+                                     // Null for New Business, Renewal and MTM - those keep
+                                     // their existing per-line calculation untouched.
     ) {
         List<Map<String, Object>> updates = new List<Map<String, Object>>();
 
@@ -814,7 +845,11 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                     // Using li.endDate caused PTC to reflect the old date range while EndDate
                     // was updated to the new range — PTC=9 with EndDate=2027-11-30, for example.
                     Decimal decPTC = calcLineItemPTC(lineStartDate, recalcEndDate);
-                    Decimal ptcToSet = decPTC != null ? decPTC : (Decimal) contractTerm;
+                    // Amend (non-MTM): the quote-level term is the source of
+                    // truth - take it verbatim rather than recomputing per line.
+                    Decimal ptcToSet = amendTermPTC != null
+                        ? amendTermPTC
+                        : (decPTC != null ? decPTC : (Decimal) contractTerm);
                     // Only push StartDate when the Quote Start Date differs from the persisted
                     // QLI StartDate. Pushing it unconditionally on every Reprice causes RC to
                     // recreate AssetStatePeriods for all lines simultaneously → concurrent
@@ -871,6 +906,10 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 if (effectiveEndDate != null) {
                     Date lineSD = String.isNotBlank(li.startDate) ? Date.valueOf(li.startDate) : startDate;
                     ptcToSet = calcLineItemPTC(lineSD, effectiveEndDate);
+                }
+                if (amendTermPTC != null) {
+                    // Amend (non-MTM): quote-level term wins, as above.
+                    ptcToSet = amendTermPTC;
                 }
                 if (ptcToSet == null && contractTerm != null) {
                     ptcToSet = contractTerm;
@@ -1148,16 +1187,13 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
 
     // =========================================================
     // DERIVE AMEND CONTRACT TERM (Amend, non Month-to-Month)
-    // Sourced from the line items' own PricingTermCount, NOT recomputed
-    // from the dates. Revenue Cloud recalculates PricingTermCount with
-    // its own formula after this hook runs, so a date-based figure here
-    // (calcLineItemPTC gave 11.23 where RC stored 11.2086) would always
-    // disagree with what the lines end up displaying. Taking the lines'
-    // value makes the two identical by construction.
+    // Prorated months from Quote.StartDate to Contract.EndDate, via the
+    // same calcLineItemPTC the lines use.
     //
-    // Returns null when no line carries a PricingTermCount yet - the
-    // field then stays blank and populates on a later pricing pass,
-    // rather than being stamped with a value that would never correct.
+    // This term is the SOURCE: the value derived here is also pushed onto
+    // every amendment line as PricingTermCount (see buildLineUpdates'
+    // amendTermPTC), so quote and lines agree because they are literally
+    // the same number - rather than each computing its own.
     // BLANK-ONLY: a term already on the quote is never recomputed, so
     // the field stays editable - a rep's edit survives every reprice.
     // Pure: no DML, no context writes. Returns null when not applicable.
@@ -1171,7 +1207,8 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         // Rep-entered (or already populated) - leave it alone.
         if (tc.contractTerm != null && tc.contractTerm > 0) return null;
 
-        Decimal derived = getQuoteLinePTC(tc.quoteId);
+        Decimal derived = calcLineItemPTC(
+            Date.valueOf(tc.quoteStartDate), tc.contractEndDate);
         System.debug('==deriveAmendContractTerm== derived=' + derived
             + ' | start=' + tc.quoteStartDate
             + ' | contractEnd=' + tc.contractEndDate);
@@ -1207,48 +1244,6 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                               'ContractTermsMonths__c',
                               derivedTerm }
         });
-    }
-
-    // =========================================================
-    // GET QUOTE LINE PRICING TERM COUNT
-    // Most common PricingTermCount among the quote's pricing-relevant
-    // lines - same shape as getContractCoTermEndDate above, and the same
-    // exclusions (One-Time selling model, ramp segments), so the term
-    // reflects the lines that actually carry the contract's duration.
-    // =========================================================
-    @TestVisible
-    private static Decimal getQuoteLinePTC(String quoteId) {
-        if (String.isBlank(quoteId)) return null;
-
-        Map<Decimal, Integer> ptcCounts = new Map<Decimal, Integer>();
-        try {
-            for (QuoteLineItem qli : [
-                SELECT PricingTermCount
-                FROM   QuoteLineItem
-                WHERE  QuoteId          = :quoteId
-                AND    PricingTermCount != null
-                AND    RampIdentifier   = null
-                AND    SellingModelType != 'OneTime'
-            ]) {
-                Integer cnt = ptcCounts.containsKey(qli.PricingTermCount)
-                    ? ptcCounts.get(qli.PricingTermCount) : 0;
-                ptcCounts.put(qli.PricingTermCount, cnt + 1);
-            }
-        } catch (Exception e) {
-            System.debug('==getQuoteLinePTC SOQL error== ' + e.getMessage());
-            return null;
-        }
-
-        Decimal best      = null;
-        Integer bestCount = -1;
-        for (Decimal d : ptcCounts.keySet()) {
-            if (ptcCounts.get(d) > bestCount) {
-                bestCount = ptcCounts.get(d);
-                best = d;
-            }
-        }
-        System.debug('==getQuoteLinePTC== counts=' + ptcCounts + ' | chosen=' + best);
-        return best;
     }
 
     // =========================================================

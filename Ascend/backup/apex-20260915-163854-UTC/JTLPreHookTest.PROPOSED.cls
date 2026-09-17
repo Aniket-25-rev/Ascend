@@ -60,6 +60,15 @@ private class JTLPreHookTest {
         while (suffix.length() < 12) suffix = '0' + suffix;
         return Id.valueOf('0QL' + suffix);
     }
+    // Same convention as fakeQliId, for Quote: a well-formed Id that matches
+    // no record, so SOQL against it returns nothing and the tests need no
+    // setup data.
+    private static Id fakeQuoteId() {
+        fakeIdCounter++;
+        String suffix = String.valueOf(fakeIdCounter);
+        while (suffix.length() < 12) suffix = '0' + suffix;
+        return Id.valueOf('0Q0' + suffix);
+    }
 
     // ─────────────────────────────────────────────────────────
     // SECTION 1 – execute()
@@ -1790,31 +1799,20 @@ private class JTLPreHookTest {
     }
 
     @IsTest
-    static void deriveAmendContractTerm_noLinePtc_returnsNull() {
-        // No quote id, so no line PricingTermCount to read: the field stays
-        // blank this pass rather than taking a date-derived value that
-        // would never agree with what Revenue Cloud puts on the lines.
-        JTLPreHook.TransactionContext tc = amendTc();
-        tc.quoteId = null;
-        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc));
+    static void deriveAmendContractTerm_proratedFromDates() {
+        // amendTc(): 2026-11-11 -> 2027-10-31, so 11 whole months plus the
+        // part month, via calcLineItemPTC. The same figure is pushed onto
+        // the lines as PricingTermCount, so quote and lines carry one
+        // number rather than each computing its own.
+        Decimal d = JTLPreHook.deriveAmendContractTerm(amendTc());
+        System.assertEquals(11.68, d);
     }
 
-    @IsTest
-    static void getQuoteLinePTC_blankQuoteId_returnsNull() {
-        System.assertEquals(null, JTLPreHook.getQuoteLinePTC(null));
-        System.assertEquals(null, JTLPreHook.getQuoteLinePTC(''));
-    }
-
-    @IsTest
-    static void getQuoteLinePTC_noMatchingLines_returnsNull() {
-        // Valid Id shape, no such quote: the query returns nothing.
-        System.assertEquals(null, JTLPreHook.getQuoteLinePTC('0Q0000000000000AAA'));
-    }
 
     @IsTest
     static void deriveAmendContractTerm_skipsWhenNotApplicable() {
         JTLPreHook.TransactionContext tc = amendTc();
-        tc.quoteId = '0Q0000000000000AAA';
+        tc.quoteId = fakeQuoteId();
         tc.quoteType = 'Renew';
         System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'renewal');
 
@@ -1876,14 +1874,14 @@ private class JTLPreHookTest {
         System.assertEquals(null, tc.contractEndDate, 'no quote id');
 
         tc = amendTc();
-        tc.quoteId         = '0Q0000000000000AAA';
+        tc.quoteId         = fakeQuoteId();
         tc.quoteType       = 'Renew';
         tc.contractEndDate = null;
         JTLPreHook.loadContractEndDate(tc);
         System.assertEquals(null, tc.contractEndDate, 'renewal');
 
         tc = amendTc();
-        tc.quoteId         = '0Q0000000000000AAA';
+        tc.quoteId         = fakeQuoteId();
         tc.isMonthToMonth  = true;
         tc.contractEndDate = null;
         JTLPreHook.loadContractEndDate(tc);
@@ -1896,7 +1894,7 @@ private class JTLPreHookTest {
         tc.contractEndDate = null;
         // A syntactically valid Id that matches no record: the SOQL returns
         // no rows, the catch swallows it, and the field stays null.
-        tc.quoteId = '0Q0000000000000AAA';
+        tc.quoteId = fakeQuoteId();
         JTLPreHook.loadContractEndDate(tc);
         System.assertEquals(null, tc.contractEndDate);
     }
