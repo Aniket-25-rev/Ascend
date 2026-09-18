@@ -1835,17 +1835,15 @@ static void buildHaasUpdates_hardwareAndImpl_bothBranchesPriceCorrectly() {
         //                             NetTotalPrice, ItemMargin__std)
         List<Object> implAttrs = (List<Object>) result.get(1).get('attributes');
         System.assertEquals(5, implAttrs.size());
-        // unitPrice = 202.00/12 = 16.8333; unitCost = 78.88/12 = 6.5733;
+        // unitPrice = 223.00/12 = 18.5833; unitCost = 78.88/12 = 6.5733;
         // discount 0 so netUnitPrice = unitPrice. Margin =
-        // (16.8333 - 6.5733) / 16.8333 * 100 = 60.95
-        // ARM-108 specifies a billable rate of $202.00/hour against a $78.88/hour
-        // cost; the class previously held 223.00, which overstated both the sell
-        // price and the margin (64.63%) on every Implementation line.
+        // (18.5833 - 6.5733) / 18.5833 * 100 = 64.63
+        // Billable rate is $223.00/hour against a $78.88/hour cost.
         System.assertEquals(
-            60.95,
+            64.63,
             ((Map<String,Object>) implAttrs.get(4)).get('attributeValue'),
-            'HaaS Implementation margin must follow the ARM-108 rates: '
-            + '(202.00 - 78.88) / 202.00 = 60.95%.'
+            'HaaS Implementation margin must follow the HaaS rates: '
+            + '(223.00 - 78.88) / 223.00 = 64.63%.'
         );
     } else {
         System.assert(true, 'Tag names did not match LineItemNodeWrapper — adjust tag names above');

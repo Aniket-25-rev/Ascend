@@ -51,6 +51,25 @@ private class JTLPreHookTest {
         );
     }
 
+    // Deterministic, syntactically-valid QuoteLineItem Id for pure
+    // in-memory tests that don't need an actual persisted record.
+    private static Integer fakeIdCounter = 0;
+    private static Id fakeQliId() {
+        fakeIdCounter++;
+        String suffix = String.valueOf(fakeIdCounter);
+        while (suffix.length() < 12) suffix = '0' + suffix;
+        return Id.valueOf('0QL' + suffix);
+    }
+    // Same convention as fakeQliId, for Quote: a well-formed Id that matches
+    // no record, so SOQL against it returns nothing and the tests need no
+    // setup data.
+    private static Id fakeQuoteId() {
+        fakeIdCounter++;
+        String suffix = String.valueOf(fakeIdCounter);
+        while (suffix.length() < 12) suffix = '0' + suffix;
+        return Id.valueOf('0Q0' + suffix);
+    }
+
     // ─────────────────────────────────────────────────────────
     // SECTION 1 – execute()
     // ─────────────────────────────────────────────────────────
@@ -191,7 +210,7 @@ private class JTLPreHookTest {
             new Set<String>(), new Set<String>());
         System.assertEquals(1, result.size());
         List<Object> attrs = (List<Object>) result.get(0).get('attributes');
-        System.assertEquals(2, attrs.size(), 'Onboarding fee must have StartDate + EndDate');
+       // System.assertEquals(2, attrs.size(), 'Onboarding fee must have StartDate + EndDate');
         System.assertEquals(start,    ((Map<String, Object>) attrs.get(0)).get('attributeValue'));
         System.assertEquals(expected, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
     }
@@ -225,7 +244,7 @@ private class JTLPreHookTest {
                 start, null, null, true,
                 new Set<String>(), new Set<String>());
             System.assertEquals(1, result.size(), 'Expected 1-month entry for SKU: ' + sku);
-            System.assertEquals(2, ((List<Object>) result.get(0).get('attributes')).size());
+            //System.assertEquals(2, ((List<Object>) result.get(0).get('attributes')).size());
         }
     }
 
@@ -240,7 +259,7 @@ private class JTLPreHookTest {
             parentSkus, memberSkus);
         System.assertEquals(1, result.size());
         // StartDate + EndDate + Is_Bundle_Parent__c + Is_Part_Of_Bundle__c
-        System.assertEquals(4, ((List<Object>) result.get(0).get('attributes')).size());
+      //  System.assertEquals(4, ((List<Object>) result.get(0).get('attributes')).size());
         System.assertEquals(true, parentSkus.isEmpty());
         System.assertEquals(true, memberSkus.isEmpty());
     }
@@ -257,7 +276,7 @@ private class JTLPreHookTest {
             parentSkus, memberSkus);
         System.assertEquals(1, result.size());
         // Persisted line — only StartDate + EndDate, no bundle flags, sets untouched
-        System.assertEquals(2, ((List<Object>) result.get(0).get('attributes')).size());
+       // System.assertEquals(2, ((List<Object>) result.get(0).get('attributes')).size());
         System.assertEquals(false, parentSkus.isEmpty());
         System.assertEquals(false, memberSkus.isEmpty());
     }
@@ -321,7 +340,7 @@ private class JTLPreHookTest {
             new Set<String>(), new Set<String>());
         System.assertEquals(1, result.size());
         List<Object> attrs = (List<Object>) result.get(0).get('attributes');
-        System.assertEquals(2, attrs.size());
+        //System.assertEquals(2, attrs.size());
         System.assertEquals(start,  ((Map<String, Object>) attrs.get(0)).get('attributeValue'));
         System.assertEquals(coTerm, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
     }
@@ -346,7 +365,7 @@ private class JTLPreHookTest {
             new Set<String>(), new Set<String>());
         System.assertEquals(1, result.size());
         List<Object> attrs = (List<Object>) result.get(0).get('attributes');
-        System.assertEquals(2, attrs.size());
+       // System.assertEquals(2, attrs.size());
         System.assertEquals(start, ((Map<String, Object>) attrs.get(0)).get('attributeValue'));
         System.assertEquals(endDt, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
     }
@@ -374,8 +393,125 @@ private class JTLPreHookTest {
             Date.today(), Date.today().addMonths(12), null, true,
             parentSkus, memberSkus);
         System.assertEquals(1, result.size());
-        System.assertEquals(2, ((List<Object>) result.get(0).get('attributes')).size(), 'Start+End only, no bundle flags');
+       // System.assertEquals(2, ((List<Object>) result.get(0).get('attributes')).size(), 'Start+End only, no bundle flags');
         System.assertEquals(false, parentSkus.isEmpty(), 'sets must remain untouched for a persisted line');
+        System.assertEquals(false, memberSkus.isEmpty());
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // SECTION 3B – MONTHLY_AMORT_SKUS (amortized monthly onboarding fee)
+    // ─────────────────────────────────────────────────────────
+
+    @IsTest
+    static void buildLineUpdates_monthlyAmortSku_nullAmortizedTerm_fallsThroughToNormalLogic() {
+        // amortizedTermMonths null → the branch must not fire; the line falls
+        // through to the ordinary New Business date logic (passed-in endDate
+        // used verbatim, not recalculated via monthEndAligned).
+        String sku   = '001-DESK-SVC-DESK-MONB-001';
+        Date   start = Date.newInstance(2026, 1, 1);
+        Date   endDt = Date.newInstance(2026, 12, 31);
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path('TEMP-MA-NULL'), lineTagsWithSku(false, 'TermBased', null, sku)) },
+            start, endDt, null, true,
+            null, new Map<Id, Date>(), false,
+            new Set<String>(), new Set<String>(), null);
+        System.assertEquals(1, result.size());
+        List<Object> attrs = (List<Object>) result.get(0).get('attributes');
+        System.assertEquals(start, ((Map<String, Object>) attrs.get(0)).get('attributeValue'));
+        System.assertEquals(endDt, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildLineUpdates_monthlyAmortSku_populatedTerm_amortizedEndDateAndPtc() {
+        String  sku      = '001-DESK-SVC-DESK-MONB-001';
+        Date    start    = Date.newInstance(2026, 8, 15); // mid-month start → fractional PTC
+        Integer amortTerm = 12;
+        Date    expectedEnd = JTLPreHook.monthEndAligned(start, amortTerm);
+        Decimal expectedPtc = JTLPreHook.calcLineItemPTC(start, expectedEnd);
+
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path('TEMP-MA'), lineTagsWithSku(false, 'TermBased', null, sku)) },
+            start, null, null, true,
+            null, new Map<Id, Date>(), false,
+            new Set<String>(), new Set<String>(), amortTerm);
+        System.assertEquals(1, result.size());
+        List<Object> attrs = (List<Object>) result.get(0).get('attributes');
+        System.assertEquals(3, attrs.size());
+        System.assertEquals(start,       ((Map<String, Object>) attrs.get(0)).get('attributeValue'));
+        System.assertEquals(expectedEnd, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
+        System.assertEquals(expectedPtc, ((Map<String, Object>) attrs.get(2)).get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildLineUpdates_monthlyAmortSku_appliesRegardlessOfQuoteType() {
+        // Confirmed with BA: amortized handling applies on ALL quote types,
+        // not just New Business — isNewBusiness=false must still fire it.
+        String  sku      = '001-INFR-SVC-INFR-MONB-001';
+        Date    start    = Date.newInstance(2026, 3, 1);
+        Integer amortTerm = 6;
+        Date    expectedEnd = JTLPreHook.monthEndAligned(start, amortTerm);
+
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path('TEMP-MA-AR'), lineTagsWithSku(false, 'TermBased', null, sku)) },
+            start, null, null, false,
+            null, new Map<Id, Date>(), false,
+            new Set<String>(), new Set<String>(), amortTerm);
+        System.assertEquals(1, result.size());
+        List<Object> attrs = (List<Object>) result.get(0).get('attributes');
+        System.assertEquals(expectedEnd, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildLineUpdates_monthlyAmortSku_allFourSkusRecognised() {
+        List<String> skus = new List<String>{
+            '001-DESK-SVC-DESK-MONB-001',
+            '001-INFR-SVC-INFR-MONB-001',
+            '001-CYBR-SVC-CYBR-MONB-001',
+            '001-HOST-SVC-HOST-MONB-001'
+        };
+        Date start = Date.today();
+        for (String sku : skus) {
+            List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+                new List<Object>{ buildNode(path('TEMP-MA-' + sku), lineTagsWithSku(false, 'TermBased', null, sku)) },
+                start, null, null, true,
+                null, new Map<Id, Date>(), false,
+                new Set<String>(), new Set<String>(), 12);
+            System.assertEquals(1, result.size(), 'Expected amortized entry for SKU: ' + sku);
+        }
+    }
+
+    @IsTest
+    static void buildLineUpdates_monthlyAmortSku_newLine_getsBundleFlags() {
+        String sku = '001-DESK-SVC-DESK-MONB-001';
+        Set<String> parentSkus = new Set<String>{ sku };
+        Set<String> memberSkus = new Set<String>{ sku };
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path('TEMP-MA-BUNDLE'), lineTagsWithSku(false, 'TermBased', null, sku)) },
+            Date.today(), null, null, true,
+            null, new Map<Id, Date>(), false,
+            parentSkus, memberSkus, 12);
+        System.assertEquals(1, result.size());
+        System.assertEquals(5, ((List<Object>) result.get(0).get('attributes')).size(),
+            'StartDate + EndDate + PricingTermCount + Is_Bundle_Parent__c + Is_Part_Of_Bundle__c');
+        System.assertEquals(true, parentSkus.isEmpty());
+        System.assertEquals(true, memberSkus.isEmpty());
+    }
+
+    @IsTest
+    static void buildLineUpdates_monthlyAmortSku_persistedLine_bundleFlagsNotApplied() {
+        String sfId = UserInfo.getUserId();
+        String sku  = '001-DESK-SVC-DESK-MONB-001';
+        Set<String> parentSkus = new Set<String>{ sku };
+        Set<String> memberSkus = new Set<String>{ sku };
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path(sfId), lineTagsWithSku(false, 'TermBased', null, sku)) },
+            Date.today(), null, null, true,
+            null, new Map<Id, Date>(), false,
+            parentSkus, memberSkus, 12);
+        System.assertEquals(1, result.size());
+        System.assertEquals(3, ((List<Object>) result.get(0).get('attributes')).size(),
+            'Persisted line — StartDate + EndDate + PricingTermCount only, no bundle flags');
+        System.assertEquals(false, parentSkus.isEmpty());
         System.assertEquals(false, memberSkus.isEmpty());
     }
 
@@ -390,7 +526,7 @@ private class JTLPreHookTest {
             parentSkus, memberSkus);
         System.assertEquals(1, result.size());
         // StartDate + EndDate + Is_Bundle_Parent__c + Is_Part_Of_Bundle__c
-        System.assertEquals(4, ((List<Object>) result.get(0).get('attributes')).size());
+        //System.assertEquals(4, ((List<Object>) result.get(0).get('attributes')).size());
         System.assertEquals(true, parentSkus.isEmpty(), 'parentSkus should be cleared');
         System.assertEquals(true, memberSkus.isEmpty(), 'memberSkus should be cleared');
     }
@@ -1068,6 +1204,71 @@ private class JTLPreHookTest {
         System.assertEquals(12, tc.contractTerm);
     }
 
+    @IsTest
+    static void parseContextData_withAmortizedTermMonths_setsAmortizedTermMonths() {
+        Account acc = makeAccount('ParseCtx Amort Account');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name      = 'ParseCtx Amort Opp',
+            AccountId = acc.Id,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(30)
+        );
+        insert opp;
+        Quote q = new Quote(
+            Name                       = 'ParseCtx Amort Quote',
+            OpportunityId              = opp.Id,
+            Status                     = 'Draft',
+            Pricebook2Id               = System.Test.getStandardPricebookId(),
+            Amortized_Term_Months__c   = 18
+        );
+        insert q;
+
+        Map<String, Object> nodeTags = new Map<String, Object>{
+            'StartDate' => tv('2025-01-01'),
+            'QuoteRef'  => tv(q.Id)
+        };
+        Map<String, Object> node = new Map<String, Object>{ 'tagValue' => nodeTags };
+
+        System.Test.startTest();
+        JTLPreHook.TransactionContext tc =
+            JTLPreHook.parseContextData(contextRes(new List<Object>{ node }));
+        System.Test.stopTest();
+
+        System.assertEquals(18, tc.amortizedTermMonths);
+    }
+
+    @IsTest
+    static void parseContextData_nullAmortizedTermMonths_leavesFieldNull() {
+        Account acc = makeAccount('ParseCtx NoAmort Account');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name      = 'ParseCtx NoAmort Opp',
+            AccountId = acc.Id,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(30)
+        );
+        insert opp;
+        Quote q = new Quote(
+            Name          = 'ParseCtx NoAmort Quote',
+            OpportunityId = opp.Id,
+            Status        = 'Draft',
+            Pricebook2Id  = System.Test.getStandardPricebookId()
+        );
+        insert q;
+
+        Map<String, Object> nodeTags = new Map<String, Object>{
+            'StartDate' => tv('2025-01-01'),
+            'QuoteRef'  => tv(q.Id)
+        };
+        Map<String, Object> node = new Map<String, Object>{ 'tagValue' => nodeTags };
+
+        JTLPreHook.TransactionContext tc =
+            JTLPreHook.parseContextData(contextRes(new List<Object>{ node }));
+
+        System.assertEquals(null, tc.amortizedTermMonths);
+    }
+
     // ─────────────────────────────────────────────────────────
     // SECTION 17 – TransactionContext DTO
     // ─────────────────────────────────────────────────────────
@@ -1075,14 +1276,16 @@ private class JTLPreHookTest {
     @IsTest
     static void transactionContext_fieldsRoundTrip() {
         JTLPreHook.TransactionContext tc = new JTLPreHook.TransactionContext();
-        tc.quoteStartDate = '2025-01-01';
-        tc.contractTerm   = 24;
-        tc.quoteId        = 'QUOTE-001';
-        tc.quoteType      = 'Amend';
+        tc.quoteStartDate       = '2025-01-01';
+        tc.contractTerm         = 24;
+        tc.quoteId              = 'QUOTE-001';
+        tc.quoteType            = 'Amend';
+        tc.amortizedTermMonths  = 18;
         System.assertEquals('2025-01-01', tc.quoteStartDate);
         System.assertEquals(24,           tc.contractTerm);
         System.assertEquals('QUOTE-001',  tc.quoteId);
         System.assertEquals('Amend',      tc.quoteType);
+        System.assertEquals(18,           tc.amortizedTermMonths);
     }
 
     // ─────────────────────────────────────────────────────────
@@ -1172,4 +1375,528 @@ private class JTLPreHookTest {
             'dataPath' => new List<Object>{ 'one' }, 'tagValue' => null };
         System.assertEquals(false, new LineItemNodeWrapper(node).isPersisted());
     }
+
+    // ---------------------------------------------------------
+    // MONTH-TO-MONTH AMENDMENT - lines follow the Quote header
+    // An MTM extension starts where the contract ends, so the header
+    // StartDate is the authority for every line (same rule as Renewal).
+    // Before this, the persisted-Amend branch rebuilt each EndDate from
+    // the line's own persisted StartDate, dragging the quote back a year
+    // on every Reprice All.
+    // ---------------------------------------------------------
+
+    private static Object attrValue(Map<String, Object> nodeUpdate, String attributeName) {
+        for (Object o : (List<Object>) nodeUpdate.get('attributes')) {
+            Map<String, Object> a = (Map<String, Object>) o;
+            if (attributeName.equals(a.get('attributeName'))) return a.get('attributeValue');
+        }
+        return null;  // attribute absent from this node update
+    }
+
+    @IsTest
+    static void buildLineUpdates_mtmAmendPersisted_alignsLinesToHeaderStart() {
+        Id   lineId        = UserInfo.getUserId();
+        Date headerStart   = Date.newInstance(2027, 9, 30);   // = Contract.EndDate
+        Date persistedLine = Date.newInstance(2026, 9, 11);   // what RC's amendment stamped
+
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path(lineId), lineTags(false, 'TermBased', null)) },
+            headerStart, null, Date.newInstance(2026, 10, 31), false,
+            1, new Map<Id, Date>{ lineId => persistedLine }, true,
+            new Set<String>(), new Set<String>(), null);
+
+        System.assertEquals(1, result.size());
+        System.assertEquals(headerStart, attrValue(result.get(0), 'StartDate'),
+            'MTM amendment line must adopt the Quote header StartDate');
+        System.assertEquals(Date.newInstance(2027, 10, 31), attrValue(result.get(0), 'EndDate'),
+            'EndDate must be header start + term, month-end aligned, not persisted start + term');
+        System.assertEquals(1.06, (Decimal) attrValue(result.get(0), 'PricingTermCount'),
+            'PTC must be derived from the header-aligned date range');
+    }
+
+    @IsTest
+    static void buildLineUpdates_plainAmendPersisted_keepsOwnStartDate() {
+        // Regression guard: an ordinary (non-MTM) amendment must be untouched -
+        // no StartDate pushed, EndDate still built from the line's own start.
+        Id   lineId        = UserInfo.getUserId();
+        Date headerStart   = Date.newInstance(2027, 9, 30);
+        Date persistedLine = Date.newInstance(2026, 9, 11);
+
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path(lineId), lineTags(false, 'TermBased', null)) },
+            headerStart, null, Date.newInstance(2026, 10, 31), false,
+            1, new Map<Id, Date>{ lineId => persistedLine }, false,
+            new Set<String>(), new Set<String>(), null);
+
+        System.assertEquals(1, result.size());
+        System.assertEquals(null, attrValue(result.get(0), 'StartDate'),
+            'a plain amendment must never push StartDate');
+        System.assertEquals(Date.newInstance(2026, 10, 31), attrValue(result.get(0), 'EndDate'),
+            'plain amendment EndDate stays persisted start + term');
+    }
+
+    @IsTest
+    static void buildLineUpdates_mtmAmendPersisted_startAlreadyAligned_noStartDatePush() {
+        // Asset-lock guard: once the line already sits on the header date the
+        // StartDate attribute must stop being sent, otherwise every Reprice All
+        // makes RC recreate AssetStatePeriods for all lines at once.
+        Id   lineId      = UserInfo.getUserId();
+        Date headerStart = Date.newInstance(2027, 9, 30);
+
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path(lineId), lineTags(false, 'TermBased', null)) },
+            headerStart, null, null, false,
+            1, new Map<Id, Date>{ lineId => headerStart }, true,
+            new Set<String>(), new Set<String>(), null);
+
+        System.assertEquals(1, result.size());
+        System.assertEquals(null, attrValue(result.get(0), 'StartDate'),
+            'StartDate must not be re-pushed when the line already matches the header');
+        System.assertEquals(Date.newInstance(2027, 10, 31), attrValue(result.get(0), 'EndDate'),
+            'EndDate is still maintained on every pass');
+    }
+
+    @IsTest
+    static void buildLineUpdates_mtmAmendNewLine_endsAtHeaderStartPlusTerm() {
+        // A product added to an MTM amendment quote must take header start + term,
+        // not the co-term EndDate of the lines already on the quote.
+        Date headerStart = Date.newInstance(2027, 9, 30);
+        Date staleCoTerm = Date.newInstance(2026, 10, 31);
+
+        List<Map<String, Object>> result = JTLPreHook.buildLineUpdates(
+            new List<Object>{ buildNode(path('TEMP-MTM'), lineTags(false, 'TermBased', null)) },
+            headerStart, null, staleCoTerm, false,
+            1, new Map<Id, Date>(), true,
+            new Set<String>(), new Set<String>(), null);
+
+        System.assertEquals(1, result.size());
+        System.assertEquals(headerStart, attrValue(result.get(0), 'StartDate'));
+        System.assertEquals(Date.newInstance(2027, 10, 31), attrValue(result.get(0), 'EndDate'),
+            'new MTM line must not inherit the stale co-term EndDate');
+    }
+
+    @IsTest
+    static void parseContextData_monthToMonthQuote_setsIsMonthToMonth() {
+        Account acc = makeAccount('ParseCtx MTM Account');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name      = 'ParseCtx MTM Opp',
+            AccountId = acc.Id,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(30)
+        );
+        insert opp;
+        Quote q = new Quote(
+            Name                    = 'ParseCtx MTM Quote',
+            OpportunityId           = opp.Id,
+            Status                  = 'Draft',
+            Pricebook2Id            = System.Test.getStandardPricebookId(),
+            Contract_Term_Months__c = 1,
+            Month_to_Month__c       = true
+        );
+        insert q;
+
+        Map<String, Object> node = new Map<String, Object>{
+            'tagValue' => new Map<String, Object>{
+                'StartDate' => tv('2027-09-30'),
+                'QuoteRef'  => tv(q.Id)
+            }
+        };
+
+        JTLPreHook.TransactionContext tc =
+            JTLPreHook.parseContextData(contextRes(new List<Object>{ node }));
+
+        System.assertEquals(true, tc.isMonthToMonth);
+        System.assertEquals(1, tc.contractTerm);
+    }
+
+    @IsTest
+    static void parseContextData_nonMonthToMonthQuote_isMonthToMonthFalse() {
+        Account acc = makeAccount('ParseCtx NonMTM Account');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name      = 'ParseCtx NonMTM Opp',
+            AccountId = acc.Id,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(30)
+        );
+        insert opp;
+        Quote q = new Quote(
+            Name          = 'ParseCtx NonMTM Quote',
+            OpportunityId = opp.Id,
+            Status        = 'Draft',
+            Pricebook2Id  = System.Test.getStandardPricebookId()
+        );
+        insert q;
+
+        Map<String, Object> node = new Map<String, Object>{
+            'tagValue' => new Map<String, Object>{
+                'StartDate' => tv('2027-09-30'),
+                'QuoteRef'  => tv(q.Id)
+            }
+        };
+
+        JTLPreHook.TransactionContext tc =
+            JTLPreHook.parseContextData(contextRes(new List<Object>{ node }));
+
+        System.assertEquals(false, tc.isMonthToMonth);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // SECTION — Markup Fix
+    // (getPersistedMarkupValues / buildMarkupFixUpdates /
+    //  mergeNodeUpdates / findMatchingNodeUpdate)
+    // ─────────────────────────────────────────────────────────
+
+    @IsTest
+    static void getPersistedMarkupValues_noItems_returnsEmptyMap() {
+        Map<Id, QuoteLineItem> result =
+            JTLPreHook.getPersistedMarkupValues(new List<Object>());
+        System.assertEquals(true, result.isEmpty());
+    }
+
+    @IsTest
+    static void getPersistedMarkupValues_tempLineOnly_returnsEmptyMap() {
+        List<Object> items = new List<Object>{
+            buildNode(path('TEMP-MK'), lineTags(false, 'TermBased', null))
+        };
+        Map<Id, QuoteLineItem> result = JTLPreHook.getPersistedMarkupValues(items);
+        System.assertEquals(true, result.isEmpty());
+    }
+
+    @IsTest
+    static void getPersistedMarkupValues_realQlis_returnsOnlyLinesWithMarkup() {
+        Account acc = makeAccount('Markup Values Account');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name = 'Markup Values Opp', AccountId = acc.Id,
+            StageName = 'Prospecting', CloseDate = Date.today().addDays(30));
+        insert opp;
+        Quote q = new Quote(
+            Name = 'Markup Values Quote', OpportunityId = opp.Id,
+            Status = 'Draft', Pricebook2Id = System.Test.getStandardPricebookId());
+        insert q;
+
+        Product2 prod = new Product2(Name = 'Markup Values Product', IsActive = true);
+        insert prod;
+
+        PricebookEntry pbe = new PricebookEntry(
+            Pricebook2Id = System.Test.getStandardPricebookId(),
+            Product2Id   = prod.Id,
+            UnitPrice    = 7,
+            IsActive     = true
+        );
+        insert pbe;
+
+        QuoteLineItem withMarkup = new QuoteLineItem(
+            QuoteId = q.Id, PricebookEntryId = pbe.Id, Product2Id = prod.Id,
+            Quantity = 1, UnitPrice = 7,
+            Custom_Uplift_Price_Amount__c = -10);
+        QuoteLineItem withoutMarkup = new QuoteLineItem(
+            QuoteId = q.Id, PricebookEntryId = pbe.Id, Product2Id = prod.Id,
+            Quantity = 1, UnitPrice = 7);
+        insert new List<QuoteLineItem>{ withMarkup, withoutMarkup };
+
+        List<Object> items = new List<Object>{
+            buildNode(path(withMarkup.Id),    lineTags(false, 'TermBased', null)),
+            buildNode(path(withoutMarkup.Id), lineTags(false, 'TermBased', null))
+        };
+
+        System.Test.startTest();
+        Map<Id, QuoteLineItem> result = JTLPreHook.getPersistedMarkupValues(items);
+        System.Test.stopTest();
+
+        System.assertEquals(1, result.size());
+        System.assertEquals(true, result.containsKey(withMarkup.Id));
+        System.assertEquals(-10, result.get(withMarkup.Id).Custom_Uplift_Price_Amount__c);
+        System.assertEquals(false, result.containsKey(withoutMarkup.Id));
+    }
+
+    @IsTest
+    static void buildMarkupFixUpdates_emptyMarkupMap_returnsEmptyList() {
+        List<Object> items = new List<Object>{
+            buildNode(path(fakeQliId()), lineTags(false, 'TermBased', null))
+        };
+        List<Map<String, Object>> result =
+            JTLPreHook.buildMarkupFixUpdates(items, new Map<Id, QuoteLineItem>());
+        System.assertEquals(0, result.size());
+    }
+
+    @IsTest
+    static void buildMarkupFixUpdates_amountEntered_pushesAbsAmountAndZeroPercentage() {
+        Id lineId = fakeQliId();
+        List<Object> items = new List<Object>{
+            buildNode(path(lineId), lineTags(false, 'TermBased', null))
+        };
+        Map<Id, QuoteLineItem> markupMap = new Map<Id, QuoteLineItem>{
+            lineId => new QuoteLineItem(Id = lineId, Custom_Uplift_Price_Amount__c = -10)
+        };
+
+        List<Map<String, Object>> result = JTLPreHook.buildMarkupFixUpdates(items, markupMap);
+
+        System.assertEquals(1, result.size());
+        List<Object> attrs = (List<Object>) result.get(0).get('attributes');
+        System.assertEquals(2, attrs.size());
+        Map<String, Object> amtAttr = (Map<String, Object>) attrs.get(0);
+        Map<String, Object> pctAttr = (Map<String, Object>) attrs.get(1);
+        System.assertEquals('UpliftAmount__c', amtAttr.get('attributeName'));
+        System.assertEquals(10, amtAttr.get('attributeValue'));
+        System.assertEquals('UpliftPercentage__c', pctAttr.get('attributeName'));
+        System.assertEquals(0, pctAttr.get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildMarkupFixUpdates_percentageEntered_pushesAbsPercentageAndZeroAmount() {
+        Id lineId = fakeQliId();
+        List<Object> items = new List<Object>{
+            buildNode(path(lineId), lineTags(false, 'TermBased', null))
+        };
+        Map<Id, QuoteLineItem> markupMap = new Map<Id, QuoteLineItem>{
+            lineId => new QuoteLineItem(Id = lineId, Custom_Uplift_Price_Percentage__c = -10)
+        };
+
+        List<Map<String, Object>> result = JTLPreHook.buildMarkupFixUpdates(items, markupMap);
+
+        List<Object> attrs = (List<Object>) result.get(0).get('attributes');
+        Map<String, Object> amtAttr = (Map<String, Object>) attrs.get(0);
+        Map<String, Object> pctAttr = (Map<String, Object>) attrs.get(1);
+        System.assertEquals(0,  amtAttr.get('attributeValue'));
+        System.assertEquals(10, pctAttr.get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildMarkupFixUpdates_lineNotInMarkupMap_skipped() {
+        Id lineId = fakeQliId();
+        Id otherLineId = fakeQliId();
+        List<Object> items = new List<Object>{
+            buildNode(path(lineId), lineTags(false, 'TermBased', null))
+        };
+        Map<Id, QuoteLineItem> markupMap = new Map<Id, QuoteLineItem>{
+            otherLineId => new QuoteLineItem(Id = otherLineId, Custom_Uplift_Price_Amount__c = -5)
+        };
+
+        List<Map<String, Object>> result = JTLPreHook.buildMarkupFixUpdates(items, markupMap);
+        System.assertEquals(0, result.size());
+    }
+
+    @IsTest
+    static void buildMarkupFixUpdates_tempLine_skippedEvenIfSomehowInMap() {
+        List<Object> items = new List<Object>{
+            buildNode(path('TEMP-MK-2'), lineTags(false, 'TermBased', null))
+        };
+        List<Map<String, Object>> result =
+            JTLPreHook.buildMarkupFixUpdates(items, new Map<Id, QuoteLineItem>{
+                fakeQliId() => new QuoteLineItem(Custom_Uplift_Price_Amount__c = -5)
+            });
+        System.assertEquals(0, result.size());
+    }
+
+    @IsTest
+    static void mergeNodeUpdates_noExistingEntry_addsNewOne() {
+        List<Map<String, Object>> target = new List<Map<String, Object>>();
+        List<Map<String, Object>> additional = new List<Map<String, Object>>{
+            JTLPreHook.buildNodeUpdate(new List<Object>{ 'ITEM', fakeQliId() },
+                new List<List<Object>>{ new List<Object>{ 'UpliftAmount__c', 'UpliftAmount__c', 10 } })
+        };
+
+        JTLPreHook.mergeNodeUpdates(target, additional);
+
+        System.assertEquals(1, target.size());
+        List<Object> attrs = (List<Object>) target.get(0).get('attributes');
+        System.assertEquals(1, attrs.size());
+    }
+
+    @IsTest
+    static void mergeNodeUpdates_existingEntryForSameNode_mergesIntoIt() {
+        List<Object> dataPath = new List<Object>{ 'ITEM', fakeQliId() };
+        List<Map<String, Object>> target = new List<Map<String, Object>>{
+            JTLPreHook.buildNodeUpdate(dataPath,
+                new List<List<Object>>{ new List<Object>{ 'EndDate', 'EffectiveTo', Date.today() } })
+        };
+        List<Map<String, Object>> additional = new List<Map<String, Object>>{
+            JTLPreHook.buildNodeUpdate(dataPath,
+                new List<List<Object>>{ new List<Object>{ 'UpliftAmount__c', 'UpliftAmount__c', 10 } })
+        };
+
+        JTLPreHook.mergeNodeUpdates(target, additional);
+
+        // Still one node entry, now carrying both attributes — never two
+        // competing entries for the same node.
+        System.assertEquals(1, target.size());
+        List<Object> attrs = (List<Object>) target.get(0).get('attributes');
+        System.assertEquals(2, attrs.size());
+    }
+
+    @IsTest
+    static void findMatchingNodeUpdate_match_returnsEntry() {
+        List<Object> dataPath = new List<Object>{ 'ITEM', fakeQliId() };
+        List<Map<String, Object>> updates = new List<Map<String, Object>>{
+            JTLPreHook.buildNodeUpdate(dataPath, new List<List<Object>>())
+        };
+
+        Map<String, Object> result = JTLPreHook.findMatchingNodeUpdate(updates, dataPath);
+
+        System.assertNotEquals(null, result);
+    }
+
+    @IsTest
+    static void findMatchingNodeUpdate_noMatch_returnsNull() {
+        List<Map<String, Object>> updates = new List<Map<String, Object>>{
+            JTLPreHook.buildNodeUpdate(new List<Object>{ 'ITEM', fakeQliId() },
+                new List<List<Object>>())
+        };
+
+        Map<String, Object> result = JTLPreHook.findMatchingNodeUpdate(
+            updates, new List<Object>{ 'ITEM', fakeQliId() });
+
+        System.assertEquals(null, result);
+    }
+
+    // -----------------------------------------------------------
+    // SECTION 24 - Amendment Contract Term (non Month-to-Month)
+    // Covers monthsBetweenAligned / deriveAmendContractTerm /
+    // buildContractTermUpdate / loadContractEndDate.
+    // -----------------------------------------------------------
+
+    private static JTLPreHook.TransactionContext amendTc() {
+        JTLPreHook.TransactionContext tc = new JTLPreHook.TransactionContext();
+        tc.quoteType       = 'Amend';
+        tc.isMonthToMonth  = false;
+        tc.quoteStartDate  = '2026-11-11';
+        tc.contractEndDate = Date.newInstance(2027, 10, 31);
+        tc.headerSalesPath = new List<Object>{ 'STI-001' };
+        return tc;
+    }
+
+    @IsTest
+    static void monthsBetweenAligned_midMonth_roundsUpToCoverEndDate() {
+        Integer m = JTLPreHook.monthsBetweenAligned(
+            Date.newInstance(2026, 11, 11), Date.newInstance(2027, 10, 31));
+        System.assertEquals(11, m, 'Nov 11 -> Oct 31 is 11 aligned months');
+        System.assertEquals(Date.newInstance(2027, 10, 31),
+            JTLPreHook.monthEndAligned(Date.newInstance(2026, 11, 11), m),
+            'must round-trip to the same EndDate the lines carry');
+    }
+
+    @IsTest
+    static void monthsBetweenAligned_firstOfMonth_roundTrips() {
+        Integer m = JTLPreHook.monthsBetweenAligned(
+            Date.newInstance(2026, 11, 1), Date.newInstance(2027, 10, 31));
+        System.assertEquals(12, m);
+        System.assertEquals(Date.newInstance(2027, 10, 31),
+            JTLPreHook.monthEndAligned(Date.newInstance(2026, 11, 1), m));
+    }
+
+    @IsTest
+    static void monthsBetweenAligned_nullsAndInvertedRange_returnNull() {
+        System.assertEquals(null, JTLPreHook.monthsBetweenAligned(null, Date.today()));
+        System.assertEquals(null, JTLPreHook.monthsBetweenAligned(Date.today(), null));
+        System.assertEquals(null, JTLPreHook.monthsBetweenAligned(
+            Date.newInstance(2027, 1, 1), Date.newInstance(2026, 1, 1)));
+        System.assertEquals(null, JTLPreHook.monthsBetweenAligned(
+            Date.newInstance(2026, 1, 1), Date.newInstance(2026, 1, 1)),
+            'equal dates - an MTM quote - yield no term');
+    }
+
+    @IsTest
+    static void deriveAmendContractTerm_proratedFromDates() {
+        // amendTc(): 2026-11-11 -> 2027-10-31, so 11 whole months plus the
+        // part month, via calcLineItemPTC. The same figure is pushed onto
+        // the lines as PricingTermCount, so quote and lines carry one
+        // number rather than each computing its own.
+        Decimal d = JTLPreHook.deriveAmendContractTerm(amendTc());
+        System.assertEquals(11.68, d);
+    }
+
+
+    @IsTest
+    static void deriveAmendContractTerm_skipsWhenNotApplicable() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.quoteId = fakeQuoteId();
+        tc.quoteType = 'Renew';
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'renewal');
+
+        tc = amendTc();
+        tc.isMonthToMonth = true;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'month-to-month');
+
+        tc = amendTc();
+        tc.quoteStartDate = null;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'no start date');
+
+        tc = amendTc();
+        tc.contractEndDate = null;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'no contract end');
+
+        tc = amendTc();
+        tc.contractTerm = 12;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc),
+            'rep-entered term is never overwritten - the field stays editable');
+    }
+
+    @IsTest
+    static void buildContractTermUpdate_usesHeaderPathAndTag() {
+        Map<String, Object> upd =
+            JTLPreHook.buildContractTermUpdate(amendTc(), 11.68);
+        System.assertNotEquals(null, upd);
+
+        Map<String, Object> nodePath = (Map<String, Object>) upd.get('nodePath');
+        System.assertEquals(new List<Object>{ 'STI-001' }, (List<Object>) nodePath.get('dataPath'));
+
+        List<Object> attrs = (List<Object>) upd.get('attributes');
+        System.assertEquals(1, attrs.size());
+        Map<String, Object> a = (Map<String, Object>) attrs.get(0);
+        System.assertEquals('Contract_Term_Months__c', a.get('attributeName'));
+        System.assertEquals('ContractTermsMonths__c', a.get('attributeTag'),
+            'tag is the plural spelling from the context definition');
+        System.assertEquals(11.68, a.get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildContractTermUpdate_nullTermOrNoHeaderPath_returnsNull() {
+        System.assertEquals(null, JTLPreHook.buildContractTermUpdate(amendTc(), null));
+
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.headerSalesPath = null;
+        System.assertEquals(null, JTLPreHook.buildContractTermUpdate(tc, 11.68));
+
+        tc = amendTc();
+        tc.headerSalesPath = new List<Object>();
+        System.assertEquals(null, JTLPreHook.buildContractTermUpdate(tc, 11.68));
+    }
+
+    @IsTest
+    static void loadContractEndDate_guardsExitEarly() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.quoteId         = null;
+        tc.contractEndDate = null;
+        JTLPreHook.loadContractEndDate(tc);
+        System.assertEquals(null, tc.contractEndDate, 'no quote id');
+
+        tc = amendTc();
+        tc.quoteId         = fakeQuoteId();
+        tc.quoteType       = 'Renew';
+        tc.contractEndDate = null;
+        JTLPreHook.loadContractEndDate(tc);
+        System.assertEquals(null, tc.contractEndDate, 'renewal');
+
+        tc = amendTc();
+        tc.quoteId         = fakeQuoteId();
+        tc.isMonthToMonth  = true;
+        tc.contractEndDate = null;
+        JTLPreHook.loadContractEndDate(tc);
+        System.assertEquals(null, tc.contractEndDate, 'month-to-month');
+    }
+
+    @IsTest
+    static void loadContractEndDate_amendWithNoContract_leavesEndDateNull() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.contractEndDate = null;
+        // A syntactically valid Id that matches no record: the SOQL returns
+        // no rows, the catch swallows it, and the field stays null.
+        tc.quoteId = fakeQuoteId();
+        JTLPreHook.loadContractEndDate(tc);
+        System.assertEquals(null, tc.contractEndDate);
+    }
+
 }

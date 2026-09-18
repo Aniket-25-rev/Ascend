@@ -26,7 +26,13 @@ public class LineItemNodeWrapper {
     // these against Setup > Context Definitions > Ascend_SalesTransactionContext
     // > Context Tags (Node Tag: SalesTransactionItem) before trusting the values.
     public String netUnitPrice      { get; set; } // reads context tag: NetUnitPrice (UNVERIFIED)
-    public String quantity          { get; set; } // reads context tag: Quantity (UNVERIFIED)
+    // Quantity's context TAG is 'LineItemQuantity', not 'Quantity' — 'Quantity'
+    // is the ATTRIBUTE name. Verified in Ascend_SalesTransactionContext:
+    // contextAttributes > title 'Quantity' > contextTags > title
+    // 'LineItemQuantity' (dataType number, fieldType inputoutput). This read
+    // passed 'Quantity' and so returned null on every line — precisely the
+    // silent-null failure the note above warns about.
+    public String quantity          { get; set; } // reads context tag: LineItemQuantity
     public String totalPrice        { get; set; } // reads context tag: TotalPrice (UNVERIFIED)
     public String netTotalPrice     { get; set; } // reads context tag: NetTotalPrice (UNVERIFIED)
     public Decimal pricingTermCount { get; set; } // reads context tag: PricingTermCount (ARM-108)
@@ -39,6 +45,15 @@ public class LineItemNodeWrapper {
     // fallback, this tag is readable on lines added in THIS transaction —
     // they have no saved QuoteLineItem row to query yet.
     public String listPrice         { get; set; } // reads context tag: ListPrice
+
+    // Written by JTLPreHook's bundle flagging on the pass that adds the bundle,
+    // then PERSISTED on the QuoteLineItem — which is what makes it readable on
+    // every later reprice. It is the only per-line "this line came in as part
+    // of a bundle" signal a PRE-hook can see: ParentContextId, MainItem,
+    // RootItem and ParentSalesTransactionItem are all null this early (see the
+    // BUNDLE DETECTION note in JTLPreHook), so the structural parent link is
+    // not an option here.
+    public Boolean isPartOfBundle   { get; set; } // reads context tag: Is_Part_Of_Bundle__c
 
     public LineItemNodeWrapper(Object node) {
 
@@ -76,12 +91,13 @@ public class LineItemNodeWrapper {
         this.endDate           = getString('EndDate');
         this.haasHardwareAmount = getDecimal('HaaS_Hardware_Amount__c');
         this.netUnitPrice       = getString('NetUnitPrice');
-        this.quantity           = getString('Quantity');
+        this.quantity           = getString('LineItemQuantity');
         this.totalPrice         = getString('TotalPrice');
         this.netTotalPrice      = getString('NetTotalPrice');
         this.pricingTermCount   = getDecimal('PricingTermCount');
         this.discount           = getDecimal('Discount');
         this.listPrice          = getString('ListPrice');
+        this.isPartOfBundle     = getBoolean('Is_Part_Of_Bundle__c');
     }
 
     public Boolean isValid() {
@@ -101,6 +117,20 @@ public class LineItemNodeWrapper {
             }
         } catch (Exception e) {}
         return null;
+    }
+
+    // Returns false, not null, when the tag is absent — every caller treats a
+    // missing flag as "not set", and a null would force null-guards at each one.
+    private Boolean getBoolean(String key) {
+        try {
+            if (tags != null && tags.containsKey(key)) {
+                Object val =
+                    ((Map<String, Object>) tags.get(key))
+                    .get('tagValue');
+                return val != null && Boolean.valueOf(String.valueOf(val));
+            }
+        } catch (Exception e) {}
+        return false;
     }
 
     private Decimal getDecimal(String key) {

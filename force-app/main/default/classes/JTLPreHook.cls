@@ -11,7 +11,24 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         '001-DESK-SVC-DESK-ONOB-001',
         '001-INFR-SVC-INFR-ONOB-001',
         '001-CYBR-SVC-CYBR-ONOB-001',
-        '001-HOST-SVC-HOST-ONOB-001'
+        '001-HOST-SVC-HOST-ONOB-001',
+        '000-CS-SVC-CS-ONON-001'
+    };
+
+    // =========================================================
+    // MONTHLY ONBOARDING FEE SKUS (amortized)
+    // These SKUs amortize over Quote.Amortized_Term_Months__c instead of
+    // the fixed 1-month term used by ONBOARDING_FEE_SKUS above — EndDate =
+    // StartDate + Amortized_Term_Months__c (month-end aligned), PTC = the
+    // resulting fractional term. Only applies when Amortized_Term_Months__c
+    // is populated; otherwise the line falls through to the normal
+    // New Business / Amend-Renew date logic below.
+    // =========================================================
+    private static final Set<String> MONTHLY_AMORT_SKUS = new Set<String>{
+        '001-DESK-SVC-DESK-MONB-001',
+        '001-INFR-SVC-INFR-MONB-001',
+        '001-CYBR-SVC-CYBR-MONB-001',
+        '001-HOST-SVC-HOST-MONB-001'
     };
 
     public RevSignaling.TransactionResponse execute(
@@ -42,6 +59,18 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             }
 
             // =========================================================
+            // MARKUP FIX (Amend/Ramp Markup Amount & Percentage not
+            // applying correctly)
+            // Computed once here, independent of quote type / start date,
+            // then merged into whichever update list is actually sent
+            // below — this never changes what the date/bundle/amortized
+            // logic computes, it only adds two extra attributes onto the
+            // same node entries.
+            // =========================================================
+            Map<Id, QuoteLineItem> markupByLineId = getPersistedMarkupValues(items);
+            List<Map<String, Object>> markupUpdates = buildMarkupFixUpdates(items, markupByLineId);
+
+            // =========================================================
             // BUNDLE FLAGGING (Case #473938467)
             // Only the SKU lookup happens up front. The actual
             // Is_Bundle_Parent__c / Is_Part_Of_Bundle__c attributes are
@@ -66,29 +95,95 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             Set<String> bundleMemberSkus = bundleInfo.memberSkus;
 
             TransactionContext tc = build(contextId, ctx);
+            loadContractEndDate(tc);
 
             System.debug('==tc.quoteStartDate== ' + tc.quoteStartDate);
             System.debug('==tc.contractTerm==   ' + tc.contractTerm);
             System.debug('==tc.quoteType==      ' + tc.quoteType);
 
             if (String.isBlank(tc.quoteStartDate)) {
+                List<Map<String, Object>> startDateBlankUpdates =
+                    buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus);
+                mergeNodeUpdates(startDateBlankUpdates, markupUpdates);
                 return pushUpdates(ctx, contextId,
-                    buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus), response,
+                    startDateBlankUpdates, response,
                     'Start Date blank — bundle flags only');
             }
 
             // null  -> New Business  (StartDate + Term → EndDate)
-            // Amend -> Amendment     (StartDate only, new lines only, EndDate from co-term)
-            // Renew -> Renewal       (same as Amendment)
+            // Amend -> Amendment     (StartDate only, new lines only, EndDate from co-term;
+            //                         EXCEPT Month-to-Month — see isMtmAmend below)
+            // Renew -> Renewal       (Quote StartDate propagates to ALL QLIs; EndDate = StartDate + Term)
             Boolean isNewBusiness  = String.isBlank(tc.quoteType);
+            Boolean isRenewal      = 'Renew'.equalsIgnoreCase(tc.quoteType);
             Boolean isAmendOrRenew =
                 'Amend'.equalsIgnoreCase(tc.quoteType)
-                || 'Renew'.equalsIgnoreCase(tc.quoteType);
+                || isRenewal;
             Boolean isCancel = 'Cancel'.equalsIgnoreCase(tc.quoteType);
 
+            // =========================================================
+            // MONTH-TO-MONTH AMENDMENT
+            // An MTM extension starts where the contract ends, so the
+            // Quote header StartDate (kept equal to Contract.EndDate by
+            // QuoteMtmStartDateTrigger) is the authority for every line —
+            // exactly like a Renewal. Without this the persisted-Amend
+            // branch below rebuilds each EndDate from the line's OWN
+            // persisted StartDate (the date RC's amendment stamped, e.g.
+            // today), dragging the whole quote back a year on every
+            // Reprice All and turning the extension into a credit.
+            // Gated on a real term so a plain amendment of an MTM-flagged
+            // contract (the Amend flow copies Contract.Month_to_Month__c
+            // onto every amendment quote) is untouched.
+            // =========================================================
+            Boolean isMtmAmend =
+                'Amend'.equalsIgnoreCase(tc.quoteType)
+                && tc.isMonthToMonth
+                && tc.contractTerm != null
+                && tc.contractTerm > 0;
+            System.debug('==isMtmAmend== ' + isMtmAmend
+                + ' | isMonthToMonth=' + tc.isMonthToMonth
+                + ' | contractTerm=' + tc.contractTerm);
+
+            // =========================================================
+            // AMENDMENT CONTRACT TERM (non Month-to-Month)
+            // Restores the population the pricing procedure used to do
+            // before that step was removed. Term = whole months from the
+            // Quote StartDate to Contract.EndDate.
+            //
+            // Written back through updateContextAttributes on the
+            // SalesTransaction node (see buildContractTermUpdate), NOT by
+            // DML - Revenue Cloud runs this hook in a read-only
+            // transaction where any DML throws 'Too many DML statements: 1'.
+            //
+            // Month-to-Month amendments are excluded: their StartDate IS
+            // Contract.EndDate, so the span is zero and the formula is
+            // meaningless. Those keep the existing isMtmAmend handling,
+            // and leaving the field blank for them is also what keeps the
+            // 'real term' gate on isMtmAmend above working as before.
+            // =========================================================
+            // Two forms of the same term, deliberately:
+            //   derivedTermExact - prorated, e.g. 11.68. What lands on
+            //       Quote.Contract_Term_Months__c, matching the fractional
+            //       PricingTermCount the lines carry.
+            //   tc.contractTerm  - whole months, e.g. 11. What the EndDate
+            //       math below needs: monthEndAligned() takes a month count,
+            //       and a fractional one would not round-trip to a date.
+            Decimal derivedTermExact = deriveAmendContractTerm(tc);
+            if (derivedTermExact != null) {
+                // Feed this pass the same value the pricing procedure used
+                // to supply, so lines aren't built against a null term.
+                tc.contractTerm = monthsBetweenAligned(
+                    Date.valueOf(tc.quoteStartDate), tc.contractEndDate);
+                System.debug('==derivedTerm== exact=' + derivedTermExact
+                    + ' | wholeMonths=' + tc.contractTerm);
+            }
+
             if (!isNewBusiness && !isAmendOrRenew) {
+                List<Map<String, Object>> unhandledTypeUpdates =
+                    buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus);
+                mergeNodeUpdates(unhandledTypeUpdates, markupUpdates);
                 return pushUpdates(ctx, contextId,
-                    buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus), response,
+                    unhandledTypeUpdates, response,
                     'Unhandled OriginalActionType (' + tc.quoteType + ') — bundle flags only');
             }
 
@@ -118,26 +213,11 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 System.debug('==Amend/Renew persistedStartDates== ' + persistedStartDates);
             }
 
-            // =========================================================
-            // AMEND — LINE END DATE IS FIXED TO THE CONTRACT END DATE
-            // On an Amendment every line ends on the contract's own End
-            // Date. That date is FIXED: editing the Quote Start Date moves
-            // only the line Start Date, never the End Date.
-            // Null for every other action type, and when the quote has no
-            // contract — in which case the existing logic runs untouched.
-            // =========================================================
-            Date amendFixedEndDate =
-                ('Amend'.equalsIgnoreCase(tc.quoteType) && tc.contractEndDate != null)
-                    ? tc.contractEndDate
-                    : null;
-            System.debug('==Amend fixed EndDate== quoteType=' + tc.quoteType
-                + ' contractEndDate=' + tc.contractEndDate
-                + ' amendFixedEndDate=' + amendFixedEndDate);
-
             List<Map<String, Object>> updates = buildLineUpdates(
                 items, startDate, endDate, coTermEndDate, isNewBusiness,
-                tc.contractTerm, persistedStartDates,
-                bundleParentSkus, bundleMemberSkus, amendFixedEndDate
+                tc.contractTerm, persistedStartDates, (isRenewal || isMtmAmend),
+                bundleParentSkus, bundleMemberSkus, tc.amortizedTermMonths,
+                derivedTermExact
             );
 
             // Anything left in these sets was skipped by the date logic
@@ -145,7 +225,16 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             // selling model) — still needs its own flag-only entry.
             updates.addAll(buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus));
 
+            // Header-level attribute: writes Quote.Contract_Term_Months__c
+            // in the same updateContextAttributes call as the line dates.
+            Map<String, Object> termUpdate = buildContractTermUpdate(tc, derivedTermExact);
+            if (termUpdate != null) {
+                updates.add(termUpdate);
+            }
+
             System.debug('==updates count== ' + updates.size());
+
+            mergeNodeUpdates(updates, markupUpdates);
 
             return pushUpdates(ctx, contextId, updates, response,
                 'Dates and bundle flags populated successfully');
@@ -227,6 +316,163 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
     }
 
     // =========================================================
+    // GET PERSISTED MARKUP VALUES (Markup fix)
+    // Custom_Uplift_Price_Amount__c / Custom_Uplift_Price_Percentage__c
+    // queried fresh by line Id, same reasoning as
+    // getPersistedQLIStartDates above — the transaction context's own
+    // UpliftAmount__c/UpliftPercentage__c tags are not reliable (for
+    // LastTransaction-sourced lines they can resolve from a different
+    // record entirely), so the actual entered value is read directly
+    // from the QuoteLineItem instead.
+    // Only persisted lines are queryable this way; a brand-new,
+    // not-yet-saved line with a markup just entered is picked up on
+    // its next save/reprice once it has a real Id.
+    // =========================================================
+    @TestVisible
+    private static Map<Id, QuoteLineItem> getPersistedMarkupValues(List<Object> items) {
+        Map<Id, QuoteLineItem> markupByLineId = new Map<Id, QuoteLineItem>();
+
+        Set<Id> lineIds = new Set<Id>();
+        for (Object obj : items) {
+            LineItemNodeWrapper li = new LineItemNodeWrapper(obj);
+            if (!li.isValid() || li.deleted || !li.isPersisted()) continue;
+            try {
+                lineIds.add(Id.valueOf(String.valueOf(li.dataPath.get(2))));
+            } catch (Exception e) { /* not a QuoteLineItem-shaped id — skip */ }
+        }
+
+        if (lineIds.isEmpty()) return markupByLineId;
+
+        try {
+            for (QuoteLineItem qli : [
+                SELECT Id, Custom_Uplift_Price_Amount__c, Custom_Uplift_Price_Percentage__c
+                FROM   QuoteLineItem
+                WHERE  Id IN :lineIds
+                AND    (Custom_Uplift_Price_Amount__c     != null
+                     OR Custom_Uplift_Price_Percentage__c != null)
+            ]) {
+                markupByLineId.put(qli.Id, qli);
+            }
+        } catch (Exception e) {
+            System.debug('==getPersistedMarkupValues SOQL error== ' + e.getMessage());
+        }
+        return markupByLineId;
+    }
+
+    // =========================================================
+    // BUILD MARKUP FIX UPDATES
+    //
+    // Custom_Uplift_Price_Amount__c / Custom_Uplift_Price_Percentage__c
+    // are entered as negative by data-entry convention, but "Markup"
+    // must always INCREASE the price by the absolute value (e.g.
+    // List=7, Markup Amount=-10 → expected NetUnitPrice=17).
+    //
+    // The pricing procedure's Markup step runs two ManualDiscount
+    // sub-steps (Amount-type and Percentage-type) gated by ONE shared
+    // filter that fires when EITHER field is non-null. Both sub-steps
+    // still execute once the filter fires — including whichever one
+    // has a genuinely null field for this line — and a null
+    // AdjustmentValue zeroes NetUnitPrice instead of leaving it
+    // unchanged. That is the root cause of the Amend/Ramp Markup
+    // Amount/Percentage not applying correctly.
+    //
+    // Fix: always push BOTH UpliftAmount__c and UpliftPercentage__c —
+    // the one actually entered, as its absolute value; the other, as
+    // literal 0 (never null) — so neither sub-step can zero the line.
+    // Lines with no markup entered at all (not present in
+    // markupByLineId) are completely untouched by this method.
+    // =========================================================
+    @TestVisible
+    private static List<Map<String, Object>> buildMarkupFixUpdates(
+        List<Object> items,
+        Map<Id, QuoteLineItem> markupByLineId
+    ) {
+        List<Map<String, Object>> markupUpdates = new List<Map<String, Object>>();
+        if (markupByLineId.isEmpty()) return markupUpdates;
+
+        for (Object obj : items) {
+            LineItemNodeWrapper li = new LineItemNodeWrapper(obj);
+            if (!li.isValid() || li.deleted || !li.isPersisted()) continue;
+
+            Id lineId;
+            try {
+                lineId = Id.valueOf(String.valueOf(li.dataPath.get(2)));
+            } catch (Exception e) {
+                continue;
+            }
+
+            QuoteLineItem qli = markupByLineId.get(lineId);
+            if (qli == null) continue;
+
+            Decimal upliftAmt = qli.Custom_Uplift_Price_Amount__c;
+            Decimal upliftPct = qli.Custom_Uplift_Price_Percentage__c;
+
+            markupUpdates.add(buildNodeUpdate(li.salesPath, new List<List<Object>>{
+                new List<Object>{ 'UpliftAmount__c', 'UpliftAmount__c',
+                    upliftAmt != null ? Math.abs(upliftAmt) : 0 },
+                new List<Object>{ 'UpliftPercentage__c', 'UpliftPercentage__c',
+                    upliftPct != null ? Math.abs(upliftPct) : 0 }
+            }));
+
+            System.debug('==MarkupFix== lineId=' + lineId
+                + ' Custom_Uplift_Price_Amount__c=' + upliftAmt
+                + ' Custom_Uplift_Price_Percentage__c=' + upliftPct);
+        }
+
+        return markupUpdates;
+    }
+
+    // =========================================================
+    // MERGE NODE UPDATES
+    // Combines additionalUpdates into targetUpdates in place, merging
+    // attributes onto an existing entry for the same node (dataPath)
+    // instead of adding a second, competing entry for it — preserves
+    // the "one entry per node per updateContextAttributes call"
+    // invariant documented above in the BUNDLE FLAGGING section.
+    // =========================================================
+    @TestVisible
+    private static void mergeNodeUpdates(
+        List<Map<String, Object>> targetUpdates,
+        List<Map<String, Object>> additionalUpdates
+    ) {
+        for (Map<String, Object> addUpdate : additionalUpdates) {
+            Map<String, Object> addNodePath = (Map<String, Object>) addUpdate.get('nodePath');
+            List<Object> addDataPath = (List<Object>) addNodePath.get('dataPath');
+            List<Object> addAttrs = (List<Object>) addUpdate.get('attributes');
+
+            Map<String, Object> existing = findMatchingNodeUpdate(targetUpdates, addDataPath);
+            if (existing != null) {
+                List<Object> existingAttrs = (List<Object>) existing.get('attributes');
+                existingAttrs.addAll(addAttrs);
+            } else {
+                targetUpdates.add(addUpdate);
+            }
+        }
+    }
+
+    @TestVisible
+    private static Map<String, Object> findMatchingNodeUpdate(
+        List<Map<String, Object>> updates,
+        List<Object> dataPath
+    ) {
+        for (Map<String, Object> u : updates) {
+            Map<String, Object> np = (Map<String, Object>) u.get('nodePath');
+            List<Object> dp = (List<Object>) np.get('dataPath');
+            if (dp == null || dp.size() != dataPath.size()) continue;
+
+            Boolean same = true;
+            for (Integer i = 0; i < dp.size(); i++) {
+                if (String.valueOf(dp.get(i)) != String.valueOf(dataPath.get(i))) {
+                    same = false;
+                    break;
+                }
+            }
+            if (same) return u;
+        }
+        return null;
+    }
+
+    // =========================================================
     // COUNT ACTIVE (NON-DELETED) LINES
     // =========================================================
     @TestVisible
@@ -290,6 +536,18 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
 
         tc.quoteStartDate = extractTagDate(tags, 'StartDate');
 
+        // The header node's own path, so the term can be written back onto
+        // SalesTransaction via updateContextAttributes. Mirrors
+        // LineItemNodeWrapper: salesPath is dataPath minus element 0.
+        List<Object> headerDataPath =
+            (List<Object>) ((Map<String, Object>) nodes.get(0)).get('dataPath');
+        if (headerDataPath != null && headerDataPath.size() >= 2) {
+            tc.headerSalesPath = new List<Object>();
+            for (Integer i = 1; i < headerDataPath.size(); i++) {
+                tc.headerSalesPath.add(headerDataPath.get(i));
+            }
+        }
+
         // Scan all header tags for the Quote Id (starts with 0Q0)
         for (String key : tags.keySet()) {
             try {
@@ -310,8 +568,8 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         if (String.isNotBlank(tc.quoteId)) {
             try {
                 Quote q = [
-                    SELECT Contract_Term_Months__c, OriginalActionType,
-                           ContractId, Contract.EndDate
+                    SELECT Contract_Term_Months__c, OriginalActionType, Amortized_Term_Months__c,
+                           Month_to_Month__c
                     FROM   Quote
                     WHERE  Id = :tc.quoteId
                     LIMIT  1
@@ -319,12 +577,11 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 if (q.Contract_Term_Months__c != null) {
                     tc.contractTerm = Integer.valueOf(q.Contract_Term_Months__c);
                 }
-                tc.quoteType = q.OriginalActionType;
-                // ARM: an Amendment's line End Dates are fixed to the contract's
-                // own End Date. Null when the quote has no contract.
-                if (q.ContractId != null && q.Contract != null) {
-                    tc.contractEndDate = q.Contract.EndDate;
+                if (q.Amortized_Term_Months__c != null) {
+                    tc.amortizedTermMonths = Integer.valueOf(q.Amortized_Term_Months__c);
                 }
+                tc.quoteType = q.OriginalActionType;
+                tc.isMonthToMonth = (q.Month_to_Month__c == true);
             } catch (Exception e) {
                 System.debug('==SOQL error== ' + e.getMessage());
             }
@@ -379,8 +636,32 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
     ) {
         return buildLineUpdates(
             items, startDate, endDate, coTermEndDate, isNewBusiness,
-            null, new Map<Id, Date>(),
-            bundleParentSkus, bundleMemberSkus, null
+            null, new Map<Id, Date>(), false,
+            bundleParentSkus, bundleMemberSkus, null, null
+        );
+    }
+
+    // Pre-amendTermPTC signature, kept so existing callers and tests compile.
+    // Delegates with no quote-level term: every line keeps its own
+    // per-line PricingTermCount calculation.
+    @TestVisible
+    private static List<Map<String, Object>> buildLineUpdates(
+        List<Object> items,
+        Date startDate,
+        Date endDate,
+        Date coTermEndDate,
+        Boolean isNewBusiness,
+        Integer contractTerm,
+        Map<Id, Date> persistedStartDates,
+        Boolean alignLinesToHeader,
+        Set<String> bundleParentSkus,
+        Set<String> bundleMemberSkus,
+        Integer amortizedTermMonths
+    ) {
+        return buildLineUpdates(
+            items, startDate, endDate, coTermEndDate, isNewBusiness,
+            contractTerm, persistedStartDates, alignLinesToHeader,
+            bundleParentSkus, bundleMemberSkus, amortizedTermMonths, null
         );
     }
 
@@ -393,10 +674,17 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         Boolean isNewBusiness,
         Integer contractTerm,    // ARM-106 AC1: persisted Amend/Renew lines — EndDate = StartDate + Term
         Map<Id, Date> persistedStartDates,  // ARM-106 AC1: queried StartDate per persisted line, keyed by Id
+        Boolean alignLinesToHeader,  // Renewal OR MTM amendment: the Quote header StartDate
+                                     // propagates to every QLI; EndDate = that start + Term
         Set<String> bundleParentSkus,  // mutated: SKUs handled here are removed
         Set<String> bundleMemberSkus,  // mutated: SKUs handled here are removed
-        Date amendFixedEndDate         // Amend: Contract.EndDate — the fixed line End Date.
-                                       // Null for every other action type.
+        Integer amortizedTermMonths,  // Quote.Amortized_Term_Months__c — MONTHLY_AMORT_SKUS only
+        Decimal amendTermPTC         // Amend (non-MTM): the quote-level Contract_Term_Months__c.
+                                     // When set, every amendment line takes THIS as its
+                                     // PricingTermCount instead of computing its own from
+                                     // dates, so line PTC and the quote term are identical.
+                                     // Null for New Business, Renewal and MTM - those keep
+                                     // their existing per-line calculation untouched.
     ) {
         List<Map<String, Object>> updates = new List<Map<String, Object>>();
 
@@ -410,7 +698,17 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             }
             try {
                 if (li.quantity != null && Decimal.valueOf(li.quantity) == 0) {
-                    System.debug('==item[' + i + '] SKIPPED — zero quantity==');
+                    // Persisted Amend/Renew cancellation lines: set PTC from contract term
+                    // so it stays consistent with Quote.Contract_Term_Months__c.
+                    // Dates are left untouched — Revenue Cloud owns them for credit prorations.
+                    if (!isNewBusiness && li.isPersisted() && contractTerm != null) {
+                        updates.add(buildNodeUpdate(li.salesPath, new List<List<Object>>{
+                            new List<Object>{ 'PricingTermCount', 'PricingTermCount', (Decimal) contractTerm }
+                        }));
+                        System.debug('==item[' + i + '] Qty=0 persisted AmendRenew — PTC set to contractTerm=' + contractTerm);
+                    } else {
+                        System.debug('==item[' + i + '] SKIPPED — zero quantity==');
+                    }
                     continue;
                 }
             } catch (Exception e) { /* non-numeric quantity tag — proceed */ }
@@ -461,6 +759,36 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 continue;
             }
 
+            // ✅ MONTHLY ONBOARDING FEE SKUS (amortized) — EndDate = StartDate
+            // + Quote.Amortized_Term_Months__c (month-end aligned), PTC = the
+            // resulting fractional term (e.g. ~12.53 for a mid-month start).
+            // Applies on every quote type, same as the Onboarding Fee branch
+            // above, but only when Amortized_Term_Months__c is populated —
+            // when it's null the line falls through to the normal date logic
+            // below instead of a separate fallback branch.
+            if (MONTHLY_AMORT_SKUS.contains(li.stockKeepingUnit) && amortizedTermMonths != null) {
+                Date amortEndDate = monthEndAligned(startDate, amortizedTermMonths);
+                Decimal amortPTC  = calcLineItemPTC(startDate, amortEndDate);
+
+                System.debug('==item[' + i + '] Monthly Amortized Fee SKU=' + li.stockKeepingUnit
+                    + ' | startDate=' + startDate + ' | amortEndDate=' + amortEndDate
+                    + ' | amortizedTermMonths=' + amortizedTermMonths + ' | ptc=' + amortPTC);
+
+                List<List<Object>> amortAttributes = new List<List<Object>>{
+                    new List<Object>{ 'StartDate',        'EffectiveFrom',    startDate    },
+                    new List<Object>{ 'EndDate',          'EffectiveTo',      amortEndDate },
+                    new List<Object>{ 'PricingTermCount', 'PricingTermCount', amortPTC     }
+                };
+
+                if (isNewLine) {
+                    appendBundleAttributes(amortAttributes, li.stockKeepingUnit,
+                        bundleParentSkus, bundleMemberSkus);
+                }
+
+                updates.add(buildNodeUpdate(li.salesPath, amortAttributes));
+                continue;
+            }
+
             System.debug('==item[' + i + '] lineItemId=' + String.valueOf(li.dataPath.get(2))
                 + ' | isNewLine=' + isNewLine
                 + ' | isNewBusiness=' + isNewBusiness);
@@ -479,72 +807,61 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
 
             List<List<Object>> attributes = new List<List<Object>>();
 
-            // =========================================================
-            // AMEND — FIXED CONTRACT END DATE
-            // Handles persisted AND newly added lines alike, ahead of the
-            // Amend/Renew split below:
-            //     QLI Start Date = Quote Start Date
-            //     QLI End Date   = Contract.EndDate  (fixed)
-            // Editing the Quote Start Date therefore moves only the Start
-            // Date; the End Date stays on the contract end.
-            //
-            // PricingTermCount is deliberately NOT sent. Instant Pricing
-            // re-derives the line End Date from that count as
-            // StartDate + FLOOR(term) months - 1 day, which silently
-            // overwrote the contract end for any Start Date that is not the
-            // 1st of a month (a 1st-of-month start yields a whole-number
-            // term that happens to re-derive onto the same date, which is
-            // why only mid-month starts appeared broken). Omitting it leaves
-            // the engine to derive the term from the dates set here instead.
-            // =========================================================
-            if (amendFixedEndDate != null) {
-                attributes.add(new List<Object>{ 'StartDate', 'EffectiveFrom', startDate });
-                attributes.add(new List<Object>{ 'EndDate',   'EffectiveTo',   amendFixedEndDate });
-
-                System.debug('==item[' + i + '] Amend fixed end date== start=' + startDate
-                    + ' end=' + amendFixedEndDate + ' isNewLine=' + isNewLine);
-
-                if (isNewLine) {
-                    appendBundleAttributes(attributes, li.stockKeepingUnit,
-                        bundleParentSkus, bundleMemberSkus);
-                }
-                updates.add(buildNodeUpdate(li.salesPath, attributes));
-                continue;
-            }
-
             if (isPersistedAmendRenew) {
-                // AC1 — Amend/Renew, existing persisted line: QLI End Date =
-                // QLI Start Date + Contract Term. Runs inside this pricing
-                // transaction (via updateContextAttributes below) so EndDate
-                // and the recalculated Net/Unit Price land in the same pass —
-                // unlike a backend Flow recordUpdate on EndDate, which changes
-                // a price-relevant field outside the pricing context and
-                // leaves Net/Unit Price stale. Only EndDate is touched — the
-                // line's existing StartDate is deliberately left alone (unlike
-                // the branch below, which sets StartDate for new lines).
+                // Renewal: every persisted line adopts the quote's current StartDate
+                // (the new renewal date) so all QLIs stay aligned with the header.
+                // Amendment: each line keeps its own original StartDate (co-term
+                // logic — lines end on the same date regardless of when each started).
                 //
-                // li.startDate reads the context's per-line tag payload, which
-                // only carries attributes actually touched by this save (e.g.
-                // a plain Reprice never touches StartDate) — so it's frequently
-                // blank for an unedited persisted line. persistedStartDates
-                // (queried directly from the DB in execute()) is authoritative;
-                // li.startDate is only a fallback for when it's absent there.
-                Date lineStartDate = persistedStartDates.get(Id.valueOf(String.valueOf(li.dataPath.get(2))));
-                if (lineStartDate == null && String.isNotBlank(li.startDate)) {
-                    lineStartDate = Date.valueOf(li.startDate);
+                // For both: EndDate = lineStartDate + Contract Term, recalculated
+                // inside this pricing transaction so EndDate and the recalculated
+                // Net/Unit Price land in the same pass (unlike a backend Flow
+                // recordUpdate which would leave prices stale).
+                //
+                // For Amendment: li.startDate only carries attributes touched by this
+                // save (Reprice doesn't touch StartDate), so persistedStartDates
+                // (queried from DB in execute()) is authoritative.
+                // For Renewal: use Quote Start Date so all QLIs align to the renewal date.
+                // persistedStartDates is queried for both Renewal and Amendment so we can
+                // compare and only push StartDate when it has actually changed — avoids
+                // triggering RC's AssetStatePeriod recreation on every Reprice, which causes
+                // a concurrent-lock error ("asset was updated by another process") when
+                // multiple QLIs all send a StartDate attribute in the same pricing pass.
+                Date persistedLineStart = persistedStartDates.get(Id.valueOf(String.valueOf(li.dataPath.get(2))));
+                Date lineStartDate;
+                if (alignLinesToHeader) {
+                    lineStartDate = startDate;
+                } else {
+                    lineStartDate = persistedLineStart;
+                    if (lineStartDate == null && String.isNotBlank(li.startDate)) {
+                        lineStartDate = Date.valueOf(li.startDate);
+                    }
                 }
 
                 if (contractTerm != null && lineStartDate != null) {
                     Date recalcEndDate = monthEndAligned(lineStartDate, contractTerm);
-                    // Use per-line EndDate for decimal PTC when available, rather than
-                    // integer contractTerm (e.g. 12.55 instead of 12 for a mid-month start).
-                    Decimal decPTC = String.isNotBlank(li.endDate)
-                        ? calcLineItemPTC(lineStartDate, Date.valueOf(li.endDate))
-                        : null;
-                    Decimal ptcToSet = decPTC != null ? decPTC : (Decimal) contractTerm;
+                    // Derive PTC from recalcEndDate (the EndDate this hook is setting),
+                    // not from li.endDate (the stale EndDate from the prior pricing pass).
+                    // Using li.endDate caused PTC to reflect the old date range while EndDate
+                    // was updated to the new range — PTC=9 with EndDate=2027-11-30, for example.
+                    Decimal decPTC = calcLineItemPTC(lineStartDate, recalcEndDate);
+                    // Amend (non-MTM): the quote-level term is the source of
+                    // truth - take it verbatim rather than recomputing per line.
+                    Decimal ptcToSet = amendTermPTC != null
+                        ? amendTermPTC
+                        : (decPTC != null ? decPTC : (Decimal) contractTerm);
+                    // Only push StartDate when the Quote Start Date differs from the persisted
+                    // QLI StartDate. Pushing it unconditionally on every Reprice causes RC to
+                    // recreate AssetStatePeriods for all lines simultaneously → concurrent
+                    // Asset lock error.
+                    if (alignLinesToHeader && (persistedLineStart == null || persistedLineStart != lineStartDate)) {
+                        attributes.add(new List<Object>{ 'StartDate', 'EffectiveFrom', lineStartDate });
+                    }
                     attributes.add(new List<Object>{ 'EndDate', 'EffectiveTo', recalcEndDate });
                     attributes.add(new List<Object>{ 'PricingTermCount', 'PricingTermCount', ptcToSet });
-                    System.debug('==item[' + i + '] Amend/Renew recalculated EndDate== lineStart=' + lineStartDate
+                    System.debug('==item[' + i + '] ' + (alignLinesToHeader ? 'HeaderAligned' : 'Amend')
+                        + ' recalculated dates== lineStart=' + lineStartDate
+                        + ' persistedStart=' + persistedLineStart
                         + ' term=' + contractTerm + ' endDate=' + recalcEndDate + ' ptc=' + ptcToSet);
                 } else if (String.isNotBlank(li.startDate) && String.isNotBlank(li.endDate)) {
                     // contractTerm or StartDate lookup absent but per-line dates present.
@@ -560,7 +877,17 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                     continue;
                 }
             } else {
-                Date effectiveEndDate = isNewBusiness ? endDate : coTermEndDate;
+                // New Business: endDate = startDate + contractTerm (set in execute())
+                // Renewal new lines: EndDate = quoteStartDate + contractTerm
+                // Amendment new lines: EndDate = coTermEndDate (most common end date among existing lines)
+                Date effectiveEndDate;
+                if (isNewBusiness) {
+                    effectiveEndDate = endDate;
+                } else if (alignLinesToHeader && contractTerm != null) {
+                    effectiveEndDate = monthEndAligned(startDate, contractTerm);
+                } else {
+                    effectiveEndDate = coTermEndDate;
+                }
 
                 // Order Instant Pricing carries no transaction-level EndDate (no quote term
                 // resolved from context). Fall back to the per-line EndDate tag so decimal
@@ -579,6 +906,10 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
                 if (effectiveEndDate != null) {
                     Date lineSD = String.isNotBlank(li.startDate) ? Date.valueOf(li.startDate) : startDate;
                     ptcToSet = calcLineItemPTC(lineSD, effectiveEndDate);
+                }
+                if (amendTermPTC != null) {
+                    // Amend (non-MTM): quote-level term wins, as above.
+                    ptcToSet = amendTermPTC;
                 }
                 if (ptcToSet == null && contractTerm != null) {
                     ptcToSet = contractTerm;
@@ -828,6 +1159,109 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
     // HELPERS
     // =========================================================
 
+    // =========================================================
+    // LOAD CONTRACT END DATE (Amend, non Month-to-Month)
+    // Deliberately a SEPARATE query from the Quote SOQL in
+    // parseContextData: that one is wrapped in a catch that swallows
+    // failures and leaves quoteType null, which makes isNewBusiness
+    // true and rebuilds dates on EVERY quote. A failure here must cost
+    // nothing but this one field.
+    // =========================================================
+    @TestVisible
+    private static void loadContractEndDate(TransactionContext tc) {
+        if (String.isBlank(tc.quoteId)) return;
+        if (!'Amend'.equalsIgnoreCase(tc.quoteType)) return;
+        if (tc.isMonthToMonth == true) return;
+        try {
+            Quote q = [
+                SELECT ContractId, Contract.EndDate
+                FROM   Quote
+                WHERE  Id = :tc.quoteId
+                LIMIT  1
+            ];
+            tc.contractEndDate = (q.ContractId != null) ? q.Contract.EndDate : null;
+        } catch (Exception e) {
+            System.debug('==loadContractEndDate error== ' + e.getMessage());
+        }
+    }
+
+    // =========================================================
+    // DERIVE AMEND CONTRACT TERM (Amend, non Month-to-Month)
+    // Prorated months from Quote.StartDate to Contract.EndDate, via the
+    // same calcLineItemPTC the lines use.
+    //
+    // This term is the SOURCE: the value derived here is also pushed onto
+    // every amendment line as PricingTermCount (see buildLineUpdates'
+    // amendTermPTC), so quote and lines agree because they are literally
+    // the same number - rather than each computing its own.
+    // BLANK-ONLY: a term already on the quote is never recomputed, so
+    // the field stays editable - a rep's edit survives every reprice.
+    // Pure: no DML, no context writes. Returns null when not applicable.
+    // =========================================================
+    @TestVisible
+    private static Decimal deriveAmendContractTerm(TransactionContext tc) {
+        if (!'Amend'.equalsIgnoreCase(tc.quoteType))        return null;
+        if (tc.isMonthToMonth == true)                      return null;
+        if (String.isBlank(tc.quoteStartDate))              return null;
+        if (tc.contractEndDate == null)                     return null;
+        // Rep-entered (or already populated) - leave it alone.
+        if (tc.contractTerm != null && tc.contractTerm > 0) return null;
+
+        Decimal derived = calcLineItemPTC(
+            Date.valueOf(tc.quoteStartDate), tc.contractEndDate);
+        System.debug('==deriveAmendContractTerm== derived=' + derived
+            + ' | start=' + tc.quoteStartDate
+            + ' | contractEnd=' + tc.contractEndDate);
+        return derived;
+    }
+
+    // =========================================================
+    // BUILD CONTRACT TERM UPDATE (SalesTransaction header node)
+    // Contract_Term_Months__c is mapped in
+    // Ascend_SalesTransactionContext as fieldType=inputoutput,
+    // transient=false, hydrated from Quote.Contract_Term_Months__c,
+    // so writing it here persists onto the Quote.
+    //
+    // The TAG is 'ContractTermsMonths__c' (Terms, plural) - deliberately
+    // NOT the same string as the field/attribute name. Taken from
+    // Setup > Context Definitions > Ascend_SalesTransactionContext >
+    // Context Tags. A wrong tag compiles fine and silently does nothing.
+    // =========================================================
+    @TestVisible
+    private static Map<String, Object> buildContractTermUpdate(
+        TransactionContext tc,
+        Decimal derivedTerm
+    ) {
+        if (derivedTerm == null) return null;
+        if (tc.headerSalesPath == null || tc.headerSalesPath.isEmpty()) {
+            System.debug('==buildContractTermUpdate SKIPPED - no header path==');
+            return null;
+        }
+        System.debug('==buildContractTermUpdate== path=' + tc.headerSalesPath
+            + ' | term=' + derivedTerm);
+        return buildNodeUpdate(tc.headerSalesPath, new List<List<Object>>{
+            new List<Object>{ 'Contract_Term_Months__c',
+                              'ContractTermsMonths__c',
+                              derivedTerm }
+        });
+    }
+
+    // =========================================================
+    // MONTHS BETWEEN (inverse of monthEndAligned)
+    // Smallest whole month count N where monthEndAligned(startDate, N)
+    // covers endDate, so a derived term and the EndDates this hook
+    // writes always agree.
+    // =========================================================
+    @TestVisible
+    private static Integer monthsBetweenAligned(Date startDate, Date endDate) {
+        if (startDate == null || endDate == null) return null;
+        if (endDate <= startDate) return null;
+        Integer m = startDate.monthsBetween(endDate);
+        if (m < 1) m = 1;
+        if (monthEndAligned(startDate, m) < endDate) m++;
+        return m;
+    }
+
     // Returns the last calendar day of the final month of the term.
     // Start on the 1st: anniversary - 1 day (e.g. Aug 1 + 12 → Jul 31).
     // Start mid-month: last day of the anniversary month (e.g. Aug 15 + 12 → Aug 31).
@@ -902,7 +1336,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         Integer remainDays  = baseDate.daysBetween(endDate.addDays(1));
         Date    monthStart  = Date.newInstance(baseDate.year(), baseDate.month(), 1);
         Integer daysInMonth = monthStart.daysBetween(monthStart.addMonths(1));
-        return fullMonths + (Decimal) remainDays / daysInMonth;
+        return (fullMonths + (Decimal) remainDays / daysInMonth).setScale(2, System.RoundingMode.HALF_UP);
     }
 
     // =========================================================
@@ -913,6 +1347,9 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         public Integer contractTerm;
         public String  quoteId;
         public String  quoteType;
-        public Date    contractEndDate;
+        public Integer amortizedTermMonths;
+        public Boolean isMonthToMonth = false;
+        public Date        contractEndDate;   // Amend, non-MTM
+        public List<Object> headerSalesPath;  // SalesTransaction node path
     }
 }

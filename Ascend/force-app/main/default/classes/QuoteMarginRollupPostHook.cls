@@ -193,7 +193,7 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     // =========================================================
     private static final String HAAS_HARDWARE_SKU       = '001-INFR-ASC-HAAS-HAAS-001';
     private static final String HAAS_IMPLEMENTATION_SKU = '001-INFR-SVC-HAAS-IMPL-001';
-    private static final Decimal HAAS_IMPL_SELL_RATE    = 202.00;
+    private static final Decimal HAAS_IMPL_SELL_RATE    = 223.00;
     private static final Decimal HAAS_IMPL_COST_RATE    = 78.88;
     private static final Set<String> HAAS_SKUS = new Set<String>{
         HAAS_HARDWARE_SKU, HAAS_IMPLEMENTATION_SKU
