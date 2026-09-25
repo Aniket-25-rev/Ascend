@@ -1,0 +1,94 @@
+:root {
+    color-scheme: light dark;
+    --bg: #fff;
+    --fg: #181818;
+    --muted: #6b6b6b;
+    --line: #e0e0e0;
+    --err: #b00020;
+    --warn: #8a6100;
+    --ok: #1b6b33;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1a1a1a;
+        --fg: #ececec;
+        --muted: #9a9a9a;
+        --line: #333;
+        --err: #ff8a8a;
+        --warn: #e5b667;
+        --ok: #79d39a;
+    }
+}
+body {
+    margin: 0;
+    padding: 12px;
+    background: var(--bg);
+    color: var(--fg);
+    font: 13px/1.5 -apple-system, "Segoe UI", sans-serif;
+}
+h1 {
+    font-size: 15px;
+    margin: 0 0 12px;
+}
+h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0 0 6px;
+}
+section {
+    border-top: 1px solid var(--line);
+    padding: 12px 0;
+}
+select,
+button {
+    font: inherit;
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+}
+select {
+    width: 100%;
+    margin-bottom: 8px;
+}
+button {
+    cursor: pointer;
+}
+button.link {
+    border: 0;
+    padding: 0 6px 0 0;
+    color: var(--muted);
+    text-decoration: underline;
+}
+.checklist {
+    max-height: 190px;
+    overflow: auto;
+    margin-bottom: 6px;
+}
+.checklist label {
+    display: block;
+    font-size: 12px;
+}
+.muted {
+    color: var(--muted);
+}
+pre#log {
+    white-space: pre-wrap;
+    font: 11px/1.5 ui-monospace, Consolas, monospace;
+    max-height: 240px;
+    overflow: auto;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+}
+.err {
+    color: var(--err);
+}
+.warn {
+    color: var(--warn);
+}
+.ok {
+    color: var(--ok);
+}

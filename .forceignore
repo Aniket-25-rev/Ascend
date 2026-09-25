@@ -12,3 +12,6 @@ package.xml
 **/__tests__/**
 
 node_modules/
+
+# Chrome extension tooling (not Salesforce metadata)
+chrome-extension/

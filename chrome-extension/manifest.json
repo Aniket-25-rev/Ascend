@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "RCA Metadata Bridge",
+  "version": "0.1.0",
+  "description": "Deploy Context Definitions, Expression Sets and Decision Matrix rows between Salesforce Revenue Cloud orgs.",
+  "minimum_chrome_version": "116",
+  "permissions": ["cookies", "storage", "sidePanel", "tabs", "downloads"],
+  "host_permissions": [
+    "https://*.salesforce.com/*",
+    "https://*.force.com/*",
+    "https://*.salesforce-setup.com/*"
+  ],
+  "background": { "service_worker": "src/background.js", "type": "module" },
+  "side_panel": { "default_path": "src/ui/panel.html" },
+  "action": { "default_title": "RCA Metadata Bridge" },
+  "icons": { "128": "icons/icon128.png" }
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>RCA Metadata Bridge</title>
+        <link rel="stylesheet" href="panel.css" />
+    </head>
+    <body>
+        <h1>RCA Metadata Bridge</h1>
+        <p class="muted">
+            Moves Context Definitions, Expression Sets / pricing procedures and Decision Matrix rows —
+            the Revenue Cloud pieces <code>sf project deploy</code> leaves behind.
+        </p>
+
+        <section>
+            <h2>Scope</h2>
+            <div id="lanes" class="checklist"></div>
+        </section>
+
+        <section>
+            <h2>1. Source org</h2>
+            <select id="sourceOrg"></select>
+            <button id="probeSource">Probe</button>
+            <button id="retrieve">Retrieve</button>
+        </section>
+
+        <section>
+            <h2>2. Target org</h2>
+            <select id="targetOrg"></select>
+            <button id="probeTarget">Probe</button>
+            <label><input type="checkbox" id="dryRun" checked /> Validate only (no writes)</label>
+            <label><input type="checkbox" id="activate" /> Activate versions after deploy</label>
+            <button id="deploy">Deploy</button>
+        </section>
+
+        <section>
+            <h2>Bundle</h2>
+            <div id="counts" class="muted">Nothing retrieved yet.</div>
+            <button id="download" class="link">download .json</button>
+            <label class="link">upload .json<input type="file" id="upload" accept="application/json" hidden /></label>
+        </section>
+
+        <pre id="log" aria-live="polite"></pre>
+        <script type="module" src="panel.js"></script>
+    </body>
+</html>
