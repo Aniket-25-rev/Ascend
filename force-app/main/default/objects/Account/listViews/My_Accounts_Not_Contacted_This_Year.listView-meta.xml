@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Accounts_Not_Contacted_This_Year</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE</columns>
+    <columns>ACCOUNT.INDUSTRY</columns>
+    <columns>SFDC_AE__c</columns>
+    <columns>ACCOUNT.LAST_ACTIVITY</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>ACCOUNT.RATING</columns>
+    <columns>ACCOUNT.TYPE</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Prospect,Customer</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.LAST_ACTIVITY</field>
+        <operation>notEqual</operation>
+        <value>THIS_YEAR</value>
+    </filters>
+    <label>My Accounts Not Contacted This Year</label>
+</ListView>

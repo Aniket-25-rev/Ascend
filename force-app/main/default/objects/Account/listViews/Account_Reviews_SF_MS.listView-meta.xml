@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Reviews_SF_MS</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Last_Account_Review__c</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>Account_Team__c</columns>
+    <columns>Services_Rollup__c</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE</columns>
+    <columns>Date_of_Customer_Inception__c</columns>
+    <columns>Last_Invoice_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Customer,Client</value>
+    </filters>
+    <filters>
+        <field>Services_Rollup__c</field>
+        <operation>contains</operation>
+        <value>Salesforce Managed Services,Other Managed Services</value>
+    </filters>
+    <label>Account Reviews - SF MS</label>
+</ListView>

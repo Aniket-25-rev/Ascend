@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SAS</fullName>
+    <active>true</active>
+    <compactLayoutAssignment>Ascend_Work_Order_Compact_Layout</compactLayoutAssignment>
+    <label>SAS</label>
+    <picklistValues>
+        <picklist>Engagement_Type__c</picklist>
+        <values>
+            <fullName>Onsite - Customer Location</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Remote - WFH</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Preferred_Vendor__c</picklist>
+        <values>
+            <fullName>Adaptive Applications</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Futurism</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Go2Group</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ImagIT</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secureview</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Threadfin</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>Critical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Project_Lead__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes - Previously Trained</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes - Training Needed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Request_Type__c</picklist>
+        <values>
+            <fullName>Embedded Experts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Engagement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scoping</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scoping - NEW LOGO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Staff Aug</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Resource_Sub_Type__c</picklist>
+        <values>
+            <fullName>End User%2FDesktop</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Network</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Server%2FCloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Storage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Virtual Desktop</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Resource_Type__c</picklist>
+        <values>
+            <fullName>Admin Support</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Architect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Analyst</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Developer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Developer Support</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Lead</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>QA %2F Tester</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SDM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tech Lead - Admin</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tech Lead - Dev</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status</picklist>
+        <values>
+            <fullName>Canceled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cannot Complete</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>On Hold</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type__c</picklist>
+        <values>
+            <fullName>Managed Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Professional Services</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

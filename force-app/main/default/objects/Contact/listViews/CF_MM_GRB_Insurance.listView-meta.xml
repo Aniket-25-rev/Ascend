@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CF_MM_GRB_Insurance</fullName>
+    <booleanFilter>1 AND 2 AND ((3 AND 4) OR (5 AND 6)) AND 7</booleanFilter>
+    <columns>FULL_NAME</columns>
+    <columns>CONTACT.EMAIL</columns>
+    <columns>Role__c</columns>
+    <columns>Segment__c</columns>
+    <columns>Vertical__c</columns>
+    <columns>CONTACT.ADDRESS2_CITY</columns>
+    <columns>CONTACT.ADDRESS2_STATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>equals</operation>
+        <value>Salesforce</value>
+    </filters>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>Vertical__c</field>
+        <operation>equals</operation>
+        <value>Insurance</value>
+    </filters>
+    <filters>
+        <field>Segment__c</field>
+        <operation>equals</operation>
+        <value>Mid-Market - MM</value>
+    </filters>
+    <filters>
+        <field>Vertical__c</field>
+        <operation>equals</operation>
+        <value>Insurance,Wealth,Banking,Financial Services</value>
+    </filters>
+    <filters>
+        <field>Segment__c</field>
+        <operation>equals</operation>
+        <value>Growth Business - GB</value>
+    </filters>
+    <filters>
+        <field>Role__c</field>
+        <operation>equals</operation>
+        <value>AE,RVP,AVP</value>
+    </filters>
+    <label>AE Win - MM Ins &amp; GRB FINS</label>
+</ListView>

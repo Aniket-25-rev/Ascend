@@ -1,0 +1,1093 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Standard</fullName>
+    <active>true</active>
+    <description>Contact Person</description>
+    <label>Standard</label>
+    <picklistValues>
+        <picklist>Campaigns__c</picklist>
+        <values>
+            <fullName>2018 CIO Forum Golf</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 ChannelCon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 DattoCon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 Finance Tablet - July</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 Finance Tablet - November</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 Great Plains Cyber Summit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 GreenCloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 HipoCon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 ITO Compass</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA Atlanta</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA Austin</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA Chicago</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA Naperville</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA New Jersey</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA Ohio</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSA Scottsdale</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 IoTSSACentenial</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 NE Telehealth Summit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 NICB Management Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 NTA Spring Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 Nebraska Cert</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 P3 Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 P3 Conference Happy Hour</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 SANS Washington</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 Secure360</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2018 TBG Big big Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 ASI Connection - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 ASI Connection - Pre-Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Channel Tablet - March</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Cities%2FMunicipalities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Cybereason Lunch %26 Learn</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Anaheim %28Attended%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Anaheim %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Atlanta %28Attended%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Atlanta %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Chicago %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Chicago %28Visited Booth%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Dallas %28Attended%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Dallas %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Hartford %28Attended%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Hartford %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Sacramento %28Attended%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Sacramento %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Tampa %28Attended%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Data Connectors - Tampa %28Did Not Attend%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 DattoCon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Finance Tablet - March</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 FutureCon Des Moines - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 FutureCon Des Moines - Did Not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 GM Guidelines</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IAMCP Las Vegas</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IG3 Mid-Atlantic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IT Nation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Inc%2E 5000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Columbus</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Jacksonville</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Loudoun - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Loudoun - Did Not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Minneappolis - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Minneappolis - Did Not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Mt Laurel - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Mt Laurel - Did not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 IoTSSA Salt Lake City</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 MSP World</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 NAICS 622110</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Omaha CIO Forum Golf Invitational</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Operation TOFU</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 P3 Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q1 Channel Tablet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q1 Cylance Leads</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q2 Cory</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q2 Sales Rock</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q3 Channel Tablet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q3 Cyberattack Series</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q3 Cyberattack Series Sales Targets</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q3 Direct Tablet Campaign</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q3 Finance Tablet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Q3 Multi-Touch</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 SANS KC - %28Visited Booth%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 SANS KC - Attended Lunch %26 Learn</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 TBG Big Big Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 Team Client Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 The 20 Vision</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2019 UNICO UNITEL Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Amazon Connect Campaign</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Cyber Insurance Webinar - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Cyber Insurance Webinar - Did Not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 HS Prospect Tool</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 IoTSSA Houston - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 IoTSSA Houston - Did Not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 IoTSSA Scottsdale - Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 IoTSSA Scottsdale - Did Not Attend</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Malware Prevention Home</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Netsurion Virtual Happy Hour</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 OPDA Spring Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Operation TOFU2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Operation TOFU3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Operation Up-sell Cross-sell</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 PE TOFU</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Phishing %26 Security Awareness Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Q1 Incident Response</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Taste of IT</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Team Software Client Conference</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Texas TOFU</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2020 Top 100 MSPs TOFU</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Amazon Connect %26 Microsoft Teams Integration</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Ascend %7C Doextra Merger</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Ascend Managed Services Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Camp IT - Cloud Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Camp IT Cloud Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Dark Web Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Data Management Webinar On-Demand</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Doextra Insurance Carriers Customer Spotlight</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Incident Response Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Netsurion 14 for 12</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Q3 Salesforce Managed Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Q3 Virtual Bourbon Tasting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Q4 BaaS to Install Base</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Q4 CSPM for O365 Clients</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 Q4 Dreamforce to You</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 SF Analysis Paralysis CS</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2021 XDR %26 Dark Web Launch</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>CoPrime__c</picklist>
+        <values>
+            <fullName>Commerce Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketing Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MuleSoft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Net Zero</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pardot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Slack</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tableau</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>CommunityAccess__c</picklist>
+        <values>
+            <fullName>App</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Salesforce</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Connections__c</picklist>
+        <values>
+            <fullName>Customer Event Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Happy Hour Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LinkedIn Connected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lunch %26 Learn Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>One-on-One Attended</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Opportunity Referred</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Slack Connected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Webinar Attended</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>DOZISF__ZoomInfo_Enrich_Status__c</picklist>
+        <values>
+            <fullName>Company Enrich Only</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enriched</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No-Match</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Email_Marketing__c</picklist>
+        <values>
+            <fullName>Do Not Send</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Send</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Employment_Type__c</picklist>
+        <values>
+            <fullName>1099</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>W2</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Interests__c</picklist>
+        <values>
+            <fullName>CPQ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CTI%28Phone integration with SFDC%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Community Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Conga</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Data loader</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Einstein</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Service Lightning</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Financial Service Experience</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Heroku</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hubspot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Integration Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jira</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jitterbit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketing Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MuleSoft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PMP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pardot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SQL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Service Cloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shield</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tableau</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>WalkMe</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LeadSource</picklist>
+        <values>
+            <fullName>Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing - Cross Sell</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing - Up Sell</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketing - 6sense</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Referral - Agency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Referral - Client</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Referral - Employee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Referral - Prospect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Referral - Resale</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Referral - Vendor%2FPartner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SDR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Self Generated</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Name</picklist>
+        <values>
+            <fullName>Dr%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mr%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mrs%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ms%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prof%2E</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>OnboardingStatus__c</picklist>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Started</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Point_of_Contact__c</picklist>
+        <values>
+            <fullName>Billing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cloud %26 Infrastructure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cybersecurity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>License Only</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Net Promoter Score %28NPS%29 Survey</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Salesforce %26 App Solutions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Support Desk</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Position__c</picklist>
+        <values>
+            <fullName>Configuration</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Developer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sr Architect</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority__c</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Role__c</picklist>
+        <values>
+            <fullName>AE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>AVP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BDR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RVP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SE</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Segment__c</picklist>
+        <values>
+            <fullName>Enterprise</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General Business - GB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Growth Business - GB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mid-Market - MM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Small Business - SB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Strategic</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Service__c</picklist>
+        <values>
+            <fullName>App</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Core</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Salesforce</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Stage__c</picklist>
+        <values>
+            <fullName>Aware</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Know</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loyal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refer</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Active</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Inactive</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Purge</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>TimeZone__c</picklist>
+        <values>
+            <fullName>CST</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>EST</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PST</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Trainings_Completed__c</picklist>
+        <values>
+            <fullName>Admin Handoff Documentation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Config Workbook</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Data Model%2FERD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Discovery Sessions %E2%80%93 Business Process Review</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Functional Solution Design Document</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>How to populate Change Log %26 Deployment Template</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>JIRA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Process Flows</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Lead</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Scenarios</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Story Template</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Vertical__c</picklist>
+        <values>
+            <fullName>Banking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Core</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Financial Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Healthcare %26 Life Sciences</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Manufacturing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Retail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wealth</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

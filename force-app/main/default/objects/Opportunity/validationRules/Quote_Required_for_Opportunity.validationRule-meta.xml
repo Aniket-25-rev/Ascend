@@ -9,10 +9,12 @@
   NOT(CONTAINS($UserRole.Name, &apos;SAS&apos;)),
   OR(
     ISPICKVAL( StageName , &apos;Propose&apos; ),
-    ISPICKVAL( StageName , &apos;Contract&apos; )),
-    NOT( $Permission.BypassValidationRules ),
-    NOT( $User.Id = &apos;0053b00000CSZR6&apos; 
-  )
+    ISPICKVAL( StageName , &apos;Contract&apos;)
+  ),
+  NOT( $Permission.BypassValidationRules ),
+  NOT( $User.Id = &apos;0053b00000CSZR6&apos; ),
+  NOT(  RecordType.Name = &apos;Product&apos; ),
+  NOT(  RecordType.Name = &apos;Subscription&apos; )
 )</errorConditionFormula>
     <errorMessage>&quot;Quote&quot; is required before this Opportunity can be moved to the &quot;Propose&quot; or &quot;Contract&quot; Stage</errorMessage>
 </ValidationRule>

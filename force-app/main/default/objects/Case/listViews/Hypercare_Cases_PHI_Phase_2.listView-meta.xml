@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hypercare_Cases_PHI_Phase_2</fullName>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>NAME</columns>
+    <columns>Intellio_Connect_Case_Prioritization__c</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>CASES.PRIORITY</columns>
+    <columns>Impact__c</columns>
+    <columns>LOE_Estimate__c</columns>
+    <columns>CASES.CREATED_DATE</columns>
+    <columns>OWNER_NAME</columns>
+    <columns>CASES.REASON</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>contains</operation>
+        <value>West Monroe</value>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>contains</operation>
+        <value>WMP - PS - Intellio Connect - PHI Phase 2 Subcontractor SOW</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Closed,Canceled by Client,Duplicate</value>
+    </filters>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.App_Cases</value>
+    </filters>
+    <filters>
+        <field>Intellio_Connect_OpCo__c</field>
+        <operation>equals</operation>
+        <value>PHI</value>
+    </filters>
+    <filters>
+        <field>CASES.REASON</field>
+        <operation>equals</operation>
+        <value>Clarification,Issue</value>
+    </filters>
+    <label>Hypercare Cases - PHI Phase 2</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+        <group>Exelon_Intellio_ALL</group>
+    </sharedTo>
+</ListView>

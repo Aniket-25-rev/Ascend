@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loss_MRR_VOIP__c</fullName>
+    <description>The VOIP share of the MRR this quote gives up, written by FinancialMetricsService on every quote line change. Renewal: each VOIP product on the contract that comes back smaller, or not at all, counted gross so a product that shrank still shows even when another VOIP product grew. Amendment and Cancellation: the negative VOIP lines. Blank, not zero, when nothing in VOIP was lost.</description>
+    <inlineHelpText>The VOIP MRR this quote gives up, counted per product against the contract. A product that shrank still counts even if VOIP grew overall. Blank means nothing was lost.</inlineHelpText>
+    <label>Loss MRR - VOIP</label>
+    <precision>14</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

@@ -5,6 +5,7 @@
     <inlineHelpText>Original contract end date, captured at first activation. Does not change with amendments.</inlineHelpText>
     <label>Original End Date</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Date</type>
 </CustomField>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SDM_Account_Health_Review</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Risk_Status__c</columns>
+    <columns>Risk_Notes__c</columns>
+    <columns>Health_Cloud_Infra__c</columns>
+    <columns>Health_Cybersecurity__c</columns>
+    <columns>Health_Data__c</columns>
+    <columns>Health_Other__c</columns>
+    <columns>Health_Project_Delivery__c</columns>
+    <columns>Health_Salesforce__c</columns>
+    <columns>Health_Service_Desk__c</columns>
+    <columns>Last_MS_Revenue__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All SDM Account Health Review</label>
+</ListView>

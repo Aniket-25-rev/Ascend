@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bypass_Contract_Dates_Flow__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Backend field to bypass flow for setting contract end date based on start date and term.</description>
+    <label>Bypass Contract Dates Flow</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Management</fullName>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Status__c</columns>
+    <columns>Primary_Contact__c</columns>
+    <columns>Contract_Renewal_Date__c</columns>
+    <columns>Last_MS_Revenue__c</columns>
+    <filterScope>Team</filterScope>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Customer,Client</value>
+    </filters>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <label>Account Management</label>
+</ListView>

@@ -3,6 +3,7 @@
     <fullName>Owner_Expiration_Notice__c</fullName>
     <label>Owner Expiration Notice</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

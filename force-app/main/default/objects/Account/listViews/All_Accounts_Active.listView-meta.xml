@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Accounts_Active</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>ACCOUNT.INDUSTRY</columns>
+    <columns>Account_Team__c</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE</columns>
+    <columns>ACCOUNT.TYPE</columns>
+    <columns>Status__c</columns>
+    <columns>Last_Invoice_Date__c</columns>
+    <columns>Services_Rollup__c</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>Client_Code__c</columns>
+    <columns>ACCOUNT.CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Customer,Client</value>
+    </filters>
+    <label>All Accounts - Active</label>
+</ListView>

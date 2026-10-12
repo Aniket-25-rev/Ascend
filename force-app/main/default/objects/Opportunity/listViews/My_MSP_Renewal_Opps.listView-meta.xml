@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_MSP_Renewal_Opps</fullName>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>CORE.USERS.FULL_NAME</columns>
+    <columns>Booked_MRR_rollup__c</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <columns>OPPORTUNITY.LEAD_SOURCE</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <columns>OPPORTUNITY.FORECAST_CATEGORY</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>OPPORTUNITY.CREATED_DATE</columns>
+    <filterScope>SalesTeam</filterScope>
+    <filters>
+        <field>OPPORTUNITY.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Opportunity.Opportunity</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.STAGE_NAME</field>
+        <operation>equals</operation>
+        <value>Generate,Qualify,Analyze,Propose,Contract,Approve</value>
+    </filters>
+    <filters>
+        <field>Service_Offering_Rollup__c</field>
+        <operation>notContain</operation>
+        <value>Salesforce,HubSpot,Application</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.TYPE</field>
+        <operation>equals</operation>
+        <value>Renewal</value>
+    </filters>
+    <label>My MSP Renewal Opps</label>
+</ListView>

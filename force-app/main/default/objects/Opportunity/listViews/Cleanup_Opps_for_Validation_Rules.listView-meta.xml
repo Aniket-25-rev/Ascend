@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cleanup_Opps_for_Validation_Rules</fullName>
+    <booleanFilter>1 AND (2 OR 3) and 4</booleanFilter>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>Pains__c</columns>
+    <columns>Goals__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Project__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Goals__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>Pains__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.CLOSED</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>Cleanup Opps for Validation Rules</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

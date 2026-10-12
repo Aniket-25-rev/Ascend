@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Change_Management_Approvers_Case</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>OWNER_NAME</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>NAME</columns>
+    <columns>CASES.TYPE</columns>
+    <columns>Impact__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Change_Management_Status__c</field>
+        <operation>equals</operation>
+        <value>Request Submitted</value>
+    </filters>
+    <label>Cases Awaiting Approval</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

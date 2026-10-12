@@ -11,9 +11,6 @@ private class RPRFAssignmentServiceTest {
     @TestSetup
     static void initData()
     {
-
-        
-
         Account a = new account(name = 'Test', BillingCountry = 'US', BillingState = 'AL');
         insert a;
         list<RecordType> lr=[Select Id from RecordType where SobjectType='Contact' and name = 'Resource'];
@@ -48,7 +45,7 @@ private class RPRFAssignmentServiceTest {
         insert psa;
 
         Test.startTest();
-        //setup
+
         System.runAs(u) {
             Account a = [select Id from Account limit 1];
             Contact c = [select Id from Contact limit 1];
@@ -74,7 +71,7 @@ private class RPRFAssignmentServiceTest {
             System.assertEquals(1, timecards.size());
             System.assertEquals(timecard.Id, timecards[0].Id);
 
-            Map<ID, Map<Date, Decimal>> actualDates = service.getAssignmentsActualDates(new List<ID>{assignment.Id});
+            Map<ID, Map<Date, RPRFAssignmentService.AssignmentData>> actualDates = service.getAssignmentsActualDates(new List<ID>{assignment.Id});
             System.assertEquals(0, actualDates.size());
 
             List<Daily_Assignment__c> dailyAssignments = service.getDailyAssignments(assignment.Id, null, null);
@@ -122,13 +119,9 @@ private class RPRFAssignmentServiceTest {
         AbstractTrigger.Disabled = false;
         service.processApprovedTimesheets(new List<Timesheet__c>{timesheet});
 
-        system.debug(assignment);
-        Map<ID, Map<Date, Decimal>> actualDates = service.getAssignmentsActualDates(new List<ID>{assignment.Id});
-        system.debug(actualDates);
-//        System.assertEquals(30, actualDates.get(assignment.Id).get(startDate.addDays(2)));
+        Map<ID, Map<Date, RPRFAssignmentService.AssignmentData>> actualDates = service.getAssignmentsActualDates(new List<ID>{assignment.Id});
 
         Test.startTest();
-
         list<SFDC_Assignment__c> assignmentsbyresource = service.getAssignmentsByResourcesAndDates(new map<Id, set<date>>{c.id=>new set<date>{startDate, enddate}});
 
         service.call('recalculateDailyAssignments', new Map<String, Object>{'data' => new List<ID>{assignment.Id}});
@@ -137,6 +130,5 @@ private class RPRFAssignmentServiceTest {
         try {
             service.call('unknownAction', null);
         } catch (Exception ignore) {}
-
     }
 }

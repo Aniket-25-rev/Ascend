@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ramp_Start_Date_Mismatch__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>True when the earliest Ramp Schedule segment (QuoteLineGroup) Start Date does not match the Quote Start Date. Used to drive a warning banner on the Quote page.</description>
+    <inlineHelpText>Checked automatically when the first Ramp Schedule segment&apos;s Start Date does not match this Quote&apos;s Start Date.</inlineHelpText>
+    <label>Ramp Start Date Mismatch</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -4,21 +4,27 @@
     <active>true</active>
     <description>Fields: Booked MRR (rollup), Term, Est. Start Date - required at Stage of Propose or later for Managed Services record type
 Case00016020 - removed requirement for Booked MRR to allow negative and zero dollar opps.</description>
-    <errorConditionFormula>AND ( 
- RecordType.DeveloperName = &apos;Opportunity&apos;,
-OR ( 
- ISPICKVAL(StageName, &quot;Propose&quot;), 
- ISPICKVAL(StageName, &quot;Contract&quot;),
- ISPICKVAL(StageName, &quot;Approve&quot;), 
- ISPICKVAL(StageName, &quot;Closed Won&quot;) 
-), 
-OR(
-   ISBLANK( Duration_in_Months__c ),
-   ISBLANK( Est_Start_Date__c )
-)
-, ISBLANK( Project__c )
-)
-&amp;&amp; NOT($Permission.BypassValidationRules)
-&amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)</errorConditionFormula>
+    <errorConditionFormula>AND(
+    RecordType.DeveloperName = &apos;Opportunity&apos;,
+    OR(
+        ISPICKVAL(StageName, &quot;Propose&quot;),
+        ISPICKVAL(StageName, &quot;Contract&quot;),
+        ISPICKVAL(StageName, &quot;Approve&quot;),
+        ISPICKVAL(StageName, &quot;Closed Won&quot;)
+    ),
+    OR(
+        ISBLANK(Est_Start_Date__c),
+        AND(
+            OR(
+                ISPICKVAL(Type, &quot;New Business&quot;),
+                ISPICKVAL(Type, &quot;Renewal&quot;)
+            ),
+            ISBLANK(Duration_in_Months__c)
+        )
+    ),
+    ISBLANK(Project__c),
+    NOT($Permission.BypassValidationRules),
+    NOT($User.Id = &apos;0053b00000CSZR6&apos;)
+)</errorConditionFormula>
     <errorMessage>The following fields are required to move this Opportunity to the next stage: Estimated Start Date, Term, Booked MRR (rollup).</errorMessage>
 </ValidationRule>

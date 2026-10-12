@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Open_SAS_Staff_Aug_RR</fullName>
+    <columns>Name</columns>
+    <columns>Subject</columns>
+    <columns>Account</columns>
+    <columns>Status</columns>
+    <columns>Priority</columns>
+    <columns>RecordType</columns>
+    <columns>Request_Type__c</columns>
+    <columns>Resource_Type__c</columns>
+    <columns>Preferred_Vendor__c</columns>
+    <columns>Preferred_Person_s__c</columns>
+    <columns>CreatedDate</columns>
+    <columns>CreatedBy</columns>
+    <columns>Owner</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status</field>
+        <operation>notContain</operation>
+        <value>Completed,Closed,Cannot Complete,Canceled</value>
+    </filters>
+    <filters>
+        <field>RecordType</field>
+        <operation>equals</operation>
+        <value>WorkOrder.SAS</value>
+    </filters>
+    <filters>
+        <field>Request_Type__c</field>
+        <operation>equals</operation>
+        <value>Staff Aug</value>
+    </filters>
+    <label>All Open SAS Staff Aug RR</label>
+</ListView>

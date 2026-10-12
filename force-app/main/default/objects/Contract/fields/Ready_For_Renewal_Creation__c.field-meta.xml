@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ready_For_Renewal_Creation__c</fullName>
+    <formula>IF(
+     ContractTerm &gt; 12,
+    TODAY()  =  ADDMONTHS(EndDate,-9),
+    TODAY() = ADDMONTHS(EndDate, -6)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Ready For Renewal Creation</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

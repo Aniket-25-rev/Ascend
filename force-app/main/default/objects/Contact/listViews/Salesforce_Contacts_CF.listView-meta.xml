@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Salesforce_Contacts_CF</fullName>
+    <columns>FULL_NAME</columns>
+    <columns>CONTACT.TITLE</columns>
+    <columns>Stage__c</columns>
+    <columns>Role__c</columns>
+    <columns>Segment__c</columns>
+    <columns>Vertical__c</columns>
+    <columns>Relationship_Owner_Formula__c</columns>
+    <columns>CONTACT.LAST_ACTIVITY</columns>
+    <columns>Priority__c</columns>
+    <columns>Connections__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>equals</operation>
+        <value>Salesforce</value>
+    </filters>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>Relationship_Owner_Formula__c</field>
+        <operation>contains</operation>
+        <value>Fox</value>
+    </filters>
+    <filters>
+        <field>Segment__c</field>
+        <operation>equals</operation>
+        <value>Mid-Market - MM,Growth Business - GB</value>
+    </filters>
+    <filters>
+        <field>Role__c</field>
+        <operation>equals</operation>
+        <value>AE</value>
+    </filters>
+    <label>Salesforce Contacts - CF</label>
+</ListView>

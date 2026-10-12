@@ -60,6 +60,15 @@ public class ContractNightlyRollupBatch implements Database.Batchable<SObject>, 
         Map<Id, Map<String, Decimal>> lobByContractId =
             lobMrrByContract(contractIds, contractIdByAssetId, periods);
 
+        // Only Contracts whose rolled-up values actually changed are saved. Every save
+        // fires the Contract automation (e.g. onContract_Upsert_Set_Integeration_Status
+        // marks the Contract for the ServiceNow sync), so re-saving unchanged Contracts
+        // every night would flag all of them for integration with no real change.
+        List<String> rollupFields = rollupFieldNames();
+        Map<Id, Contract> currentById = new Map<Id, Contract>((List<Contract>) Database.query(
+            'SELECT Id, ' + String.join(rollupFields, ', ') + ' FROM Contract WHERE Id IN :contractIds'
+        ));
+
         List<Contract> toUpdate = new List<Contract>();
         for (Id cId : contractIds) {
             Contract target = new Contract(
@@ -72,8 +81,11 @@ public class ContractNightlyRollupBatch implements Database.Batchable<SObject>, 
                 Decimal amount = lobTotals == null ? 0 : lobTotals.get(suffix);
                 target.put('Current_MRR_' + suffix + '__c', amount == null ? 0 : amount);
             }
-            toUpdate.add(target);
+            if (hasRollupChanged(currentById.get(cId), target, rollupFields)) {
+                toUpdate.add(target);
+            }
         }
+        lastUpdateCount = toUpdate.size();
 
         // Partial success, not all-or-nothing: a plain `update` on this list
         // rolls back every record in the chunk if even one fails (e.g. a
@@ -95,14 +107,47 @@ public class ContractNightlyRollupBatch implements Database.Batchable<SObject>, 
 
     public void finish(Database.BatchableContext bc) {}
 
-    // "Active" per ticket: the Asset's own lifecycle window must cover
-    // asOf. LifecycleEndDate is null for open-ended/perpetual assets —
-    // null must count as active, not get excluded. This is a deliberate
-    // belt-and-suspenders check on top of the AssetStatePeriod date
-    // window, not a duplicate of it — it's what makes the active-only rule
-    // an explicit, visible part of this batch rather than an implicit side
-    // effect of AssetStatePeriod behaving perfectly. Extracted (and
-    // @TestVisible) so the filter itself can be asserted on directly.
+    // Number of Contracts the last recalculateContracts() call tried to save, so tests
+    // can assert that unchanged Contracts are skipped.
+    @TestVisible
+    private static Integer lastUpdateCount = 0;
+
+    @TestVisible
+    private static List<String> rollupFieldNames() {
+        List<String> fields = new List<String>{ 'Current_MRR__c', 'Current_TCV__c' };
+        for (String suffix : FinancialMetricsService.LOB_TO_SUFFIX.values()) {
+            fields.add('Current_MRR_' + suffix + '__c');
+        }
+        return fields;
+    }
+
+    // A blank stored value counts as a change even when the new value is 0, so a
+    // Contract that was never rolled up still gets its first values written.
+    @TestVisible
+    private static Boolean hasRollupChanged(Contract current, Contract target, List<String> fields) {
+        if (current == null) {
+            return true;
+        }
+        for (String f : fields) {
+            Decimal before = (Decimal) current.get(f);
+            Decimal after = (Decimal) target.get(f);
+            if (before != after) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // "Active" here means not yet ended — deliberately NOT "already started".
+    // An Order can be activated well before its service begins, and the
+    // Contract must show its metrics from activation. Filtering on
+    // LifecycleStartDate <= asOf excluded those Assets, so the rollup wrote 0
+    // over the numbers Order_Stamp_Contract_Baseline had just stamped, and
+    // the next quote then copied that 0 as its Existing baseline.
+    // LifecycleEndDate is null for open-ended/perpetual assets — null must
+    // count as active, not get excluded. Ended Assets are still excluded, so
+    // genuine churn still rolls to 0. Extracted (and @TestVisible) so the
+    // filter itself can be asserted on directly.
     @TestVisible
     private static List<AssetContractRelationship> queryActiveAssetRelationships(
         Set<Id> contractIds, Date asOf
@@ -111,23 +156,67 @@ public class ContractNightlyRollupBatch implements Database.Batchable<SObject>, 
             SELECT AssetId, ContractId, Asset.TotalLifecycleAmount
             FROM   AssetContractRelationship
             WHERE  ContractId IN :contractIds
-            AND    Asset.LifecycleStartDate <= :asOf
             AND    (Asset.LifecycleEndDate = null OR Asset.LifecycleEndDate >= :asOf)
         ];
     }
 
+    // Every period for the scoped Assets is queried and narrowed in Apex
+    // rather than filtered in SOQL, because the choice isn't a pure date
+    // window: an Asset whose service starts in the future has no covering
+    // period, and must still contribute its first one. Selection lives in
+    // chooseCoveringPeriods() so it can be asserted on without DML —
+    // lifecycle-managed Assets can't be built in a test.
     @TestVisible
     private static List<AssetStatePeriod> activePeriods(Set<Id> assetIds, Datetime asOf) {
         if (assetIds == null || assetIds.isEmpty()) {
             return new List<AssetStatePeriod>();
         }
-        return [
-            SELECT AssetId, Mrr, Line_of_Business__c
+        return chooseCoveringPeriods([
+            SELECT AssetId, Mrr, Line_of_Business__c, Asset.Product2.Service_Offering__c, StartDate, EndDate
             FROM   AssetStatePeriod
             WHERE  AssetId IN :assetIds
-            AND    StartDate <= :asOf
-            AND    (EndDate = null OR EndDate >= :asOf)
-        ];
+            ORDER BY StartDate ASC
+        ], asOf);
+    }
+
+    // One period per Asset, mirroring FinancialMetricsService.periodCoveringNow()
+    // so the nightly reconciliation and the Loss MRR baseline can't disagree
+    // about which period represents an Asset: the period covering asOf wins;
+    // failing that the most recent period that has started; failing that the
+    // earliest period, which is the not-yet-started case this exists for.
+    // Expects periods ordered by StartDate ASC.
+    @TestVisible
+    private static List<AssetStatePeriod> chooseCoveringPeriods(
+        List<AssetStatePeriod> periods, Datetime asOf
+    ) {
+        Map<Id, AssetStatePeriod> chosenByAssetId = new Map<Id, AssetStatePeriod>();
+        Map<Id, AssetStatePeriod> earliestByAssetId = new Map<Id, AssetStatePeriod>();
+        Set<Id> settled = new Set<Id>();
+        if (periods == null) {
+            return new List<AssetStatePeriod>();
+        }
+        for (AssetStatePeriod asp : periods) {
+            if (settled.contains(asp.AssetId)) {
+                continue;
+            }
+            if (!earliestByAssetId.containsKey(asp.AssetId)) {
+                earliestByAssetId.put(asp.AssetId, asp);
+            }
+            Boolean hasStarted = asp.StartDate == null || asp.StartDate <= asOf;
+            Boolean hasEnded = asp.EndDate != null && asp.EndDate < asOf;
+            if (hasStarted && !hasEnded) {
+                chosenByAssetId.put(asp.AssetId, asp);
+                settled.add(asp.AssetId);
+            } else if (hasStarted) {
+                chosenByAssetId.put(asp.AssetId, asp);
+            }
+        }
+        for (Id assetId : earliestByAssetId.keySet()) {
+            if (!chosenByAssetId.containsKey(assetId)) {
+                chosenByAssetId.put(assetId, earliestByAssetId.get(assetId));
+            }
+        }
+        return chosenByAssetId.values();
     }
 
     @TestVisible
@@ -173,7 +262,10 @@ public class ContractNightlyRollupBatch implements Database.Batchable<SObject>, 
             result.put(cId, totals);
         }
         for (AssetStatePeriod asp : periods) {
-            String suffix = FinancialMetricsService.LOB_TO_SUFFIX.get(asp.Line_of_Business__c);
+            String suffix = FinancialMetricsService.LOB_TO_SUFFIX.get(FinancialMetricsService.lobOf(
+                asp.Line_of_Business__c,
+                asp.Asset == null || asp.Asset.Product2 == null ? null : asp.Asset.Product2.Service_Offering__c
+            ));
             if (suffix == null || asp.Mrr == null) {
                 continue;
             }

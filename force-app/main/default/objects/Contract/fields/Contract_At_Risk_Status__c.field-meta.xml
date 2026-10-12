@@ -5,6 +5,7 @@
     <inlineHelpText>Indicates whether this contract is currently considered at risk.</inlineHelpText>
     <label>Contract At Risk Status</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

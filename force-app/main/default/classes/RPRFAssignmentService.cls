@@ -42,7 +42,7 @@ public with sharing class RPRFAssignmentService implements Callable
 
     public List<SFDC_Assignment__c> getAssignments(ID resourceId, ID projectId, Date fromDate, Date toDate) {
         List<String> dailyAssignmentsConditions = new List<String>();
-        List<String> conditions = new List<String>{'Inactive__c = false'};
+        List<String> conditions = new List<String>{'Inactive__c = false', 'Projects__r.Unforcasted_Project__c = false'};
         if(resourceId != null) conditions.add('Resource__c = \'' + resourceId + '\'');
         if(projectId != null) conditions.add('Projects__c = \'' + projectId + '\'');
 

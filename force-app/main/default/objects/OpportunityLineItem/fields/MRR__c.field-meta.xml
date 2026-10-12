@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MRR__c</fullName>
     <description>Monthly Recurring Revenue = Quantity/Devices X Sales Price</description>
-    <formula>IF( Term__c &gt; 1, UnitPrice *  DevicesHours__c, 0)</formula>
+    <formula>IF(AND(Term__c &gt; 1, TotalPrice &lt;&gt; 0), ROUND(TotalPrice / Term__c, 0), 0)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Monthly Recurring Revenue = Quantity/Devices X Sales Price</inlineHelpText>
     <label>MRR</label>

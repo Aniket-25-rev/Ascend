@@ -5,6 +5,7 @@
     <description>Indicates the contract is currently running month-to-month (e.g. during contract negotiation) rather than under a firm term. Editable by SOA users and System Administrators only.</description>
     <inlineHelpText>Check while this contract is running month-to-month (e.g. during renewal negotiation).</inlineHelpText>
     <label>Month-to-Month</label>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Checkbox</type>
 </CustomField>

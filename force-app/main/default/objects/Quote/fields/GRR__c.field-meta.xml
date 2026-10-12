@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GRR__c</fullName>
+    <description>Gross Revenue Retention = (Existing MRR - Churn/Contraction MRR) / Existing MRR x 100. Computed as (Existing_MRR__c + Loss_MRR__c) / Existing_MRR__c x 100, where Loss_MRR__c (from the related Opportunity) is already a negative value representing churn/contraction only, excluding expansion. Blank when there is no Existing MRR baseline (e.g. New Business).</description>
+    <inlineHelpText>Gross Revenue Retention: how much of the prior contract&apos;s MRR was kept, excluding any expansion/upsell. Caps at 100% by definition.</inlineHelpText>
+    <label>GRR</label>
+    <precision>7</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

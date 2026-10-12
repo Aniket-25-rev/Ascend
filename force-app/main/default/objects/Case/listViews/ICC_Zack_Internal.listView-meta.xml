@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ICC_Zack_Internal</fullName>
+    <columns>Intellio_Connect_Case_Prioritization__c</columns>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>SprintNumber__c</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>LOE_Estimate__c</columns>
+    <columns>Case_Timecard_Hours__c</columns>
+    <columns>NAME</columns>
+    <columns>CASES.PRIORITY</columns>
+    <columns>CASES.REASON</columns>
+    <columns>Case_Age__c</columns>
+    <columns>CASES.CREATED_DATE</columns>
+    <columns>Intellio_Connect_OpCo__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>contains</operation>
+        <value>West Monroe</value>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>contains</operation>
+        <value>Exelon - Intellio</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>equals</operation>
+        <value>New,Backlog,Assigned - In Progress</value>
+    </filters>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.App_Cases,Case.Salesforce_Cases</value>
+    </filters>
+    <filters>
+        <field>CASES.REASON</field>
+        <operation>equals</operation>
+        <value>Clarification,Issue,Enhancement</value>
+    </filters>
+    <filters>
+        <field>Intellio_Connect_OpCo__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>CASES.PRIORITY</field>
+        <operation>equals</operation>
+        <value>High,Medium,Low</value>
+    </filters>
+    <filters>
+        <field>OWNER_NAME</field>
+        <operation>contains</operation>
+        <value>Zachary</value>
+    </filters>
+    <label>ICC - Zach (Internal)</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

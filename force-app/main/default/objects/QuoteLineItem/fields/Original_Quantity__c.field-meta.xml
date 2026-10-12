@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Original_Quantity__c</fullName>
+    <description>Per AC-11, the quantity the source Asset had at the moment a Renewal quote line was created. Amendment lines already get this from the standard StartQuantity field, but Revenue Cloud&apos;s own validation blocks StartQuantity from holding a non-zero value on any line whose action is Renew, so Renewal lines need this separate custom field instead. Populated by QuoteLineItem_Stamp_Renewal_Original_Quantity.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The asset&apos;s quantity at the time this renewal line was created. Renewal-only equivalent of Start Quantity, which Revenue Cloud does not allow to be set on Renew action lines.</inlineHelpText>
+    <label>Original Quantity</label>
+    <precision>12</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

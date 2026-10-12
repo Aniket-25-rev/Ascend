@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X2018_STL_Territory_Call_List</fullName>
+    <columns>FULL_NAME</columns>
+    <columns>LEAD.COMPANY</columns>
+    <columns>LEAD.PHONE</columns>
+    <columns>LEAD.STATE</columns>
+    <columns>LEAD.STATUS</columns>
+    <columns>LEAD.DO_NOT_CALL</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Campaigns__c</field>
+        <operation>contains</operation>
+        <value>STL Territory</value>
+    </filters>
+    <filters>
+        <field>LEAD.DO_NOT_CALL</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>2018 STL Territory Call List</label>
+</ListView>

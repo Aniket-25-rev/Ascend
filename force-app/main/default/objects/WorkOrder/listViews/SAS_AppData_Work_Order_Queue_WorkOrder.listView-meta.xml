@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SAS_AppData_Work_Order_Queue_WorkOrder</fullName>
+    <filterScope>Queue</filterScope>
+    <label>SAS AppData Work Order Queue</label>
+    <queue>SAS_AppData_Work_Order_Queue</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

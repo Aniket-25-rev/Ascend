@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lifecycle_Start__c</fullName>
+    <description>Revenue Cloud stores start at 00:00:00 UTC and end at 23:59:59 UTC (older assets at Chicago midnight), which America/Chicago users see as the previous day. Shifts 12 hours toward mid-day and reads the UTC date via TEXT(), since DATEVALUE(datetime) uses the viewing user&apos;s time zone.</description>
+    <formula>DATEVALUE(LEFT(TEXT(LifecycleStartDate + 0.5), 10))</formula>
+    <inlineHelpText>Calendar date of the period, shown without a time so it does not shift to the previous day in the user&apos;s time zone.</inlineHelpText>
+    <label>Lifecycle Start</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

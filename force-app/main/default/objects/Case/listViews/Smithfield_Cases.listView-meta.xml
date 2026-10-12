@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Smithfield_Cases</fullName>
+    <columns>CASES.SUBJECT</columns>
+    <columns>Prioritization__c</columns>
+    <columns>SprintNumber__c</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>OWNER_NAME</columns>
+    <columns>NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CASES.REASON</field>
+        <operation>notEqual</operation>
+        <value>Support Coordination</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Canceled by Client,Duplicate</value>
+    </filters>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.App_Cases</value>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>contains</operation>
+        <value>SMITH - MS - .NET - Intellio Labor 24</value>
+    </filters>
+    <label>Smithfield - Cases</label>
+    <sharedTo>
+        <group>All_Internal_Users</group>
+    </sharedTo>
+</ListView>

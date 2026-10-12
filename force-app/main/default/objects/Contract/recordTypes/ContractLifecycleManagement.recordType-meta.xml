@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ContractLifecycleManagement</fullName>
+    <active>true</active>
+    <label>Contract Lifecycle Management</label>
+    <picklistValues>
+        <picklist>Billing_Type__c</picklist>
+        <values>
+            <fullName>Fixed Fee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>T%26E</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Contract_At_Risk_Status__c</picklist>
+        <values>
+            <fullName>Churn Likely</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed Churn</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed Retained</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>High Risk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low Risk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Remediation</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Contract_Status__c</picklist>
+        <values>
+            <fullName>Activated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contract Expired</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contract Terminated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Draft</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Onboarding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Signed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Integration_Status__c</picklist>
+        <values>
+            <fullName>Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scheduled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Success</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Owner_Expiration_Notice__c</picklist>
+        <values>
+            <fullName>180 Days</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>270 Days</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Referral_Fee__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status</picklist>
+        <values>
+            <fullName>Activated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contract Expired</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contract Terminated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Draft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Onboarding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Signed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

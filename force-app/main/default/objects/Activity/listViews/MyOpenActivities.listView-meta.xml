@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MyOpenActivities</fullName>
+    <booleanFilter>(1 AND 2) OR (3 AND 4)</booleanFilter>
+    <columns>TASK.SUBJECT</columns>
+    <columns>TASK.WHO_NAME</columns>
+    <columns>TASK.WHAT_NAME</columns>
+    <columns>TASK.TYPE</columns>
+    <columns>Purpose__c</columns>
+    <columns>TASK.DUE_DATE</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>TASK.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Completed</value>
+    </filters>
+    <filters>
+        <field>ACTIVITY.TASK</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>EVENT.END_DATE_TIME</field>
+        <operation>greaterOrEqual</operation>
+        <value>TODAY</value>
+    </filters>
+    <filters>
+        <field>ACTIVITY.TASK</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>My Open Activities</label>
+</ListView>

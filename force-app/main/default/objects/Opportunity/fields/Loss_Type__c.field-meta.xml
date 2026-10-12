@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loss_Type__c</fullName>
+    <description>Per AC-9/AC-10, identifies which kind of renewal loss Loss_MRR__c reflects: the renewal closed Won but at a reduced MRR (Partial), or the renewal never happened at all (Full). Set by FinancialMetricsService alongside Loss_MRR__c itself, not by a separate process, so the two fields can never disagree.</description>
+    <inlineHelpText>Which kind of renewal loss this is. Renewal - Partial: the renewal still closed Won, just at a lower MRR. Renewal - Full: the Opportunity closed Lost and the renewal never happened.</inlineHelpText>
+    <label>Loss Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Renewal - Partial</fullName>
+                <default>false</default>
+                <label>Renewal - Partial</label>
+            </value>
+            <value>
+                <fullName>Renewal - Full</fullName>
+                <default>false</default>
+                <label>Renewal - Full</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

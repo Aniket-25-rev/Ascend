@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>APXT_CongaSign__Resend</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>page</linkType>
+    <masterLabel>Re-send Transaction</masterLabel>
+    <openType>replace</openType>
+    <page>APXT_CongaSign__apxt_resendTransaction</page>
+    <protected>false</protected>
+</WebLink>

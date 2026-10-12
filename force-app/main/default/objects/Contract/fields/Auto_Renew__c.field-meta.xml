@@ -5,6 +5,7 @@
     <description>Comes from the Opportunity Auto Renew field.</description>
     <inlineHelpText>Comes from the Opportunity Auto Renew field.</inlineHelpText>
     <label>Auto Renew</label>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Checkbox</type>
 </CustomField>

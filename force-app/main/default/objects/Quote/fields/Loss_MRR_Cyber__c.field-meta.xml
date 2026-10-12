@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loss_MRR_Cyber__c</fullName>
+    <description>The Cybersecurity share of the MRR this quote gives up, written by FinancialMetricsService on every quote line change. Renewal: each Cybersecurity product on the contract that comes back smaller, or not at all, counted gross so a product that shrank still shows even when another Cybersecurity product grew. Amendment and Cancellation: the negative Cybersecurity lines. Blank, not zero, when nothing in Cybersecurity was lost.</description>
+    <inlineHelpText>The Cybersecurity MRR this quote gives up, counted per product against the contract. A product that shrank still counts even if Cybersecurity grew overall. Blank means nothing was lost.</inlineHelpText>
+    <label>Loss MRR - Cyber</label>
+    <precision>14</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

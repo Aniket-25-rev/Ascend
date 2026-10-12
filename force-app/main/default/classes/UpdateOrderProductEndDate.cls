@@ -1,5 +1,7 @@
 public class UpdateOrderProductEndDate {
 
+    /**
+     
     public class Request {
         @InvocableVariable(required=true)
         public Id contractId;
@@ -9,6 +11,7 @@ public class UpdateOrderProductEndDate {
         public Date newStartDate;
     }
 
+    
     @InvocableMethod(
         label       = 'Update Order Product End Dates from Contract'
         description = 'Cascades Contract date changes to related Orders and OrderItems.'
@@ -17,6 +20,7 @@ public class UpdateOrderProductEndDate {
         Map<Id, Date> contractToEndDate   = new Map<Id, Date>();
         Map<Id, Date> contractToStartDate = new Map<Id, Date>();
 
+        // Identify which Requests are missing dates and need a Contract query
         Set<Id> needsDates = new Set<Id>();
         for (Request req : requests) {
             if (req.newEndDate == null || req.newStartDate == null)
@@ -27,6 +31,8 @@ public class UpdateOrderProductEndDate {
             for (Contract c : [SELECT Id, StartDate, EndDate FROM Contract WHERE Id IN :needsDates])
                 contractMap.put(c.Id, c);
         }
+
+        // Build final date maps — explicit request values take priority over queried values
         for (Request req : requests) {
             Date endDate   = req.newEndDate;
             Date startDate = req.newStartDate;
@@ -41,20 +47,8 @@ public class UpdateOrderProductEndDate {
         processContracts(contractToEndDate, contractToStartDate);
     }
 
-    // =========================================================
-    // CORE LOGIC — runs synchronously in the AfterSave transaction.
-    //
-    // Per-order sequence:
-    //   Step A  raise Order.EndDate ceiling (V14 flow may already do this)
-    //   Step B  update OrderItem.ServiceDate + EndDate  ← primary goal
-    //   Step C  update Order.EffectiveDate
-    //
-    // RCA Instant Pricing recalculates EndDate from PricingTermCount when
-    // any OrderItem field is written. To prevent it from overriding our new
-    // EndDate, we also write the correctly-derived decimal PricingTermCount.
-    //
-    // OneTime products must never have EndDate set (platform rule).
-    // =========================================================
+     
+      
     @TestVisible
     private static void processContracts(
         Map<Id, Date> contractToEndDate,
@@ -81,6 +75,7 @@ public class UpdateOrderProductEndDate {
             currentEffectiveDate.put(o.Id, o.EffectiveDate);
             currentEndDate.put(o.Id, o.EndDate);
             if (o.Status == 'Activated') {
+                // Activated Orders must be set to Draft before OrderItems can be updated
                 activatedOrderIds.add(o.Id);
                 toDeactivate.add(new Order(Id = o.Id, Status = 'Draft'));
             }
@@ -92,6 +87,7 @@ public class UpdateOrderProductEndDate {
             }
         }
 
+        // Fetch all OrderItems and group by Order for efficient per-Order processing
         List<OrderItem> allItems = [
             SELECT Id, ServiceDate, EndDate, PricingTermCount, OrderId, ProductSellingModelId
             FROM   OrderItem
@@ -107,6 +103,7 @@ public class UpdateOrderProductEndDate {
             if (oi.ProductSellingModelId != null) psmIds.add(oi.ProductSellingModelId);
         }
 
+        // Map PSM ID → SellingModelType to identify OneTime products
         Map<Id, String> psmTypeMap = new Map<Id, String>();
         if (!psmIds.isEmpty()) {
             for (ProductSellingModel psm : [
@@ -119,20 +116,21 @@ public class UpdateOrderProductEndDate {
             Date newEndDate   = contractToEndDate.get(contractId);
             Date newStartDate = contractToStartDate.get(contractId);
 
-            // Step A: raise Order.EndDate ceiling (may already be set by V14 flow)
+            // Step A: Raise Order.EndDate ceiling.
+            // This may already have been done by the V14 Update End Date flow in
+            // the same transaction. A failure here is non-fatal — Step B may still
+            // succeed if Order.EndDate was already raised by the other flow.
             if (newEndDate != currentEndDate.get(orderId)) {
                 try { update new Order(Id = orderId, EndDate = newEndDate); }
                 catch (DmlException e) {
                     System.debug('UpdateOrderProductEndDate: Step A EndDate failed orderId='
                         + orderId + ' — ' + e.getMessage());
-                    // No continue — V14 may have already updated Order.EndDate in this
-                    // transaction, so Step B may still succeed even if Step A fails here.
                 }
             }
 
-            // Step B: update OrderItems — primary goal.
-            // PricingTermCount is set alongside EndDate so RCA Instant Pricing
-            // derives the same EndDate and does not override our new value.
+            // Step B: Update OrderItems — the primary goal of this class.
+            // PricingTermCount is set alongside EndDate so Revenue Cloud's
+            // Instant Pricing derives the same EndDate and does not override it.
             List<OrderItem> orderItems = orderIdToItems.containsKey(orderId)
                 ? orderIdToItems.get(orderId) : new List<OrderItem>();
             if (!orderItems.isEmpty()) {
@@ -143,10 +141,12 @@ public class UpdateOrderProductEndDate {
                     Boolean isOneTime = 'OneTime'.equalsIgnoreCase(modelType);
                     boolean changed   = false;
 
+                    // Always update ServiceDate for all product types
                     if (oi.ServiceDate != newStartDate) {
                         oi.ServiceDate = newStartDate;
                         changed = true;
                     }
+                    // EndDate and PricingTermCount must not be set on OneTime items
                     if (!isOneTime && oi.EndDate != newEndDate) {
                         oi.EndDate = newEndDate;
                         Date sd = (oi.ServiceDate != null) ? oi.ServiceDate : newStartDate;
@@ -167,7 +167,8 @@ public class UpdateOrderProductEndDate {
                 }
             }
 
-            // Step C: update Order.EffectiveDate (isolated — must not block Step B)
+            // Step C: Update Order.EffectiveDate.
+            // Isolated in its own DML so a failure here does not roll back Step B.
             if (newStartDate != currentEffectiveDate.get(orderId)) {
                 try { update new Order(Id = orderId, EffectiveDate = newStartDate); }
                 catch (DmlException e) {
@@ -177,7 +178,7 @@ public class UpdateOrderProductEndDate {
             }
         }
 
-        // Re-activate orders that were originally Activated
+        // Re-activate Orders that were temporarily deactivated in Step 1
         List<Order> toReactivate = new List<Order>();
         for (Id oId : activatedOrderIds)
             toReactivate.add(new Order(Id = oId, Status = 'Activated'));
@@ -189,10 +190,7 @@ public class UpdateOrderProductEndDate {
         }
     }
 
-    // Calculates a decimal PricingTermCount matching Salesforce RCA's formula:
-    //   fullMonths + (daysInPartialMonth / daysInThatCalendarMonth)
-    // where daysInPartialMonth counts inclusively to endDate (daysBetween to endDate+1).
-    // Verified against live data: serviceDate=08/13/2026, endDate=07/31/2027 → 11.612903...
+     
     @TestVisible
     private static Decimal calcPTC(Date serviceDate, Date endDate) {
         if (serviceDate == null || endDate == null) return null;
@@ -202,9 +200,10 @@ public class UpdateOrderProductEndDate {
             fullMonths--;
             baseDate = serviceDate.addMonths(fullMonths);
         }
-        Integer remainDays  = baseDate.daysBetween(endDate.addDays(1));
+        Integer remainDays  = baseDate.daysBetween(endDate.addDays(1)); // inclusive end
         Date    monthStart  = Date.newInstance(baseDate.year(), baseDate.month(), 1);
         Integer daysInMonth = monthStart.daysBetween(monthStart.addMonths(1));
         return fullMonths + (Decimal) remainDays / daysInMonth;
     }
+  */
 }

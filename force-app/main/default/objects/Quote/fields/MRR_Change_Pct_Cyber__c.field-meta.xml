@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MRR_Change_Pct_Cyber__c</fullName>
-    <description>Net Cyber MRR as a percentage of the Existing baseline. Blank when there is no baseline, which is the zero-division guard.</description>
+    <description>Percent change in Cyber MRR from the Existing baseline to the resulting book. A renewal re-quotes every line, so Proposed is already the resulting book; every other action type carries only a delta, so Proposed is the change itself. Blank when there is no baseline, which is the zero-division guard.</description>
     <formula>IF(
   NULLVALUE(Existing_MRR_Cyber__c, 0) = 0,
   NULL,
-  Net_MRR_Cyber__c / Existing_MRR_Cyber__c
+  IF(
+    TEXT(OriginalActionType) = &quot;Renew&quot;,
+    (NULLVALUE(Current_MRR_Cyber__c, 0) - NULLVALUE(Existing_MRR_Cyber__c, 0)) / Existing_MRR_Cyber__c,
+    NULLVALUE(Current_MRR_Cyber__c, 0) / Existing_MRR_Cyber__c
+  )
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>MRR Change % - Cyber</label>

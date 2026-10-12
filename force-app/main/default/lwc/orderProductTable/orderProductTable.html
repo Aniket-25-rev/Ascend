@@ -1,0 +1,457 @@
+<template>
+    <template if:true={showComponent}>
+        <template if:true={isLoading}>
+            <lightning-spinner size="medium" alternative-text="Loading..."></lightning-spinner>
+        </template>
+        <template if:false={isLoading}>
+    <div class="slds-box slds-box_x-small slds-p-around_none">
+        <div class="table-header slds-p-around_small">
+            <lightning-icon icon-name="standard:product_item_transaction" size="small" class="slds-m-right_small"></lightning-icon>
+            <span class="slds-text-heading_small table-header-text">
+                <template if:true={hasGroups}>Groups ({groupCount}) | </template>Order Products ({itemCount})
+            </span>
+            <template if:true={showFilterRow}>
+                <button type="button" class="clear-filters-button" onclick={handleClearFilters}>Clear Filters</button>
+            </template>
+            <button type="button" class="filter-toggle-button" onclick={handleToggleFilterRow}>
+                <lightning-icon icon-name="utility:filterList" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>Filters
+            </button>
+        </div>
+
+        <div class={scrollWrapperClass}>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer resizable-table">
+            <colgroup>
+                <template for:each={visibleColumns} for:item="column">
+                    <col key={column.key} style={column.styleWidth} />
+                </template>
+            </colgroup>
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <template for:each={displayColumns} for:item="column">
+                        <th key={column.key} scope="col" style={column.styleWidth} class="resizable-th" aria-sort={column.ariaSort}>
+                            <span
+                                class="th-label th-label_sortable"
+                                role="button"
+                                tabindex="0"
+                                data-column-key={column.key}
+                                onclick={handleSortColumn}
+                                onkeyup={handleSortColumnKeyUp}
+                            >
+                                <span class="th-label-text">{column.label}</span>
+                                <template if:true={column.isSorted}>
+                                    <lightning-icon icon-name={column.sortIcon} size="xx-small" class="sort-icon"></lightning-icon>
+                                </template>
+                            </span>
+                            <div
+                                class="col-resize-handle"
+                                data-column-key={column.key}
+                                onmousedown={handleColumnResizeMouseDown}
+                            ></div>
+                        </th>
+                    </template>
+                </tr>
+                <template if:true={showFilterRow}>
+                    <tr class="filter-row">
+                        <template for:each={displayColumns} for:item="column">
+                            <template if:true={column.isActionColumn}>
+                                <td key={column.key} class="filter-cell"></td>
+                            </template>
+                            <template if:false={column.isActionColumn}>
+                                <td key={column.key} class="filter-cell">
+                                <template if:true={column.isDateFilter}>
+                                    <input
+                                        type="date"
+                                        class="filter-input filter-input_date"
+                                        title="From"
+                                        data-column-key={column.key}
+                                        data-bound="from"
+                                        value={column.filterFrom}
+                                        oninput={handleDateFilterChange}
+                                    />
+                                    <input
+                                        type="date"
+                                        class="filter-input filter-input_date"
+                                        title="To"
+                                        data-column-key={column.key}
+                                        data-bound="to"
+                                        value={column.filterTo}
+                                        oninput={handleDateFilterChange}
+                                    />
+                                </template>
+                                <template if:false={column.isDateFilter}>
+                                    <input
+                                        type="text"
+                                        class="filter-input"
+                                        placeholder="Search..."
+                                        data-column-key={column.key}
+                                        value={column.filterValue}
+                                        oninput={handleTextFilterChange}
+                                    />
+                                </template>
+                            </td>
+                            </template>
+                        </template>
+                    </tr>
+                </template>
+            </thead>
+            <tbody>
+                <template if:false={hasRows}>
+                    <tr>
+                        <td colspan={columnCount} class="no-items-cell">No items to display.</td>
+                    </tr>
+                </template>
+                <template for:each={rows} for:item="row">
+                    <template if:true={row.isGroup}>
+                        <tr key={row.key}
+                            class={row.rowClass}
+                            data-group-key={row.key}
+                            aria-expanded={row.expanded}
+                            role="button"
+                            tabindex="0"
+                            onclick={handleToggleGroup}
+                            onkeyup={handleToggleGroupKeyUp}
+                        >
+                            <th scope="row" class="group-name">
+                                <lightning-icon icon-name={row.chevronIcon} size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                <button
+                                    type="button"
+                                    class="group-name-link"
+                                    data-group-key={row.key}
+                                    onclick={handleOpenGroupDetail}
+                                >{row.name}</button>
+                            </th>
+                            <template if:true={showDateColumns}>
+                                <td>
+                                    <lightning-formatted-date-time value={row.startDate}></lightning-formatted-date-time>
+                                </td>
+                                <td>
+                                    <lightning-formatted-date-time value={row.endDate}></lightning-formatted-date-time>
+                                </td>
+                            </template>
+                            <td colspan={groupRowColspan}></td>
+                        </tr>
+                    </template>
+                    <template if:false={row.isGroup}>
+                        <tr key={row.key} class={row.rowClass}>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="item-name-link"
+                                    data-item-key={row.key}
+                                    onclick={handleOpenDetail}
+                                >{row.productName}</button>
+                            </td>
+                            
+                            <template if:true={showDateColumns}>
+                                <td>
+                                    <lightning-formatted-date-time value={row.serviceDate}></lightning-formatted-date-time>
+                                </td>
+                                <td>
+                                    <lightning-formatted-date-time value={row.endDate}></lightning-formatted-date-time>
+                                </td>
+                            </template>
+                            <template if:true={showDateColumns}>
+                                <td>
+                                    <span class={row.quantityClass}>
+                                        <lightning-formatted-number
+                                            value={row.quantity}
+                                            minimum-fraction-digits="2"
+                                            maximum-fraction-digits="2"
+                                        ></lightning-formatted-number>
+                                        <template if:true={row.showRampIndicator}>
+                                            <button
+                                                type="button"
+                                                class="ramp-quantity-link"
+                                                data-item-key={row.key}
+                                                title="View ramp information"
+                                                aria-label="View ramp information"
+                                                onclick={handleShowRampDetails}
+                                                onmouseenter={handleShowRampDetails}
+                                                onmouseleave={handleHideCalcDetails}
+                                            >
+                                                <lightning-icon icon-name="utility:info" size="xx-small" alternative-text="Ramped line"></lightning-icon>
+                                            </button>
+                                        </template>
+                                    </span>
+                                </td>
+                            </template>
+                            <template if:false={showDateColumns}>
+                                <td>
+                                    <span class={row.quantityClass}>
+                                        <lightning-formatted-number
+                                            value={row.quantity}
+                                            minimum-fraction-digits="2"
+                                            maximum-fraction-digits="2"
+                                        ></lightning-formatted-number>
+                                        <template if:true={row.showRampIndicator}>
+                                            <button
+                                                type="button"
+                                                class="ramp-quantity-link"
+                                                data-item-key={row.key}
+                                                title="View ramp information"
+                                                aria-label="View ramp information"
+                                                onclick={handleShowRampDetails}
+                                                onmouseenter={handleShowRampDetails}
+                                                onmouseleave={handleHideCalcDetails}
+                                            >
+                                                <lightning-icon icon-name="utility:info" size="x-small" alternative-text="Ramped line"></lightning-icon>
+                                            </button>
+                                        </template>
+                                    </span>
+                                </td>
+                            </template>
+                            <template if:true={showDiscountAmountColumn}>
+                                <td>
+                                    <lightning-formatted-number value={row.discountAmount} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                </td>
+                            </template>
+                            <template if:true={showDiscountPercentColumn}>
+                                <td>
+                                    <lightning-formatted-number value={row.discountPercent} format-style="percent-fixed"></lightning-formatted-number>
+                                </td>
+                            </template>
+                            <td>
+                                <lightning-formatted-number value={row.listPrice} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                            </td>
+                            <template if:true={showMrrColumn}>
+                                <td>
+                                    <lightning-formatted-number value={row.mrr} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                </td>
+                            </template>
+                            <td>
+                                <span
+                                    class="net-unit-price"
+                                    data-item-key={row.key}
+                                    onmouseenter={handleShowCalcDetails}
+                                    onmouseleave={handleHideCalcDetails}
+                                >
+                                    <lightning-formatted-number value={row.netUnitPrice} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                </span>
+                            </td>
+                            <td>
+                                <lightning-formatted-number value={row.netTotalPrice} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                            </td>
+                            <template if:true={showRampActionColumn}>
+                                <td class="ramp-action-cell">
+                                    <template if:true={row.showRampIndicator}>
+                                        <button type="button" class="ramp-row-action" data-item-key={row.key} onclick={handleOpenRampModal}>Ramp</button>
+                                    </template>
+                                </td>
+                            </template>
+                            <template if:true={showPricingTermCountColumn}>
+                                <td>{row.pricingTermCount}</td>
+                            </template>
+                        </tr>
+                    </template>
+                </template>
+            </tbody>
+        </table>
+        </div>
+
+        <template if:true={error}>
+            <p class="slds-text-color_error slds-p-around_small">
+                {error.body.message}
+            </p>
+        </template>
+
+        <template if:true={showDetailPanel}>
+            <div class="detail-panel-backdrop" onclick={handleCloseDetail}></div>
+            <div class="detail-panel" role="dialog" aria-modal="true">
+                <div class="detail-panel-header slds-p-around_medium">
+                    <h2 class="slds-text-heading_small detail-panel-title">{detailPanelTitle}</h2>
+                    <lightning-icon
+                        icon-name="utility:close"
+                        size="x-small"
+                        class="detail-panel-close"
+                        onclick={handleCloseDetail}
+                    ></lightning-icon>
+                </div>
+
+                <template if:true={isItemDetailMode}>
+                    <div class="slds-tabs_default">
+                        <ul class="slds-tabs_default__nav" role="tablist">
+                            <li class={detailsTabClass} title="Details" role="presentation">
+                                <button type="button" class="slds-tabs_default__link" role="tab" onclick={handleSelectDetailsTab}>Details</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-panel-body slds-p-around_medium">
+                        <template if:true={isDetailsTabActive}>
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">Service Description</h3>
+                                <p class="detail-section-text">{selectedItem.serviceDescription}</p>
+                            </div>
+
+                            <div class="detail-section">
+                                <h3
+                                    class="detail-section-title detail-section-title_clickable"
+                                    role="button"
+                                    tabindex="0"
+                                    aria-expanded={selectedItem.productDetailsExpanded}
+                                    onclick={handleToggleProductDetails}
+                                >
+                                    <lightning-icon icon-name={productDetailsChevron} size="xx-small" class="slds-m-right_xx-small"></lightning-icon>Product Details
+                                </h3>
+                                <template if:true={selectedItem.productDetailsExpanded}>
+                                    <div class="detail-grid">
+                                        <template for:each={selectedItem.productDetails} for:item="field">
+                                            <div key={field.key} class="detail-field">
+                                                <div class="detail-label">{field.label}</div>
+                                                <div class="detail-value">{field.value}</div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="detail-section">
+                                <h3
+                                    class="detail-section-title detail-section-title_clickable"
+                                    role="button"
+                                    tabindex="0"
+                                    aria-expanded={selectedItem.pricingDetailsExpanded}
+                                    onclick={handleTogglePricingDetails}
+                                >
+                                    <lightning-icon icon-name={pricingDetailsChevron} size="xx-small" class="slds-m-right_xx-small"></lightning-icon>Pricing Details
+                                </h3>
+                                <template if:true={selectedItem.pricingDetailsExpanded}>
+                                    <div class="detail-grid">
+                                        <template for:each={selectedItem.pricingDetails} for:item="field">
+                                            <div key={field.key} class="detail-field">
+                                                <div class="detail-label">{field.label}</div>
+                                                <div class="detail-value">{field.value}</div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <template if:true={isGroupDetailMode}>
+                    <div class="detail-panel-body slds-p-around_medium">
+                        <template for:each={selectedGroup.sections} for:item="section">
+                            <div key={section.key} class="detail-section">
+                                <h3
+                                    class="detail-section-title detail-section-title_clickable"
+                                    role="button"
+                                    tabindex="0"
+                                    aria-expanded={section.expanded}
+                                    data-section-key={section.key}
+                                    onclick={handleToggleGroupSection}
+                                >
+                                    <lightning-icon icon-name={section.chevronIcon} size="xx-small" class="slds-m-right_xx-small"></lightning-icon>{section.title}
+                                </h3>
+                                <template if:true={section.expanded}>
+                                    <div class="detail-list">
+                                        <template for:each={section.fields} for:item="field">
+                                            <div key={field.key} class="detail-field">
+                                                <div class="detail-label">{field.label}</div>
+                                                <div class="detail-value">{field.value}</div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showRampModal}>
+            <section class="ramp-modal-backdrop" role="presentation" onclick={handleCloseRampModal}>
+                <div class="ramp-modal" role="dialog" aria-modal="true" aria-labelledby="ramp-modal-title" onclick={stopModalPropagation}>
+                    <div class="ramp-modal-header"><h2 id="ramp-modal-title">Time-Based Ramp</h2></div>
+                    <div class="ramp-modal-body">
+                        <section class="ramp-line-card">
+                            <h3><lightning-icon icon-name="standard:timesheet" size="small"></lightning-icon>Line Item Details</h3>
+                            <div class="ramp-line-details">
+                                <div><span>Product Name</span><strong>{selectedRamp.lineItem.productName}</strong></div>
+                                <div><span>List Price</span><strong>{selectedRamp.lineItem.listPrice}</strong></div>
+                                <div><span>Start Date</span><strong>{selectedRamp.lineItem.serviceDate}</strong></div>
+                                <div><span>End Date</span><strong>{selectedRamp.lineItem.endDate}</strong></div>
+                                <div><span>Net Total</span><strong>{selectedRamp.lineItem.netTotalPrice}</strong></div>
+                            </div>
+                        </section>
+                        <h3 class="ramp-section-title">Ramp Details</h3>
+                        <div class="ramp-settings">
+                            <div><span>Subscription Term</span><strong class="ramp-term-value"><span>{selectedRamp.subscriptionTerm}</span><span>Months</span></strong></div>
+                            <div><span>Segment Type</span><strong>{selectedRamp.segmentType}</strong></div>
+                        </div>
+                        <h3 class="ramp-section-title">Ramp Segments</h3>
+                        <div class="ramp-segments-scroll">
+                            <table class="ramp-segments-table">
+                                <thead><tr><th></th><th>Segment Name</th><th>Start Date</th><th>End Date</th><th>List Price</th><th>Quantity</th><th>Discount (%)</th><th>Net Unit Price</th><th>Total Price</th></tr></thead>
+                                <tbody>
+                                    <template for:each={selectedRamp.segments} for:item="segment">
+                                        <tr key={segment.key}><td>{segment.number}</td><td>{segment.name}</td><td>{segment.startDate}</td><td>{segment.endDate}</td><td>{segment.listPrice}</td><td>{segment.quantity}</td><td>{segment.discountPercent}</td><td>{segment.netUnitPrice}</td><td>{segment.totalPrice}</td></tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="ramp-modal-footer"><button type="button" class="ramp-close-button" onclick={handleCloseRampModal}>Close</button></div>
+                </div>
+            </section>
+        </template>
+
+        <template if:true={hoveredCalcRow}>
+            <div
+                class="calc-popover"
+                style={hoveredCalcRow.style}
+                onmouseenter={handleCalcPopoverMouseEnter}
+                onmouseleave={handleCalcPopoverMouseLeave}
+            >
+                <div class="calc-popover-tail" style={hoveredCalcRow.tailStyle}></div>
+                <div if:false={hoveredCalcRow.isRampNotice} class="calc-popover-header">
+                    <span class="calc-popover-title">
+                        <template if:false={hoveredCalcRow.isRampNotice}>Calculation Details</template>
+                    </span>
+                    <lightning-icon
+                        icon-name="utility:close"
+                        size="xx-small"
+                        class="calc-popover-close"
+                        onclick={handleCloseCalcDetails}
+                    ></lightning-icon>
+                </div>
+                <template if:true={hoveredCalcRow.isRampNotice}>
+                    <p class="calc-popover-message">{hoveredCalcRow.rampMessage}</p>
+                </template>
+                <template if:false={hoveredCalcRow.isRampNotice}>
+                <table class="calc-popover-table">
+                    <thead>
+                        <tr>
+                            <th>Price Detail</th>
+                            <th>Adjustment</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Get base prices from price book</td>
+                            <td>-</td>
+                            <td>{hoveredCalcRow.listPriceDisplay}</td>
+                        </tr>
+                        <template if:true={hoveredCalcRow.showTermDiscount}>
+                            <tr style="border-top: 1px solid #dddbda;">
+                                <td>Term Discount</td>
+                                <td>{hoveredCalcRow.discountPercentDisplay}</td>
+                                <td>{hoveredCalcRow.discountAmountDisplay}</td>
+                            </tr>
+                        </template>
+                        <tr class="calc-popover-total">
+                            <td>Net Unit Price</td>
+                            <td></td>
+                            <td>{hoveredCalcRow.netUnitPriceDisplay}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </template>
+                </div>
+            </template>
+        </div>
+    </template>
+</template>

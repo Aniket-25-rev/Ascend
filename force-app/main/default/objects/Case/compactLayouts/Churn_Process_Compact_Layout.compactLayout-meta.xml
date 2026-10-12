@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Churn_Process_Compact_Layout</fullName>
+    <fields>Subject</fields>
+    <fields>AccountId</fields>
+    <fields>Contract__c</fields>
+    <fields>Annualized_At_Risk_Revenue__c</fields>
+    <fields>Status</fields>
+    <fields>Est_Start_Date__c</fields>
+    <label>Churn Process Compact Layout</label>
+</CompactLayout>

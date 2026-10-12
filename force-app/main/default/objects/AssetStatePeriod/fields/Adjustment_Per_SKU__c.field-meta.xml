@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Adjustment_Per_SKU__c</fullName>
+    <description>Total Per User Per SKU - Bundle Price for a bundle component (formula on QLI, stored value here). Copied from the Order Product via the Ascend_SalesTransactionContext mapping, for the ServiceNow / financials sync.</description>
+    <label>Adjustment Per SKU</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Currency</type>
+</CustomField>

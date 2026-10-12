@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SAS_MS_Renewals</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>CORE.USERS.FULL_NAME</columns>
+    <columns>OPPORTUNITY.TYPE</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>Booked_MRR_rollup__c</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <columns>Est_Start_Date__c</columns>
+    <columns>Service_Offering_Rollup__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>OPPORTUNITY.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Opportunity.Opportunity</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.CLOSE_DATE</field>
+        <operation>greaterOrEqual</operation>
+        <value>LAST_QUARTER</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.TYPE</field>
+        <operation>equals</operation>
+        <value>Renewal</value>
+    </filters>
+    <filters>
+        <field>Service_Offering_Rollup__c</field>
+        <operation>contains</operation>
+        <value>salesforce,Application</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.STAGE_NAME</field>
+        <operation>notEqual</operation>
+        <value>Closed Lost</value>
+    </filters>
+    <label>SAS MS Renewals</label>
+</ListView>

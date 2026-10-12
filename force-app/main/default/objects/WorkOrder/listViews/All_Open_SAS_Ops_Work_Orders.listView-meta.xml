@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Open_SAS_Ops_Work_Orders</fullName>
+    <columns>Name</columns>
+    <columns>Subject</columns>
+    <columns>Status</columns>
+    <columns>Resource_Type__c</columns>
+    <columns>Account</columns>
+    <columns>Request_Type__c</columns>
+    <columns>Duration</columns>
+    <columns>Rate__c</columns>
+    <columns>Preferred_Person_s__c</columns>
+    <columns>CreatedDate</columns>
+    <columns>CreatedBy</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status</field>
+        <operation>notContain</operation>
+        <value>Completed,Closed,Cannot Complete,Canceled</value>
+    </filters>
+    <filters>
+        <field>RecordType</field>
+        <operation>equals</operation>
+        <value>WorkOrder.SAS</value>
+    </filters>
+    <filters>
+        <field>Owner</field>
+        <operation>equals</operation>
+        <value>SAS Ops Work order Queue</value>
+    </filters>
+    <label>All Open SAS Ops Work Orders</label>
+    <sharedTo>
+        <group>SF_Ops_Team</group>
+    </sharedTo>
+</ListView>

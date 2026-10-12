@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IC_NB_Cases_ALL_FOUR</fullName>
+    <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND (6 OR 7)</booleanFilter>
+    <columns>CASES.SUBJECT</columns>
+    <columns>Intellio_Connect_Case_Prioritization__c</columns>
+    <columns>SprintNumber__c</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>OWNER_NAME</columns>
+    <columns>NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.App_Cases</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Closed,Canceled by Client,Duplicate</value>
+    </filters>
+    <filters>
+        <field>CASES.SUBJECT</field>
+        <operation>notContain</operation>
+        <value>Support Coordination</value>
+    </filters>
+    <filters>
+        <field>CASES.SUBJECT</field>
+        <operation>notContain</operation>
+        <value>Maintenance Case</value>
+    </filters>
+    <filters>
+        <field>Intellio_Connect_OpCo__c</field>
+        <operation>equals</operation>
+        <value>ALL</value>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>contains</operation>
+        <value>WMP - PS - Exelon - Intellio Connect New Business Go-Live</value>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>contains</operation>
+        <value>WMP - NB - MS - Exelon - Intellio Connect 23</value>
+    </filters>
+    <label>IC - Cases - NB - ALL FOUR</label>
+    <sharedTo>
+        <group>Exelon_Intellio_NB</group>
+        <group>Salesforce_Delivery_Team</group>
+    </sharedTo>
+</ListView>

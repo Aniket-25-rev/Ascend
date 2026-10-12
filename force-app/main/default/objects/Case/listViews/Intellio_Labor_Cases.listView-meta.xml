@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Intellio_Labor_Cases</fullName>
+    <booleanFilter>(1 OR 5) AND 2 AND 3 AND 4</booleanFilter>
+    <columns>OWNER_NAME</columns>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>NAME</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>Project__c</columns>
+    <columns>CASES.CREATED_DATE</columns>
+    <columns>CASES.REASON</columns>
+    <columns>CASES.PRIORITY</columns>
+    <columns>CASES.LAST_UPDATE_DATE_ONLY</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>contains</operation>
+        <value>West Monroe</value>
+    </filters>
+    <filters>
+        <field>CASES.REASON</field>
+        <operation>notEqual</operation>
+        <value>Support Coordination</value>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>contains</operation>
+        <value>Intellio Labor</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Closed,Canceled by Client,Duplicate</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>contains</operation>
+        <value>Sysco</value>
+    </filters>
+    <label>Intellio Labor Cases</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

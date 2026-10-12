@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Team_Open_Opps</fullName>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>OPPORTUNITY.FORECAST_CATEGORY</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <columns>Service_Offering_Rollup__c</columns>
+    <columns>Booked_MRR_rollup__c</columns>
+    <columns>Duration_in_Months__c</columns>
+    <columns>OPPORTUNITY.CREATED_DATE</columns>
+    <filterScope>Team</filterScope>
+    <filters>
+        <field>OPPORTUNITY.STAGE_NAME</field>
+        <operation>notEqual</operation>
+        <value>Closed Won,Closed Lost</value>
+    </filters>
+    <label>My Team&apos;s Open Opps</label>
+</ListView>

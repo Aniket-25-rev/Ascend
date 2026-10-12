@@ -9,6 +9,8 @@ public class LineItemNodeWrapper {
     public String stockKeepingUnit  { get; set; } // reads context tag: ItemStockKeepingUnit
     public String sellingModelType  { get; set; }
     public String segmentIdentifier { get; set; } // Quote context: ItemSegmentIdentifier tag
+    public String segmentName       { get; set; } // Quote context: ItemSegmentName tag (e.g. "Year 1")
+    public String itemGroup         { get; set; } // Quote context: SalesTransactionItemGroup tag (line group Id)
     public String rampIdentifier    { get; set; } // Order context: RampIdentifier tag
     public String startDate         { get; set; }
     public String effectiveFrom     { get; set; }
@@ -84,6 +86,8 @@ public class LineItemNodeWrapper {
         this.stockKeepingUnit  = getString('ItemStockKeepingUnit');
         this.sellingModelType  = getString('SellingModelType');
         this.segmentIdentifier = getString('ItemSegmentIdentifier');
+        this.segmentName       = getString('ItemSegmentName');
+        this.itemGroup         = getString('SalesTransactionItemGroup');
         this.rampIdentifier    = getString('RampIdentifier');
         this.startDate         = getString('StartDate');
         this.effectiveFrom     = getString('EffectiveFrom');

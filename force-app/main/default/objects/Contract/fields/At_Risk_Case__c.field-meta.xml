@@ -4,11 +4,12 @@
     <deleteConstraint>SetNull</deleteConstraint>
     <description>References the case created to track and manage issues contributing to a contract&apos;s at-risk status.</description>
     <inlineHelpText>Lookup to the case used to track and manage this contract&apos;s risk.</inlineHelpText>
-    <label>At Risk Case</label>
+    <label>X At Risk Case</label>
     <referenceTo>Case</referenceTo>
     <relationshipLabel>Contracts</relationshipLabel>
     <relationshipName>Contracts</relationshipName>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Lookup</type>
 </CustomField>

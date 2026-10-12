@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NRR__c</fullName>
+    <description>Net Revenue Retention = (Existing MRR + Expansion MRR - Churn/Contraction MRR) / Existing MRR x 100. Computed as Current_MRR__c / Existing_MRR__c x 100, since Current_MRR__c already nets expansion and churn together. Blank when there is no Existing MRR baseline (e.g. New Business).</description>
+    <inlineHelpText>Net Revenue Retention: this Quote&apos;s resulting MRR as a percentage of the prior contract&apos;s MRR. Includes expansion. 100% = no change, above 100% = grew, below 100% = shrank.</inlineHelpText>
+    <label>NRR</label>
+    <precision>7</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

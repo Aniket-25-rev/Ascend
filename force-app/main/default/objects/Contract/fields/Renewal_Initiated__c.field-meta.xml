@@ -4,6 +4,7 @@
     <defaultValue>false</defaultValue>
     <description>Set to true once this contract&apos;s renewal Opportunity/Quote has been automatically generated. Prevents the same contract from being picked up again on a later scheduled run.</description>
     <label>Renewal Initiated</label>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Checkbox</type>
 </CustomField>

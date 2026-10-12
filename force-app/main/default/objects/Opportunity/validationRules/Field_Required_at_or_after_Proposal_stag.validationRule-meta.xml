@@ -22,6 +22,5 @@ OR (
 &amp;&amp; NOT($Permission.BypassValidationRules)
 &amp;&amp; NOT( $User.Id = &apos;0053b00000CSZR6&apos;)
 &amp;&amp; NOT(ISCHANGED(Project__c))</errorConditionFormula>
-    <errorDisplayField>Description</errorDisplayField>
     <errorMessage>Use Case cannot be blank after Stage of Propose or later.</errorMessage>
 </ValidationRule>

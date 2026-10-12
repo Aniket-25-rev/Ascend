@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Annual_Increase__c</fullName>
-    <defaultValue>0.04</defaultValue>
+    <defaultValue>0</defaultValue>
     <description>Annual percent increase on the contract</description>
     <label>Annual % Increase</label>
     <precision>3</precision>

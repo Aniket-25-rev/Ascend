@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Evans_Opps</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>CORE.USERS.FULL_NAME</columns>
+    <columns>OPPORTUNITY.TYPE</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>Duration_in_Months__c</columns>
+    <columns>Booked_MRR_rollup__c</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <columns>OPPORTUNITY.FORECAST_CATEGORY</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>OPPORTUNITY.CLOSED</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Opportunity.Opportunity</value>
+    </filters>
+    <filters>
+        <field>Service_Offering_Rollup__c</field>
+        <operation>contains</operation>
+        <value>Salesforce</value>
+    </filters>
+    <label>SAS MS Opps</label>
+</ListView>

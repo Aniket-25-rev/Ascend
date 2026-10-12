@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cleanup_Queue_App</fullName>
+    <booleanFilter>1 AND 2 AND 3 AND (4 OR 5 OR 6 OR 9) AND 7 AND 8</booleanFilter>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Project__c</columns>
+    <columns>Project_Line_Item__c</columns>
+    <columns>NAME</columns>
+    <columns>CASES.EMAIL</columns>
+    <columns>Intellio_Connect_OpCo__c</columns>
+    <columns>CASES.REASON</columns>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>CASES.CREATED_DATE</columns>
+    <columns>OWNER_NAME</columns>
+    <columns>CASES.PRIORITY</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CASES.CLOSED</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Closed</value>
+    </filters>
+    <filters>
+        <field>CASES.REASON</field>
+        <operation>notEqual</operation>
+        <value>Support Coordination</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>Project__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>NAME</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>notEqual</operation>
+        <value>Test Company A</value>
+    </filters>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.App_Cases</value>
+    </filters>
+    <filters>
+        <field>OWNER_NAME</field>
+        <operation>equals</operation>
+        <value>App MS Case Queue</value>
+    </filters>
+    <label>Cleanup Queue - App</label>
+    <sharedTo>
+        <group>SF_Ops_Team</group>
+        <group>Salesforce_Delivery_Team</group>
+        <group>Salesforce_Sales_Team</group>
+    </sharedTo>
+</ListView>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ascend_MSP_MSSP_Pre_Sales</fullName>
+    <active>true</active>
+    <label>Ascend MSP &amp; MSSP Pre-Sales</label>
+    <picklistValues>
+        <picklist>Engagement_Type__c</picklist>
+        <values>
+            <fullName>Onsite - Shipping Location</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Preferred_Vendor__c</picklist>
+        <values>
+            <fullName>Adaptive Applications</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Futurism</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Go2Group</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ImagIT</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secureview</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Threadfin</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>Critical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Project_Lead__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes - Previously Trained</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes - Training Needed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Request_Type__c</picklist>
+        <values>
+            <fullName>Contract</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Demo or Workshop</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Discovery and Scoping</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quote or Proposal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Resource_Sub_Type__c</picklist>
+        <values>
+            <fullName>End User%2FDesktop</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Network</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Server%2FCloud</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Storage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Virtual Desktop</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Resource_Type__c</picklist>
+        <values>
+            <fullName>Ascend Pre-Sales SA</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status</picklist>
+        <values>
+            <fullName>Canceled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cannot Complete</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Delivered</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>On Hold</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type__c</picklist>
+        <values>
+            <fullName>Managed Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Professional Services</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

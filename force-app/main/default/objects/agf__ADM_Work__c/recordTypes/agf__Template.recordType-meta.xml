@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>agf__Template</fullName>
+    <active>true</active>
+    <description>Used to store common values which can then be applied to new Bugs</description>
+    <label>Template</label>
+    <picklistValues>
+        <picklist>agf__Attributes__c</picklist>
+        <values>
+            <fullName>Automated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Technical Debt</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trust</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Complete_By__c</picklist>
+        <values>
+            <fullName>Apr 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Aug 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dec 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Feb 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jan 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jul 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jun 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mar 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>May 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nov 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Oct 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sep 2009 sprint</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Deal_at_Risk__c</picklist>
+        <values>
+            <fullName>New</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Renewal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Help_Status__c</picklist>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deferred</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fixed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Info Only</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Needed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pilot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ready for Review</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Major_Func_Area__c</picklist>
+        <values>
+            <fullName>%2ENET</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Perforce_Status__c</picklist>
+        <values>
+            <fullName>Open</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Open Once</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Priority__c</picklist>
+        <values>
+            <fullName>P0</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>P1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>P2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>P3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>P4</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Product_Area__c</picklist>
+        <values>
+            <fullName>API</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Product_Child__c</picklist>
+        <values>
+            <fullName>AXIS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Resolution__c</picklist>
+        <values>
+            <fullName>App Bug Fix</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Duplicate Test Failure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Reproducible%3A Autobuild environment issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Reproducible%3A Broken By Another Team</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Reproducible%3A Other %28please specify in Chatter feed%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Reproducible%3A SauceLabs issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Reproducible%3A Unknown</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Change%3A Due to app changes</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Change%3A Test issue only</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Removed%2FDisabled</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Severity_Level__c</picklist>
+        <values>
+            <fullName>1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>4</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Status__c</picklist>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Ready for Review</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Test_Failure_Status__c</picklist>
+        <values>
+            <fullName>Blocking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Signed Off</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>agf__Type__c</picklist>
+        <values>
+            <fullName>Bug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bug List</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Help</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Integrate</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Skunkforce</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Case</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Failure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Test Tool</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Translation</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>App_Cases</fullName>
+    <active>true</active>
+    <businessProcess>App Cases</businessProcess>
+    <label>App Cases</label>
+    <picklistValues>
+        <picklist>CaseStage__c</picklist>
+        <values>
+            <fullName>Escalated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>On Hold</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Change_Management_Status__c</picklist>
+        <values>
+            <fullName>Deployment Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Development In Progress</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Request Submitted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Domain__c</picklist>
+        <values>
+            <fullName>Client Administration</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client Environment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client Systems</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Intellio Connect Platform%2FInfrastructure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Intellio Connect Product</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Third-Party Vendor%2FDependency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unknown %2F Under Investigation</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Environment__c</picklist>
+        <values>
+            <fullName>Development</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Production</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Staging%2FTesting</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Impact__c</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Intellio_Connect_OpCo__c</picklist>
+        <values>
+            <fullName>ALL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BGE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>COMED</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DG Rebate</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PECO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PHI</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Origin</picklist>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meeting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SNOW</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Web</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>Critical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason</picklist>
+        <values>
+            <fullName>Clarification</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enhancement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Issue</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>StoryPoints__c</picklist>
+        <values>
+            <fullName>%2E5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>13</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>8</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Termination_Category__c</picklist>
+        <values>
+            <fullName>Ascend Initiated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Closure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client Growth Mismatch</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Relationship Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Misalignment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security or Risk Confidence</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Service Issues</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Value or Price Sensitivity</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Termination_Type__c</picklist>
+        <values>
+            <fullName>In house</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>M%26A</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New MSP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New MSSP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Service Need%2FMove</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>API Client Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>API System Error%2FBug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>AlertWarning</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Automation%2FBatch Processing Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bug - System Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client-side Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Configuration%2FSetup Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DataContent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Database%2FInfrastructure Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Defect - Configuration Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email%2FMessaging%2FNotification Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ErrorFailure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>External Dependency Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hypercare</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Incorrect%2FOutdated Application Data</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Feature</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Performance Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product Enhancement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reporting%2FAnalytics Data Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Resource Threshold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>System Logic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>System Performance Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UI Error%2FBug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Login%2FAuthentication Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Permissions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Permissions Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Training%2FUsability Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Validation%2FBusiness Rule Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Workflow%2FStatus%2FAlert Issue</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>WMInvolvement__c</picklist>
+        <values>
+            <fullName>None</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Question</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Solution</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Warranty_Case__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

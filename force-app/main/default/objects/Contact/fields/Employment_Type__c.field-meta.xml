@@ -20,6 +20,11 @@
                 <default>false</default>
                 <label>1099</label>
             </value>
+            <value>
+                <fullName>EOR</fullName>
+                <default>false</default>
+                <label>EOR</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

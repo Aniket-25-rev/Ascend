@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loss_MRR_Private_Cloud__c</fullName>
+    <description>The Private Cloud share of the MRR this quote gives up, written by FinancialMetricsService on every quote line change. Renewal: each Private Cloud product on the contract that comes back smaller, or not at all, counted gross so a product that shrank still shows even when another Private Cloud product grew. Amendment and Cancellation: the negative Private Cloud lines. Blank, not zero, when nothing in Private Cloud was lost.</description>
+    <inlineHelpText>The Private Cloud MRR this quote gives up, counted per product against the contract. A product that shrank still counts even if Private Cloud grew overall. Blank means nothing was lost.</inlineHelpText>
+    <label>Loss MRR - Private Cloud</label>
+    <precision>14</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

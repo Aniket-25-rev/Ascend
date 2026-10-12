@@ -1,0 +1,57 @@
+<template>
+    <lightning-quick-action-panel header="Create QuoteWerks Quote">
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-p-around_large">
+                <lightning-spinner
+                    alternative-text="Loading QuoteWerks information"
+                    size="medium">
+                </lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:true={errorMessage}>
+                <div class="slds-text-color_error" role="alert">
+                    {errorMessage}
+                </div>
+            </template>
+
+            <template if:false={errorMessage}>
+                <div class="slds-text-longform">
+                    <p class="slds-text-heading_small slds-m-bottom_small">
+                        Launch QuoteWerks
+                    </p>
+
+                    <p class="slds-m-bottom_small">
+                        QuoteWerks must be launched from the QuoteWerks server through Remote Desktop.
+                    </p>
+
+                    <p class="slds-m-bottom_small">
+                        If you continue from a computer that does not have access to the QuoteWerks
+                        environment, the QuoteWerks quote creation link may not open correctly.
+                    </p>
+
+                    <p>
+                        Continue to open a new QuoteWerks quote for:
+                        <strong>{opportunityName}</strong>
+                    </p>
+                </div>
+            </template>
+        </template>
+
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                onclick={handleCancel}>
+            </lightning-button>
+
+            <lightning-button
+                class="slds-m-left_small"
+                variant="brand"
+                label="Continue"
+                onclick={handleContinue}
+                disabled={disableContinue}>
+            </lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

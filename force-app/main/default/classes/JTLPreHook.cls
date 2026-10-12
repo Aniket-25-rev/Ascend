@@ -12,7 +12,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         '001-INFR-SVC-INFR-ONOB-001',
         '001-CYBR-SVC-CYBR-ONOB-001',
         '001-HOST-SVC-HOST-ONOB-001',
-        '000-CS-SVC-CS-ONON-001'
+        '001-BNDL-SVC-CORE-ONOB-001'
     };
 
     // =========================================================
@@ -181,6 +181,16 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             if (!isNewBusiness && !isAmendOrRenew) {
                 List<Map<String, Object>> unhandledTypeUpdates =
                     buildStandaloneBundleFlagUpdates(items, bundleParentSkus, bundleMemberSkus);
+                // CANCELLATION CONTRACT TERM: same header-only term as an
+                // Amendment (Quote StartDate -> Contract.EndDate, blank-only,
+                // non Month-to-Month). Line dates/prices on a cancellation are
+                // deliberately left untouched - only the Quote header field.
+                if (isCancel) {
+                    Map<String, Object> cancelTermUpdate = buildContractTermUpdate(tc, derivedTermExact);
+                    if (cancelTermUpdate != null) {
+                        unhandledTypeUpdates.add(cancelTermUpdate);
+                    }
+                }
                 mergeNodeUpdates(unhandledTypeUpdates, markupUpdates);
                 return pushUpdates(ctx, contextId,
                     unhandledTypeUpdates, response,
@@ -1027,14 +1037,83 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
         Set<String> bundleParentSkus,
         Set<String> bundleMemberSkus
     ) {
+        appendBundleAttributes(attributes, sku, null, bundleParentSkus, bundleMemberSkus);
+    }
+
+    // RAMP BUNDLES: on a ramp quote the bundle (parent + every child) is
+    // repeated once per ramp-year group, all with the same SKUs. Removing
+    // the SKU after the first hit flagged only ONE copy per SKU across the
+    // whole quote, so the other years' children priced as standalone lines
+    // (FormulaBasedPricing13 only zeroes NetTotalPrice when
+    // Is_Part_Of_Bundle__c = true). For a ramp line the SKU is instead
+    // marked handled per ramp group, so each year's copy gets flagged once.
+    // Non-ramp lines (blank rampGroupKey) keep the original remove-on-first-
+    // hit behaviour unchanged.
+    //
+    // The bundle PARENT SKU is deliberately NOT flagged per ramp group: the
+    // pricing procedure sums ItemNetTotalPrice of Is_Bundle_Parent__c lines
+    // into Principal_Bundle_MRR__c and prices the Core Support onboarding fee
+    // at 1.5x that, so flagging every year's parent multiplied the fee by the
+    // number of ramp years. The parent keeps remove-on-first-hit (one parent
+    // per quote, exactly as before); only CHILD SKUs are flagged per group.
+    @TestVisible
+    private static final String RAMP_FLAGGED_PREFIX = '#rampFlagged#';
+    @TestVisible
+    private static final String PARENT_HANDLED_PREFIX = '#parentHandled#';
+
+    @TestVisible
+    private static void appendBundleAttributes(
+        List<List<Object>> attributes,
+        String sku,
+        String rampGroupKey,
+        Set<String> bundleParentSkus,
+        Set<String> bundleMemberSkus
+    ) {
+        if (String.isBlank(rampGroupKey)) {
+            if (bundleParentSkus.contains(sku)) {
+                attributes.add(new List<Object>{ 'Is_Bundle_Parent__c', 'Is_Bundle_Parent__c', true });
+                bundleParentSkus.remove(sku);
+            }
+            if (bundleMemberSkus.contains(sku)) {
+                attributes.add(new List<Object>{ 'Is_Part_Of_Bundle__c', 'Is_Part_Of_Bundle__c', true });
+                bundleMemberSkus.remove(sku);
+            }
+            return;
+        }
+
+        // Bundle parent SKU: once per quote, both flags, exactly as before.
         if (bundleParentSkus.contains(sku)) {
             attributes.add(new List<Object>{ 'Is_Bundle_Parent__c', 'Is_Bundle_Parent__c', true });
             bundleParentSkus.remove(sku);
+            bundleParentSkus.add(PARENT_HANDLED_PREFIX + sku);
+            if (bundleMemberSkus.contains(sku)) {
+                attributes.add(new List<Object>{ 'Is_Part_Of_Bundle__c', 'Is_Part_Of_Bundle__c', true });
+                bundleMemberSkus.remove(sku);
+            }
+            return;
         }
-        if (bundleMemberSkus.contains(sku)) {
+        if (bundleParentSkus.contains(PARENT_HANDLED_PREFIX + sku)) {
+            return; // another ramp year's parent copy: leave unflagged, as before
+        }
+
+        // Child SKU: once per ramp group.
+        String handledKey = RAMP_FLAGGED_PREFIX + sku + '|' + rampGroupKey;
+        if (bundleMemberSkus.contains(sku) && !bundleMemberSkus.contains(handledKey)) {
             attributes.add(new List<Object>{ 'Is_Part_Of_Bundle__c', 'Is_Part_Of_Bundle__c', true });
-            bundleMemberSkus.remove(sku);
+            bundleMemberSkus.add(handledKey);
         }
+    }
+
+    // The ramp-year group a ramp segment line belongs to, or null when the
+    // line is not a ramp segment. ItemSegmentIdentifier is unique per LINE
+    // (not per year), so it is only the last resort; SalesTransactionItemGroup
+    // is shared by the bundle parent and its children within one ramp year.
+    @TestVisible
+    private static String rampBundleGroupKey(LineItemNodeWrapper li) {
+        if (String.isBlank(li.segmentIdentifier)) return null;
+        if (String.isNotBlank(li.itemGroup))      return li.itemGroup;
+        if (String.isNotBlank(li.segmentName))    return li.segmentName;
+        return li.segmentIdentifier;
     }
 
     // Fallback ONLY for bundle SKUs that buildLineUpdates never reached
@@ -1061,7 +1140,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
             if (li.isPersisted()) continue; // never re-derive bundle flags for already-saved lines
 
             List<List<Object>> attributes = new List<List<Object>>();
-            appendBundleAttributes(attributes, li.stockKeepingUnit,
+            appendBundleAttributes(attributes, li.stockKeepingUnit, rampBundleGroupKey(li),
                 remainingBundleParentSkus, remainingBundleMemberSkus);
 
             if (attributes.isEmpty()) continue;
@@ -1160,17 +1239,24 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
     // =========================================================
 
     // =========================================================
-    // LOAD CONTRACT END DATE (Amend, non Month-to-Month)
+    // LOAD CONTRACT END DATE (Amend or Cancel, non Month-to-Month)
     // Deliberately a SEPARATE query from the Quote SOQL in
     // parseContextData: that one is wrapped in a catch that swallows
     // failures and leaves quoteType null, which makes isNewBusiness
     // true and rebuilds dates on EVERY quote. A failure here must cost
     // nothing but this one field.
     // =========================================================
+    // Quote types whose Contract_Term_Months__c is derived from
+    // Quote StartDate -> Contract.EndDate: Amendment and Cancellation.
+    @TestVisible
+    private static Boolean isContractTermDerivedType(String quoteType) {
+        return 'Amend'.equalsIgnoreCase(quoteType) || 'Cancel'.equalsIgnoreCase(quoteType);
+    }
+
     @TestVisible
     private static void loadContractEndDate(TransactionContext tc) {
         if (String.isBlank(tc.quoteId)) return;
-        if (!'Amend'.equalsIgnoreCase(tc.quoteType)) return;
+        if (!isContractTermDerivedType(tc.quoteType)) return;
         if (tc.isMonthToMonth == true) return;
         try {
             Quote q = [
@@ -1186,7 +1272,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
     }
 
     // =========================================================
-    // DERIVE AMEND CONTRACT TERM (Amend, non Month-to-Month)
+    // DERIVE AMEND CONTRACT TERM (Amend or Cancel, non Month-to-Month)
     // Prorated months from Quote.StartDate to Contract.EndDate, via the
     // same calcLineItemPTC the lines use.
     //
@@ -1200,7 +1286,7 @@ global class JTLPreHook implements RevSignaling.SignalingApexProcessor {
     // =========================================================
     @TestVisible
     private static Decimal deriveAmendContractTerm(TransactionContext tc) {
-        if (!'Amend'.equalsIgnoreCase(tc.quoteType))        return null;
+        if (!isContractTermDerivedType(tc.quoteType))       return null;
         if (tc.isMonthToMonth == true)                      return null;
         if (String.isBlank(tc.quoteStartDate))              return null;
         if (tc.contractEndDate == null)                     return null;

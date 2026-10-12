@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>agf__Status__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New</fullName>
+                <default>true</default>
+                <label>New</label>
+            </value>
+            <value>
+                <fullName>Backlog</fullName>
+                <default>false</default>
+                <label>Backlog</label>
+            </value>
+            <value>
+                <fullName>In Grooming</fullName>
+                <default>false</default>
+                <label>In Grooming</label>
+            </value>
+            <value>
+                <fullName>Ready</fullName>
+                <default>false</default>
+                <label>Ready</label>
+            </value>
+            <value>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+                <label>Acknowledged</label>
+            </value>
+            <value>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+                <label>In Progress</label>
+            </value>
+            <value>
+                <fullName>Blocked</fullName>
+                <default>false</default>
+                <label>Blocked</label>
+            </value>
+            <value>
+                <fullName>Development</fullName>
+                <default>false</default>
+                <label>Development</label>
+            </value>
+            <value>
+                <fullName>Ready for Review</fullName>
+                <default>false</default>
+                <label>Ready for Review</label>
+            </value>
+            <value>
+                <fullName>UAT</fullName>
+                <default>false</default>
+                <label>UAT</label>
+            </value>
+            <value>
+                <fullName>Ready for Deployment</fullName>
+                <default>false</default>
+                <label>Ready for Deployment</label>
+            </value>
+            <value>
+                <fullName>Closed - Pending Release</fullName>
+                <default>false</default>
+                <label>Closed - Pending Release</label>
+            </value>
+            <value>
+                <fullName>Closed</fullName>
+                <default>false</default>
+                <label>Closed</label>
+            </value>
+            <value>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+                <label>Rejected</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

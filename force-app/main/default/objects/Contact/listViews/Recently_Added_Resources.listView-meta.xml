@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recently_Added_Resources</fullName>
+    <columns>FULL_NAME</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>CONTACT.PHONE1</columns>
+    <columns>CONTACT.EMAIL</columns>
+    <columns>CONTACT.TITLE</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>External_Resource__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CONTACT.CREATED_DATE</field>
+        <operation>greaterOrEqual</operation>
+        <value>10/1/2018 12:00 AM</value>
+    </filters>
+    <filters>
+        <field>CONTACT.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Contact.Resource</value>
+    </filters>
+    <label>Recently Added Resources</label>
+</ListView>

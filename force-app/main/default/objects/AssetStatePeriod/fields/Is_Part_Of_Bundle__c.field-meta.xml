@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Part_Of_Bundle__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the line is part of a product bundle. Copied from the Order Product via the Ascend_SalesTransactionContext mapping, for the ServiceNow / financials sync.</description>
+    <label>Is Part Of Bundle</label>
+    <type>Checkbox</type>
+</CustomField>

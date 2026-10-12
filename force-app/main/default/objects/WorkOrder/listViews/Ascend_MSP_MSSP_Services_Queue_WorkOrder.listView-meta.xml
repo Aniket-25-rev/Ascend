@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ascend_MSP_MSSP_Services_Queue_WorkOrder</fullName>
+    <filterScope>Queue</filterScope>
+    <label>Ascend MSP &amp; MSSP Services Queue</label>
+    <queue>Ascend_MSP_MSSP_Services_Queue</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

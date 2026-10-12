@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>License_Procurement_Work_Order_Queue_WorkOrder</fullName>
+    <filterScope>Queue</filterScope>
+    <label>License Procurement Work Order Queue</label>
+    <queue>License_Procurement_Work_Order_Queue</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

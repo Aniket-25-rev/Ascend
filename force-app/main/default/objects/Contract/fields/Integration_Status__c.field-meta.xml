@@ -4,6 +4,7 @@
     <description>Whenever a Contract needs to be sent to SNOW with an Update this field is set to Scheduled. And Boomi writes back with Success or Error.</description>
     <label>Integration Status</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

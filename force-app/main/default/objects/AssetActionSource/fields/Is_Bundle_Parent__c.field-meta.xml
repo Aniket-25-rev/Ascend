@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Bundle_Parent__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the line is a bundle parent line. Copied from the Order Product via the Ascend_SalesTransactionContext mapping, for the ServiceNow / financials sync.</description>
+    <label>Is Bundle Parent</label>
+    <type>Checkbox</type>
+</CustomField>

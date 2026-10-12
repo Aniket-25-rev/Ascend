@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X1099_Active_Contacts</fullName>
+    <columns>FULL_NAME</columns>
+    <columns>Status__c</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>CONTACT.TITLE</columns>
+    <columns>CONTACT.ADDRESS2_STREET</columns>
+    <columns>CONTACT.ADDRESS2_CITY</columns>
+    <columns>CONTACT.ADDRESS2_STATE</columns>
+    <columns>CONTACT.ADDRESS2_COUNTRY</columns>
+    <columns>CONTACT.ADDRESS2_ZIP</columns>
+    <columns>Service__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Employment_Type__c</field>
+        <operation>equals</operation>
+        <value>1099</value>
+    </filters>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>CONTACT.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Contact.Resource</value>
+    </filters>
+    <label>1099 Active Contacts</label>
+</ListView>

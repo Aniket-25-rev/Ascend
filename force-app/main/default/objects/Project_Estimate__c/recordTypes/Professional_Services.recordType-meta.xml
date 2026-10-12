@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Professional_Services</fullName>
+    <active>true</active>
+    <label>Professional Services</label>
+    <picklistValues>
+        <picklist>Engagement_Type__c</picklist>
+        <values>
+            <fullName>Fixed Fee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>T%26M</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Estimate_Template__c</picklist>
+        <values>
+            <fullName>Custom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General-NA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Standard Azure</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Project_Management_Level__c</picklist>
+        <values>
+            <fullName>PM Light</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PM Standard</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Accepted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Review</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

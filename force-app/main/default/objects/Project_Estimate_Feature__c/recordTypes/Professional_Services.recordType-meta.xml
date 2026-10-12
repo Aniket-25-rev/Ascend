@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Professional_Services</fullName>
+    <active>true</active>
+    <label>Professional Services</label>
+    <picklistValues>
+        <picklist>Feature_Group__c</picklist>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Testing %26 Validation</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Phase__c</picklist>
+        <values>
+            <fullName>Phase 1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 10</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 4</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 6</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 7</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 8</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 9</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Step__c</picklist>
+        <values>
+            <fullName>Acceptance Criteria</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Activities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Assumptions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client Responsibilities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Out of Scope</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase Deliverables</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

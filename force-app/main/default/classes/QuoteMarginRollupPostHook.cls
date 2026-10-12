@@ -71,6 +71,25 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         return margin;
     }
 
+    // QUOTE MARGIN RANGE — the Quote's Margin_*__c values are copied by
+    // Quote To Opportunity Margin Sync onto Opportunity margin fields that are
+    // percent(3,0): anything at or beyond ±999.5 fails with
+    // NUMBER_OUTSIDE_VALID_RANGE (verified in pilot on Sold_Gross_Margin__c),
+    // which aborts the Quote approval that triggers the sync. Quote-level
+    // margins are therefore held to ±999.
+    @TestVisible
+    private static final Decimal QUOTE_MARGIN_MAX =  999;
+    @TestVisible
+    private static final Decimal QUOTE_MARGIN_MIN = -999;
+
+    @TestVisible
+    private static Decimal clampToQuoteMargin(Decimal margin) {
+        if (margin == null)               return null;
+        if (margin > QUOTE_MARGIN_MAX)    return QUOTE_MARGIN_MAX;
+        if (margin < QUOTE_MARGIN_MIN)    return QUOTE_MARGIN_MIN;
+        return margin;
+    }
+
     // =========================================================
     // ONBOARDING FEE DISCOUNT — added constants
     // =========================================================
@@ -317,24 +336,34 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // BOTH HaaS SKUs (ARM-108) are deliberately excluded here — per
         // explicit instruction, neither Hardware nor Implementation shall
         // contribute to ANY margin figure (Margin_Infra__c,
-        // Margin_Onboarding__c, or Margin_Total__c — Margin_Total__c is
-        // summed from this same lobMrrSum/lobCostSum, so excluding both
-        // SKUs here covers it too). They still contribute to MRR/TCV as
+        // Margin_Onboarding__c, or Margin_Total__c — Margin_Total__c skips
+        // them on both its revenue and cost side, see where it is computed
+        // below). They still contribute to MRR/TCV as
         // normal — see the unfiltered mrrLines query below, which this
         // exclusion does NOT apply to. (Previously only Hardware was
         // excluded; Implementation's real cost basis was left contributing
         // to Onboarding margin — that scope was explicitly widened to
         // exclude both.)
-        List<QuoteLineItem> qliList = [
-            SELECT Id, Line_of_Business__c, MRR__c, TotalCost
+        //
+        // BUNDLES are left out of every quote-level margin (LOB and Total):
+        // a bundle's margin lives on its own quote lines only (see
+        // applyBundleMarginViaContext). Only standalone lines count here.
+        List<QuoteLineItem> marginLines = standaloneMarginLines([
+            SELECT Id, ParentQuoteLineItemId, Is_Bundle_Parent__c,
+                   Line_of_Business__c, MRR__c, TotalCost,
+                   Product2.StockKeepingUnit
             FROM   QuoteLineItem
-            WHERE  QuoteId = :quoteId
-            AND    Line_of_Business__c != null
-            AND    SellingModelType    != 'OneTime'
-            AND    Product2.StockKeepingUnit NOT IN :HAAS_SKUS
-        ];
+            WHERE  QuoteId          = :quoteId
+            AND    SellingModelType != 'OneTime'
+        ]);
 
-        System.debug('==processMarginUpdate booked QLI count== ' + qliList.size());
+        List<QuoteLineItem> qliList = new List<QuoteLineItem>();
+        for (QuoteLineItem qli : marginLines) {
+            if (qli.Line_of_Business__c != null) qliList.add(qli);
+        }
+
+        System.debug('==processMarginUpdate standalone QLI count== ' + marginLines.size()
+            + ' (with LOB: ' + qliList.size() + ')');
 
         aggregateMrrAndCostByLOB(qliList, lobMrrSum, lobCostSum);
 
@@ -406,13 +435,14 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
         q.Booked_MRR__c = bookedMrr;
 
-        // Total margin = (Σ Booked MRR across all LOBs − Σ TotalCost across all
-        // LOBs) / Σ Booked MRR across all LOBs — i.e. the same booked-MRR basis
-        // rolled up, not an average of the per-LOB percentages.
-        Decimal totalBookedMrr = sumMapValues(lobMrrSum);
-        Decimal totalCost      = sumMapValues(lobCostSum);
-        q.Margin_Total__c = calcMarginPercent(totalBookedMrr, totalCost);
-        System.debug('==Margin_Total__c== bookedMrr=' + totalBookedMrr
+        // Total margin = (All LOB Total MRR − All LOB Total Cost) / All LOB
+        // Total MRR — the same standalone, LOB-carrying lines as the per-LOB
+        // margins, summed across LOBs. Lines with no Line_of_Business__c are
+        // not in it. Booked_MRR__c above still covers the whole quote.
+        Decimal marginMrr = sumMapValues(lobMrrSum);
+        Decimal totalCost = sumMapValues(lobCostSum);
+        q.Margin_Total__c = clampToQuoteMargin(calcMarginPercent(marginMrr, totalCost));
+        System.debug('==Margin_Total__c== marginMrr=' + marginMrr
             + ' cost=' + totalCost + ' margin=' + q.Margin_Total__c);
 
         // ─────────────────────────────────────────────────────
@@ -430,7 +460,7 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // job is exactly what was flagging every bundle quote as
         // TransactionIncomplete.
 
-        update q;
+        Database.update(q, AccessLevel.SYSTEM_MODE);
         System.debug('==processMarginUpdate Quote DML SUCCESS==');
 
         // ─────────────────────────────────────────────────────
@@ -465,9 +495,9 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         // here can never roll back the margin values themselves.
         // ─────────────────────────────────────────────────────
         try {
-            update new Quote(
-                Id                = quoteId,
-                CalculationStatus = 'CompletedWithPricing'
+            Database.update(
+                new Quote(Id = quoteId, CalculationStatus = 'CompletedWithPricing'),
+                AccessLevel.SYSTEM_MODE
             );
             System.debug('==Quote pricing status re-asserted==');
         } catch (Exception statusEx) {
@@ -583,7 +613,7 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         for (String lob : lobMrrSum.keySet()) {
             Decimal bookedMrr = lobMrrSum.get(lob);
             Decimal cost      = lobCostSum.containsKey(lob) ? lobCostSum.get(lob) : 0;
-            Decimal margin    = calcMarginPercent(bookedMrr, cost);
+            Decimal margin    = clampToQuoteMargin(calcMarginPercent(bookedMrr, cost));
             System.debug('==Setting Margin ' + lob + ' = ' + margin + ' (BookedMRR=' + bookedMrr + ', Cost=' + cost + ')');
 
             if      (lob == 'Service Desk')   q.Margin_Desk__c          = margin;
@@ -604,7 +634,10 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
             return 0;
         }
         Decimal cost = costTotal == null ? 0 : costTotal;
-        return (((revenueTotal - cost) / revenueTotal) * 100).setScale(2);
+        // Always 2 decimal places, rounded HALF_UP like every price in this
+        // class. A bare setScale(2) uses banker's rounding (half to even), so a
+        // margin of exactly x.xx5 landed one cent lower than the prices around it.
+        return (((revenueTotal - cost) / revenueTotal) * 100).setScale(2, RoundingMode.HALF_UP);
     }
 
     @TestVisible
@@ -792,6 +825,14 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
     // already does — confirmed live on 001-INFR-SVC-HAAS-IMPL-001, which has
     // no CostBookEntry at all yet shows UnitCost 2.1659 and TotalCost 21.659,
     // both derived by the platform from a pushed 'UnitCost' attribute.
+    // NOTE (2026-09-11): that SKU DOES carry a CostBookEntry now — 78.88,
+    // added 2026-06-01 on the default Ascend Managed Services Cost Book. It
+    // is the FULL 36-month cost sitting in a per-unit field, so the native
+    // cost step stamps UnitCost 78.88 against a per-period UnitPrice and
+    // drives Margin past the percent(5,2) rail. The HaaS block divides the
+    // rate by PricingTermCount itself and does not need that entry; it
+    // should stay expired. buildHaasUpdates now also pushes a clamped
+    // margin so a reappearance degrades instead of aborting pricing.
     @TestVisible
     private static List<BundleLineData> queryBundleLineData(String quoteId) {
         List<QuoteLineItem> rows = [
@@ -1081,6 +1122,27 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
         Decimal result = (gross / rate).setScale(2);
         System.debug('==calcEffort ' + lob + ' → ' + gross + ' / ' + rate + ' = ' + result);
+        return result;
+    }
+
+    // Recurring lines that count toward quote-level margin: everything except
+    // HaaS (ARM-108) and bundle lines — a bundle parent (flagged, or the parent
+    // of any line) and every line under one. Is_Part_Of_Bundle__c is not used:
+    // it has been seen set on a standalone line and clear on a real component.
+    @TestVisible
+    private static List<QuoteLineItem> standaloneMarginLines(List<QuoteLineItem> rows) {
+        Set<Id> parentIds = new Set<Id>();
+        for (QuoteLineItem qli : rows) {
+            if (qli.ParentQuoteLineItemId != null) parentIds.add(qli.ParentQuoteLineItemId);
+        }
+        List<QuoteLineItem> result = new List<QuoteLineItem>();
+        for (QuoteLineItem qli : rows) {
+            if (qli.ParentQuoteLineItemId != null) continue;
+            if (qli.Is_Bundle_Parent__c == true || parentIds.contains(qli.Id)) continue;
+            String sku = qli.Product2 != null ? qli.Product2.StockKeepingUnit : null;
+            if (sku != null && HAAS_SKUS.contains(sku)) continue;
+            result.add(qli);
+        }
         return result;
     }
 
@@ -1596,6 +1658,35 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                 attrs.add(new List<Object>{ 'NetUnitPrice',  'NetUnitPrice',  netUnitPrice  });
                 attrs.add(new List<Object>{ 'NetTotalPrice', 'NetTotalPrice', netTotalPrice });
 
+                // MARGIN — clamped, pushed explicitly rather than left to the
+                // engine. Without this the native cost step is free to derive
+                // Margin from whatever UnitCost it resolved (a CostBookEntry
+                // value is the full standalone cost, NOT the per-period cost
+                // this block computes), and an out-of-range result aborts the
+                // ENTIRE pricing pass rather than failing on the one line —
+                // see MARGIN_FIELD_RANGE at the top of this class. Observed
+                // live on 001-INFR-SVC-HAAS-IMPL-001: a cost book entry of
+                // 78.88 against a 36-month unit price of 6.1944 produced
+                // -1173.41 and took down the whole refresh.
+                //
+                // Only pushed when there is a price to measure against.
+                // A zero/blank NetUnitPrice is left exactly as it was so
+                // zero-priced HaaS lines keep their existing behaviour
+                // instead of acquiring a synthetic 0% margin.
+                if (netUnitPrice != null && netUnitPrice != 0) {
+                    Decimal haasMargin  = calcMarginPercent(netUnitPrice, unitCost);
+                    Decimal haasPushVal = clampToMarginField(haasMargin);
+                    if (haasPushVal != haasMargin) {
+                        System.debug('==HaaS margin CLAMPED== actual=' + haasMargin
+                            + ' pushed=' + haasPushVal);
+                    }
+                    attrs.add(new List<Object>{
+                        BUNDLE_MARGIN_CONTEXT_ATTRIBUTE,
+                        BUNDLE_MARGIN_CONTEXT_ATTRIBUTE,
+                        haasPushVal
+                    });
+                }
+
                 System.debug('==HaaS Implementation pricing== ptc=' + ptc + ' hours=' + quantity
                     + ' unitPrice=' + unitPrice + ' unitCost=' + unitCost + ' netTotalPrice=' + netTotalPrice);
             }
@@ -1655,12 +1746,6 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
         List<Map<String, Object>> updates       = new List<Map<String, Object>>();
         Boolean anyEligibleLine = false;
 
-        // Blank-price lines that could NOT be resolved to a saved QuoteLineItem
-        // Id, keyed so the SOQL branch below can hand back anything it also
-        // failed to resolve. See buildNodeListPriceUpdate for why these exist.
-        Map<String, LineItemNodeWrapper> unresolvedNodes =
-            new Map<String, LineItemNodeWrapper>();
-
         for (Object itemObj : items) {
             LineItemNodeWrapper li = new LineItemNodeWrapper(itemObj);
             if (!li.isValid() || li.deleted) continue;
@@ -1708,20 +1793,11 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                 continue;
             }
 
-            String nodeKey = String.valueOf(li.dataPath.get(2));
-
             try {
-                Id lineId = (Id) nodeKey;
+                Id lineId = (Id) String.valueOf(li.dataPath.get(2));
                 salesPathByLineId.put(lineId, li.salesPath);
-                unresolvedNodes.put(String.valueOf(lineId), li);
             } catch (Exception idEx) {
-                // Node key isn't an Id at all — a line added in THIS
-                // transaction (e.g. every component of a bundle the user just
-                // dropped on the quote). The SOQL branch below can never see
-                // it, so price it from the node's own ListPrice tag instead.
-                System.debug('==NetUnitPrice fallback unsaved line== nodeKey=' + nodeKey
-                    + ' — will price from node ListPrice tag');
-                unresolvedNodes.put(nodeKey, li);
+                System.debug('==NetUnitPrice fallback salesPath map skip== ' + idEx.getMessage());
             }
         }
 
@@ -1758,21 +1834,6 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
                     new List<Object>{ 'UnitPrice',    'UnitPrice',    unitPrice    },
                     new List<Object>{ 'NetUnitPrice', 'NetUnitPrice', netUnitPrice }
                 }));
-
-                // Priced from the saved row — no need for the node-tag sweep.
-                unresolvedNodes.remove(String.valueOf(qli.Id));
-            }
-        }
-
-        // Whatever is left never reached a saved QuoteLineItem row: lines added
-        // in this same transaction (bundle components, above all), plus any
-        // Id-shaped node the SOQL didn't return. Price those from the node's own
-        // ListPrice tag, which the pricing context carries regardless of whether
-        // the line has been committed yet.
-        for (LineItemNodeWrapper li : unresolvedNodes.values()) {
-            Map<String, Object> nodeUpdate = buildNodeListPriceUpdate(li);
-            if (nodeUpdate != null) {
-                updates.add(nodeUpdate);
             }
         }
 
@@ -1783,43 +1844,6 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
         plan.updates = updates;
         return plan;
-    }
-
-    // Node-tag twin of the SOQL branch in buildNetUnitPriceFallbackUpdates.
-    //
-    // The SOQL branch can only price lines that already exist as QuoteLineItem
-    // rows. When a user adds a bundle, every component line is brand new in
-    // that same pricing transaction, so its context node key is a transient
-    // string rather than a real Id and the query can never match it. Any
-    // component the native Pricing Procedure happened to leave blank therefore
-    // stayed blank on screen until the user hit Reprice — by then the lines
-    // were saved, the SOQL matched, and the price appeared. Reading ListPrice
-    // off the node closes that first-pass gap.
-    //
-    // Returns null when the node carries no usable list price.
-    @TestVisible
-    private static Map<String, Object> buildNodeListPriceUpdate(LineItemNodeWrapper li) {
-        if (li == null || li.salesPath == null) return null;
-
-        Decimal listPrice = parseTagDecimal(li.listPrice);
-        if (listPrice == null) {
-            System.debug('==NetUnitPrice fallback SKIPPED (node, no ListPrice tag)== path=' + li.salesPath);
-            return null;
-        }
-
-        Decimal unitPrice    = listPrice.setScale(2, RoundingMode.HALF_UP);
-        Decimal discountPct  = li.discount == null ? 0 : li.discount;
-        Decimal netUnitPrice = unitPrice * (1 - (discountPct / 100));
-        if (netUnitPrice < 0) netUnitPrice = 0;
-        netUnitPrice = netUnitPrice.setScale(2, RoundingMode.HALF_UP);
-
-        System.debug('==NetUnitPrice fallback APPLIED (node)== path=' + li.salesPath
-            + ' unitPrice=' + unitPrice + ' netUnitPrice=' + netUnitPrice);
-
-        return buildNodeUpdate(li.salesPath, new List<List<Object>>{
-            new List<Object>{ 'UnitPrice',    'UnitPrice',    unitPrice    },
-            new List<Object>{ 'NetUnitPrice', 'NetUnitPrice', netUnitPrice }
-        });
     }
 
     @TestVisible

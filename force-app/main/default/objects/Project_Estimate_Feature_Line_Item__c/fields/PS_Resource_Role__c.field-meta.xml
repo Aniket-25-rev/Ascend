@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PS_Resource_Role__c</fullName>
+    <label>PS Resource Role</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Tier 1 – Technician</fullName>
+                <default>false</default>
+                <label>Tier 1 – Technician</label>
+            </value>
+            <value>
+                <fullName>Tier 1 – Sr. Technician</fullName>
+                <default>false</default>
+                <label>Tier 1 – Sr. Technician</label>
+            </value>
+            <value>
+                <fullName>Tier 2 – Field/Operations Engineer</fullName>
+                <default>false</default>
+                <label>Tier 2 – Field/Operations Engineer</label>
+            </value>
+            <value>
+                <fullName>Consulting Engineer</fullName>
+                <default>false</default>
+                <label>Consulting Engineer</label>
+            </value>
+            <value>
+                <fullName>Consulting Sr. Engineer</fullName>
+                <default>false</default>
+                <label>Consulting Sr. Engineer</label>
+            </value>
+            <value>
+                <fullName>Consulting Architect</fullName>
+                <default>false</default>
+                <label>Consulting Architect</label>
+            </value>
+            <value>
+                <fullName>Consulting Sr. Architect</fullName>
+                <default>false</default>
+                <label>Consulting Sr. Architect</label>
+            </value>
+            <value>
+                <fullName>Project Analyst</fullName>
+                <default>false</default>
+                <label>Project Analyst</label>
+            </value>
+            <value>
+                <fullName>Sr. Project Manager</fullName>
+                <default>false</default>
+                <label>Sr. Project Manager</label>
+            </value>
+            <value>
+                <fullName>Program Manager</fullName>
+                <default>false</default>
+                <label>Program Manager</label>
+            </value>
+            <value>
+                <fullName>Application Consultant</fullName>
+                <default>false</default>
+                <label>Application Consultant</label>
+            </value>
+            <value>
+                <fullName>Cybersecurity Consultant</fullName>
+                <default>false</default>
+                <label>Cybersecurity Consultant</label>
+            </value>
+            <value>
+                <fullName>Sr. Cybersecurity Consultant</fullName>
+                <default>false</default>
+                <label>Sr. Cybersecurity Consultant</label>
+            </value>
+            <value>
+                <fullName>Incident Response and Remediation</fullName>
+                <default>false</default>
+                <label>Incident Response and Remediation</label>
+            </value>
+            <value>
+                <fullName>vCISO</fullName>
+                <default>false</default>
+                <label>vCISO</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

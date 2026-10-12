@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Accounts_Owned_by_XX</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>Status__c</columns>
+    <columns>ACCOUNT.TYPE</columns>
+    <columns>ACCOUNT.CREATED_DATE</columns>
+    <columns>Client_Code__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CORE.USERS.LAST_NAME</field>
+        <operation>contains</operation>
+        <value>soyer,moore,coe,Zaben,brandt</value>
+    </filters>
+    <label>Accounts Owned by XX</label>
+</ListView>

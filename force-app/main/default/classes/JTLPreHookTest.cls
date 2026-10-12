@@ -733,6 +733,108 @@ private class JTLPreHookTest {
     }
 
     // ─────────────────────────────────────────────────────────
+    // SECTION 6b – Ramp bundles: flag every ramp year's copy
+    // ─────────────────────────────────────────────────────────
+
+    private static Map<String, Object> rampLineTags(String sku, String segmentId, String groupId, String segmentName) {
+        Map<String, Object> tags = lineTagsWithSku(false, 'TermBased', segmentId, sku);
+        if (groupId != null)     tags.put('SalesTransactionItemGroup', tv(groupId));
+        if (segmentName != null) tags.put('ItemSegmentName', tv(segmentName));
+        return tags;
+    }
+
+    @IsTest
+    static void buildStandalone_rampBundle_flagsEveryYear() {
+        String parentSku = 'CORE-SUPPORT';
+        String childSku  = 'MSAP-PER-USER';
+        List<Object> items = new List<Object>{
+            buildNode(path('TEMP-P1'), rampLineTags(parentSku, 'SEG-P1', 'GRP-Y1', 'Year 1')),
+            buildNode(path('TEMP-C1'), rampLineTags(childSku,  'SEG-C1', 'GRP-Y1', 'Year 1')),
+            buildNode(path('TEMP-P2'), rampLineTags(parentSku, 'SEG-P2', 'GRP-Y2', 'Year 2')),
+            buildNode(path('TEMP-C2'), rampLineTags(childSku,  'SEG-C2', 'GRP-Y2', 'Year 2')),
+            buildNode(path('TEMP-P3'), rampLineTags(parentSku, 'SEG-P3', 'GRP-Y3', 'Year 3')),
+            buildNode(path('TEMP-C3'), rampLineTags(childSku,  'SEG-C3', 'GRP-Y3', 'Year 3'))
+        };
+        List<Map<String, Object>> result = JTLPreHook.buildStandaloneBundleFlagUpdates(
+            items,
+            new Set<String>{ parentSku },
+            new Set<String>{ parentSku, childSku });
+
+        // 1 parent (once per quote, as before) + 3 children (one per ramp year).
+        System.assertEquals(4, result.size());
+        Integer parentFlags = 0;
+        Integer memberFlags = 0;
+        for (Map<String, Object> u : result) {
+            for (Object a : (List<Object>) u.get('attributes')) {
+                String attrJson = JSON.serialize(a);
+                if (attrJson.contains('Is_Bundle_Parent__c'))  parentFlags++;
+                if (attrJson.contains('Is_Part_Of_Bundle__c')) memberFlags++;
+            }
+        }
+        System.assertEquals(1, parentFlags,
+            'the bundle parent is flagged once per quote (onboarding fee = 1.5x flagged parents)');
+        System.assertEquals(4, memberFlags,
+            'the flagged parent plus every ramp year\'s child carry Is_Part_Of_Bundle__c');
+    }
+
+    @IsTest
+    static void appendBundle_rampParentSku_onlyFirstCopyFlagged() {
+        Set<String> parentSkus = new Set<String>{ 'CORE' };
+        Set<String> memberSkus = new Set<String>{ 'CORE', 'CHILD' };
+        List<List<Object>> y1 = new List<List<Object>>();
+        List<List<Object>> y2 = new List<List<Object>>();
+        JTLPreHook.appendBundleAttributes(y1, 'CORE', 'GRP-1', parentSkus, memberSkus);
+        JTLPreHook.appendBundleAttributes(y2, 'CORE', 'GRP-2', parentSkus, memberSkus);
+        System.assertEquals(2, y1.size(), 'first parent copy gets both flags');
+        System.assertEquals(0, y2.size(), 'later ramp-year parent copies stay unflagged, as before');
+    }
+
+    @IsTest
+    static void appendBundle_rampSameGroupTwice_flagsOnce() {
+        Set<String> memberSkus = new Set<String>{ 'SKU-R' };
+        List<List<Object>> first  = new List<List<Object>>();
+        List<List<Object>> second = new List<List<Object>>();
+        List<List<Object>> other  = new List<List<Object>>();
+        JTLPreHook.appendBundleAttributes(first,  'SKU-R', 'GRP-1', new Set<String>(), memberSkus);
+        JTLPreHook.appendBundleAttributes(second, 'SKU-R', 'GRP-1', new Set<String>(), memberSkus);
+        JTLPreHook.appendBundleAttributes(other,  'SKU-R', 'GRP-2', new Set<String>(), memberSkus);
+        System.assertEquals(1, first.size());
+        System.assertEquals(0, second.size(), 'same SKU twice in one ramp group is flagged once');
+        System.assertEquals(1, other.size(), 'a different ramp group gets its own flag');
+    }
+
+    @IsTest
+    static void appendBundle_nonRamp_keepsRemoveOnFirstHit() {
+        Set<String> memberSkus = new Set<String>{ 'SKU-N' };
+        List<List<Object>> first  = new List<List<Object>>();
+        List<List<Object>> second = new List<List<Object>>();
+        JTLPreHook.appendBundleAttributes(first,  'SKU-N', null, new Set<String>(), memberSkus);
+        JTLPreHook.appendBundleAttributes(second, 'SKU-N', null, new Set<String>(), memberSkus);
+        System.assertEquals(1, first.size());
+        System.assertEquals(0, second.size());
+        System.assertEquals(true, memberSkus.isEmpty());
+    }
+
+    @IsTest
+    static void rampBundleGroupKey_precedence() {
+        LineItemNodeWrapper nonRamp = new LineItemNodeWrapper(
+            buildNode(path('TEMP-K0'), rampLineTags('S', null, 'GRP', 'Year 1')));
+        System.assertEquals(null, JTLPreHook.rampBundleGroupKey(nonRamp));
+
+        LineItemNodeWrapper withGroup = new LineItemNodeWrapper(
+            buildNode(path('TEMP-K1'), rampLineTags('S', 'SEG-1', 'GRP', 'Year 1')));
+        System.assertEquals('GRP', JTLPreHook.rampBundleGroupKey(withGroup));
+
+        LineItemNodeWrapper withName = new LineItemNodeWrapper(
+            buildNode(path('TEMP-K2'), rampLineTags('S', 'SEG-2', null, 'Year 2')));
+        System.assertEquals('Year 2', JTLPreHook.rampBundleGroupKey(withName));
+
+        LineItemNodeWrapper segOnly = new LineItemNodeWrapper(
+            buildNode(path('TEMP-K3'), rampLineTags('S', 'SEG-3', null, null)));
+        System.assertEquals('SEG-3', JTLPreHook.rampBundleGroupKey(segOnly));
+    }
+
+    // ─────────────────────────────────────────────────────────
     // SECTION 7 – getContractCoTermEndDate()
     // ─────────────────────────────────────────────────────────
 
@@ -1886,6 +1988,69 @@ private class JTLPreHookTest {
         tc.contractEndDate = null;
         JTLPreHook.loadContractEndDate(tc);
         System.assertEquals(null, tc.contractEndDate, 'month-to-month');
+    }
+
+    // -----------------------------------------------------------
+    // SECTION 25 - Cancellation Contract Term
+    // Cancel quotes derive Contract_Term_Months__c exactly like an
+    // Amendment; Renewal / New Business stay excluded.
+    // -----------------------------------------------------------
+
+    @IsTest
+    static void isContractTermDerivedType_amendAndCancelOnly() {
+        System.assertEquals(true,  JTLPreHook.isContractTermDerivedType('Amend'));
+        System.assertEquals(true,  JTLPreHook.isContractTermDerivedType('Cancel'));
+        System.assertEquals(true,  JTLPreHook.isContractTermDerivedType('cancel'));
+        System.assertEquals(false, JTLPreHook.isContractTermDerivedType('Renew'));
+        System.assertEquals(false, JTLPreHook.isContractTermDerivedType(null));
+    }
+
+    @IsTest
+    static void deriveAmendContractTerm_cancel_proratedFromDates() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.quoteType = 'Cancel';
+        System.assertEquals(11.68, JTLPreHook.deriveAmendContractTerm(tc),
+            'cancellation derives the same prorated term as an amendment');
+    }
+
+    @IsTest
+    static void deriveAmendContractTerm_cancel_respectsSameGuards() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.quoteType = 'Cancel';
+        tc.isMonthToMonth = true;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'month-to-month');
+
+        tc = amendTc();
+        tc.quoteType = 'Cancel';
+        tc.contractTerm = 6;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc),
+            'existing term on a cancellation is never overwritten');
+
+        tc = amendTc();
+        tc.quoteType = 'Cancel';
+        tc.contractEndDate = null;
+        System.assertEquals(null, JTLPreHook.deriveAmendContractTerm(tc), 'no contract end');
+    }
+
+    @IsTest
+    static void buildContractTermUpdate_cancel_usesHeaderPathAndTag() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.quoteType = 'Cancel';
+        Map<String, Object> upd = JTLPreHook.buildContractTermUpdate(tc, 11.68);
+        System.assertNotEquals(null, upd);
+        Map<String, Object> a = (Map<String, Object>) ((List<Object>) upd.get('attributes')).get(0);
+        System.assertEquals('Contract_Term_Months__c', a.get('attributeName'));
+        System.assertEquals(11.68, a.get('attributeValue'));
+    }
+
+    @IsTest
+    static void loadContractEndDate_cancelWithNoContract_leavesEndDateNull() {
+        JTLPreHook.TransactionContext tc = amendTc();
+        tc.quoteType = 'Cancel';
+        tc.contractEndDate = null;
+        tc.quoteId = fakeQuoteId();
+        JTLPreHook.loadContractEndDate(tc);
+        System.assertEquals(null, tc.contractEndDate);
     }
 
     @IsTest

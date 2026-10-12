@@ -4,7 +4,7 @@
     <description>NET set. Derived, not stored: a renewal restates the book so Net equals Current; every other action type is Current plus Existing.</description>
     <formula>IF(
   TEXT(OriginalActionType) = &quot;Renew&quot;,
-  NULLVALUE(Current_MRR_Cyber__c, 0),
+  NULLVALUE(Current_MRR_Cyber__c, 0) - NULLVALUE(Existing_MRR_Cyber__c, 0),
   NULLVALUE(Current_MRR_Cyber__c, 0) + NULLVALUE(Existing_MRR_Cyber__c, 0)
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

@@ -117,6 +117,11 @@
                 <label>Ascend-branded Edafio</label>
             </value>
             <value>
+                <fullName>Ascend-branded Xamin</fullName>
+                <default>false</default>
+                <label>Ascend-branded Xamin</label>
+            </value>
+            <value>
                 <fullName>Ascend Legacy</fullName>
                 <default>false</default>
                 <label>Ascend Legacy</label>
@@ -160,6 +165,11 @@
                 <fullName>Edafio</fullName>
                 <default>false</default>
                 <label>Edafio</label>
+            </value>
+            <value>
+                <fullName>Xamin</fullName>
+                <default>false</default>
+                <label>Xamin</label>
             </value>
         </valueSetDefinition>
     </valueSet>

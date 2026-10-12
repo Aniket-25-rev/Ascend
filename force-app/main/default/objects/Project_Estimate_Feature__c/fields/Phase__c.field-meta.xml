@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phase__c</fullName>
+    <label>Phase</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Phase 1</fullName>
+                <default>false</default>
+                <label>Phase 1</label>
+            </value>
+            <value>
+                <fullName>Phase 2</fullName>
+                <default>false</default>
+                <label>Phase 2</label>
+            </value>
+            <value>
+                <fullName>Phase 3</fullName>
+                <default>false</default>
+                <label>Phase 3</label>
+            </value>
+            <value>
+                <fullName>Phase 4</fullName>
+                <default>false</default>
+                <label>Phase 4</label>
+            </value>
+            <value>
+                <fullName>Phase 5</fullName>
+                <default>false</default>
+                <label>Phase 5</label>
+            </value>
+            <value>
+                <fullName>Phase 6</fullName>
+                <default>false</default>
+                <label>Phase 6</label>
+            </value>
+            <value>
+                <fullName>Phase 7</fullName>
+                <default>false</default>
+                <label>Phase 7</label>
+            </value>
+            <value>
+                <fullName>Phase 8</fullName>
+                <default>false</default>
+                <label>Phase 8</label>
+            </value>
+            <value>
+                <fullName>Phase 9</fullName>
+                <default>false</default>
+                <label>Phase 9</label>
+            </value>
+            <value>
+                <fullName>Phase 10</fullName>
+                <default>false</default>
+                <label>Phase 10</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

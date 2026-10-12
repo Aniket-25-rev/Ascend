@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CSx_Account_Management</fullName>
+    <columns>ClientSuccessManager__c</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Status__c</columns>
+    <columns>Last_Account_Review__c</columns>
+    <columns>Last_MS_Revenue__c</columns>
+    <columns>Services_Rollup__c</columns>
+    <filterScope>Team</filterScope>
+    <label>CSx Account Management</label>
+</ListView>

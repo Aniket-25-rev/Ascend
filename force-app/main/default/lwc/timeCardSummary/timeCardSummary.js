@@ -139,9 +139,9 @@ export default class TimeCardSummary extends LightningElement {
         this.weekStartDate = new Date();
         let ofDay = -1 * this.selectedDay.getDay();
         this.weekStartDate = this.addDays(this.selectedDay, ofDay);
-        console.log("Set initial date",this.selectedDay.toISOString().split('T')[0], ofDay, this.weekStartDate);
+        console.log("Set initial date",this.formatLocalDate(this.selectedDay), ofDay, this.weekStartDate);
 
-        getWeek({focusDate:this.selectedDay}).then(result=>{
+        getWeek({focusDate:this.formatLocalDate(this.selectedDay)}).then(result=>{
             console.log("get week", result);
             const incoming = JSON.parse(result);
             incoming.forEach(item=>{
@@ -150,7 +150,7 @@ export default class TimeCardSummary extends LightningElement {
             
         }).finally(()=>{
 
-            this.todaysEntries = this.ensureDateInCalendar(this.selectedDay.toISOString().split('T')[0]);
+            this.todaysEntries = this.ensureDateInCalendar(this.formatLocalDate(this.selectedDay));
             this.updateTabs();
             setTimeout(() => {
                 const day = this.selectedDay.getDay();
@@ -193,7 +193,7 @@ export default class TimeCardSummary extends LightningElement {
         const targetDate = this.addDays(this.weekStartDate, this.dayIndex);
         console.log("from " + this.selectedDay + "to " + targetDate);
         this.selectedDay = targetDate;
-        this.todaysEntries = this.ensureDateInCalendar(this.selectedDay.toISOString().split('T')[0]);
+        this.todaysEntries = this.ensureDateInCalendar(this.formatLocalDate(this.selectedDay));
         console.log("finish active tab");
     }
 
@@ -202,7 +202,7 @@ export default class TimeCardSummary extends LightningElement {
         this.gtot=0;
         this.dtots=[0,0,0,0,0,0,0];
         let weekData;
-        let weekStartKey = this.weekStartDate.toISOString().split('T')[0];
+        let weekStartKey = this.formatLocalDate(this.weekStartDate);
         //console.log("updateTabs", weekStartKey, this.calendar);
         if (Object.hasOwn(this.calendar, weekStartKey)){
             weekData = this.calendar[weekStartKey];
@@ -251,7 +251,7 @@ export default class TimeCardSummary extends LightningElement {
     handleAddTime(event){
         //console.log("Add time");
         this.panelType = 'newEntry';
-        let timecard = {Hours__c:0, Date__c:this.selectedDay.toISOString().split('T')[0]};
+        let timecard = {Hours__c:0, Date__c:this.formatLocalDate(this.selectedDay)};
         //console.log(timecard);
         this.timeEntry = this.wrapTimecard(timecard);
         this.timeEntry.diff=true;
@@ -261,6 +261,7 @@ export default class TimeCardSummary extends LightningElement {
             
         this.openFormPanel();
     }
+    /*
     wrapTimecard(sfTimecard){
         const entry = {timecard:sfTimecard};
         entry.tcid = (sfTimecard&&sfTimecard.id)?sfTimecard.tcid:"new";
@@ -274,7 +275,7 @@ export default class TimeCardSummary extends LightningElement {
         let ofDay = fDate.getDay();//+1; //Day objects point to 00:00:00 which registers as yesterday in getDay    
         let weekStart = new Date();
         weekStart = this.addDays(fDate, -1 * ofDay);
-        let weekStartKey = weekStart.toISOString().split('T')[0];
+        let weekStartKey = this.formatLocalDate(weekStart);
         console.log("Ensure", aDate, fDate, ofDay, weekStart, weekStartKey, fDate.getTime());
         if (!Object.hasOwn(this.calendar, weekStartKey)){
             this.calendar[weekStartKey] = [];
@@ -288,7 +289,29 @@ export default class TimeCardSummary extends LightningElement {
         console.log("Ensure ", aDate, weekStartKey, ofDay);
         console.log("Calendar", this.calendar);
         return this.calendar[weekStartKey][ofDay];
+    }*/
+    wrapTimecard(sfTimecard) {
+        const entry = { timecard: sfTimecard };
+        entry.tcid = (sfTimecard && sfTimecard.id) ? sfTimecard.tcid : 'new';
+        entry.hours = sfTimecard.Hours__c;
+        entry.workDate = sfTimecard.Date__c; // already 'YYYY-MM-DD'
+        return entry;
     }
+    ensureDateInCalendar(aDate) {
+        const fDate = this.parseLocalDate(aDate);   // local midnight
+        const ofDay = fDate.getDay();               // correct local weekday
+        const weekStart = this.addDays(fDate, -1 * ofDay);
+        const weekStartKey = this.formatLocalDate(weekStart);
+
+        if (!Object.hasOwn(this.calendar, weekStartKey)) {
+            this.calendar[weekStartKey] = [];
+        }
+        if (this.calendar[weekStartKey][ofDay] === undefined) {
+            this.calendar[weekStartKey][ofDay] = [];
+        }
+        return this.calendar[weekStartKey][ofDay];  
+    }
+
     addTimeEntryToCalendar(entry){
         console.log("add Calendar for:", entry.workDate);
         if (entry.workDate){
@@ -595,5 +618,26 @@ export default class TimeCardSummary extends LightningElement {
             variant: variant,
         });
         dispatchEvent(showToast);
+    }
+
+    // Local YYYY-MM-DD (never UTC)
+    formatLocalDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    // Parse 'YYYY-MM-DD' as LOCAL midnight (new Date('YYYY-MM-DD') is UTC midnight)
+    parseLocalDate(dateStr) {
+        const [y, m, d] = dateStr.split('-').map(Number);
+        return new Date(y, m - 1, d);
+    }
+
+    // DST-safe day arithmetic
+    addDays(fromDate, numberOfDays) {
+        const result = new Date(fromDate.getTime());
+        result.setDate(result.getDate() + numberOfDays);
+        return result;
     }
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_MSP_Clients_Active</fullName>
+    <booleanFilter>(1 OR 3) AND 2 AND 4 AND 5</booleanFilter>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>CORE.USERS.LAST_NAME</columns>
+    <columns>Account_Team__c</columns>
+    <columns>Services_Rollup__c</columns>
+    <columns>Last_MS_Revenue__c</columns>
+    <columns>Last_Account_Review__c</columns>
+    <columns>Last_True_Up__c</columns>
+    <columns>ClientSuccessManager__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Customer,Client,Channel Partner,Channel Client Of</value>
+    </filters>
+    <filters>
+        <field>Services_Rollup__c</field>
+        <operation>contains</operation>
+        <value>Cyber,Cloud,Infra,Desk,VOIP</value>
+    </filters>
+    <filters>
+        <field>Services_Rollup__c</field>
+        <operation>contains</operation>
+        <value>Managed Services</value>
+    </filters>
+    <filters>
+        <field>ClientSuccessManager__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>All MSP Clients - Active</label>
+</ListView>

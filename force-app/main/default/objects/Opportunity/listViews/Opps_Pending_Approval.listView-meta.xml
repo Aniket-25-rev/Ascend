@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opps_Pending_Approval</fullName>
+    <booleanFilter>1 AND (2 or 3)</booleanFilter>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>CORE.USERS.FULL_NAME</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <columns>Booked_MRR_rollup__c</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <columns>OPPORTUNITY.FORECAST_CATEGORY</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>OPPORTUNITY.TYPE</columns>
+    <columns>OPPORTUNITY.RECORDTYPE</columns>
+    <columns>Service_Offering_Rollup__c</columns>
+    <columns>Reviewed_By__c</columns>
+    <columns>StageApproval__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>OPPORTUNITY.CLOSED</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>StageApproval__c</field>
+        <operation>equals</operation>
+        <value>Pending</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.STAGE_NAME</field>
+        <operation>equals</operation>
+        <value>Approve</value>
+    </filters>
+    <label>Opps Pending Approval</label>
+</ListView>

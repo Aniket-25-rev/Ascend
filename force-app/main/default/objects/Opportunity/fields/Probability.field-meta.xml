@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Probability</fullName>
+    <inlineHelpText>Adjust this based on your own gut instinct about the deal’s probability (e.g. you might have an existing client who is renewing and in the analyze stage, but you’re confident they’re committed)</inlineHelpText>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>true</trackTrending>
+</CustomField>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>TopicAssignment</baseObject>
+    <category>activities</category>
+    <deployed>true</deployed>
+    <description>Used to tag and report on arbitrary values for cases</description>
+    <label>Case Topics</label>
+    <sections>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CreatedBy</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CreatedDate</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Network</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>DerivedRecord</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>EntityKeyPrefix</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Topic</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Entity</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Id</field>
+            <table>TopicAssignment</table>
+        </columns>
+        <masterLabel>Topic Assignments</masterLabel>
+    </sections>
+</ReportType>

@@ -175,7 +175,7 @@
                     <c-abstract-lookup
                         label="Project"
                         object-name="SFDC_Projects__c"
-                        conditions="Project_Stage__c = 'Active'"
+                        conditions="Project_Stage__c = 'Active' and Unforcasted_Project__c = false"
                         value-icon-name="standard:account_score"
                         onselectvalue={handleProjectChanged}
                         placeholder="Select a Project"

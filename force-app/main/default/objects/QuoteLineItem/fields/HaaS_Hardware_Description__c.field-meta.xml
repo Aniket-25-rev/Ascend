@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HaaS_Hardware_Description__c</fullName>
+    <description>Sales-user-entered description of the hardware being provided for a Hardware as a Service (001-INFR-ASC-HAAS-HAAS-001) line. Replaces the standard Description field for this AC4 requirement so the HaaS description doesn&apos;t collide with other uses of the standard Description field on the line.</description>
+    <label>HaaS Hardware Description</label>
+    <length>4000</length>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

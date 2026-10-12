@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Professional_Services</fullName>
+    <active>true</active>
+    <label>Professional Services</label>
+    <picklistValues>
+        <picklist>PS_Resource_Role__c</picklist>
+        <values>
+            <fullName>Application Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Architect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Sr%2E Architect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Sr%2E Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cybersecurity Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Incident Response and Remediation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Program Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Analyst</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sr%2E Cybersecurity Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sr%2E Project Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 1 %E2%80%93 Sr%2E Technician</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 1 %E2%80%93 Technician</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 2 %E2%80%93 Field%2FOperations Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>vCISO</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Resource_Role__c</picklist>
+        <values>
+            <fullName>Application Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Architect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Sr%2E Architect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting Sr%2E Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cybersecurity Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Incident Response and Remediation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Program Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Analyst</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sr%2E Cybersecurity Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sr%2E Project Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 1 %E2%80%93 Sr%2E Technician</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 1 %E2%80%93 Technician</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Tier 2 %E2%80%93 Field%2FOperations Engineer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>vCISO</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

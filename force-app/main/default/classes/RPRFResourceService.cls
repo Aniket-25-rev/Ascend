@@ -46,13 +46,11 @@ public with sharing class RPRFResourceService
     }
 
     public Map<ID, Set<Date>> getUnavailabeDates(Set<ID> resourcesIds, Date fromDate, Date toDate) {
-        system.debug(string.format('getUnavailabeDates {0}-{1} {2}',new list<string>{fromDate.toString(), toDate.tostring(), JSON.serialize(resourcesIds)}));
         Map<ID, Set<Date>> result = new Map<ID, Set<Date>>();
         if(fromDate == null || toDate == null) return result;
 
         list<SFDC_Timecard__c> holidays = [select Project_Line_Item__r.Name, Assignment__r.Resource__c, Date__c from SFDC_Timecard__c 
-                                        where Project_Line_Item__r.Project__r.Unforcasted_Project__c = false
-                                            and ((Project_Line_Item__r.Name = :PTO_PROJECT_NAME and Assignment__r.Resource__c in :resourcesIds) or Project_Line_Item__r.Name = :HOLIDAYS_PROJECT_NAME) 
+                                        where ((Project_Line_Item__r.Name = :PTO_PROJECT_NAME and Assignment__r.Resource__c in :resourcesIds) or Project_Line_Item__r.Name = :HOLIDAYS_PROJECT_NAME) 
                                             and Date__c >= :fromDate 
                                             and Date__c <= :toDate];
         
@@ -67,7 +65,7 @@ public with sharing class RPRFResourceService
                 result.get(record.Assignment__r.Resource__c).add(record.Date__c);
             }
         }
-        system.debug(json.serializePretty(result));
+
         return result;
     }
 

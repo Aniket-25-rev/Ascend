@@ -192,6 +192,42 @@ private class ContractNightlyRollupBatchTest {
             'The total must be the sum of extended AssetStatePeriod.Mrr, not per-unit Asset.CurrentMrr.');
     }
 
+    // A period with a blank Line_of_Business__c (older sales) must still land in
+    // its product's Line of Business bucket; its own LOB wins when set.
+    @IsTest
+    static void lobMrrByContract_fallsBackToTheProductLineOfBusiness() {
+        Id contractId = fakeId(Contract.SObjectType);
+        Id assetA = fakeId(Asset.SObjectType);
+        Id assetB = fakeId(Asset.SObjectType);
+
+        Map<Id, Id> contractByAsset = new Map<Id, Id>{
+            assetA => contractId, assetB => contractId
+        };
+        List<AssetStatePeriod> periods = new List<AssetStatePeriod>{
+            withProductLob(statePeriod(assetA, 7116, null), 'Infrastructure'),
+            withProductLob(statePeriod(assetB, 57.51, 'Service Desk'), 'Infrastructure')
+        };
+
+        Map<String, Decimal> buckets = ContractNightlyRollupBatch.lobMrrByContract(
+            new Set<Id>{ contractId }, contractByAsset, periods
+        ).get(contractId);
+
+        System.assertEquals(7116, buckets.get('Infra'), 'Blank period LOB falls back to the product');
+        System.assertEquals(57.51, buckets.get('Desk'), 'The period\'s own LOB wins over the product');
+    }
+
+    private static AssetStatePeriod withProductLob(AssetStatePeriod period, String productLob) {
+        Map<String, Object> raw = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(period));
+        raw.put('Asset', new Map<String, Object>{
+            'attributes' => new Map<String, Object>{ 'type' => 'Asset' },
+            'Product2' => new Map<String, Object>{
+                'attributes' => new Map<String, Object>{ 'type' => 'Product2' },
+                'Service_Offering__c' => productLob
+            }
+        });
+        return (AssetStatePeriod) JSON.deserialize(JSON.serialize(raw), AssetStatePeriod.class);
+    }
+
     @IsTest
     static void mrrByContract_totalAgreesWithTheSumOfItsOwnLobBuckets() {
         Id contractId = fakeId(Contract.SObjectType);
@@ -240,6 +276,130 @@ private class ContractNightlyRollupBatchTest {
 
         System.assertEquals(100, totals.get(contractId),
             'A period whose Asset is not in the scope map must not reach the total.');
+    }
+
+    // Same fabrication trick as statePeriod(), with the date window set —
+    // StartDate/EndDate drive the selection this batch got wrong.
+    private static AssetStatePeriod statePeriod(
+        Id assetId, Decimal mrr, String lob, Datetime startDate, Datetime endDate
+    ) {
+        Map<String, Object> raw = new Map<String, Object>{
+            'attributes' => new Map<String, Object>{ 'type' => 'AssetStatePeriod' },
+            'AssetId' => assetId, 'Mrr' => mrr, 'Line_of_Business__c' => lob,
+            'StartDate' => startDate, 'EndDate' => endDate
+        };
+        return (AssetStatePeriod) JSON.deserialize(JSON.serialize(raw), AssetStatePeriod.class);
+    }
+
+    // The regression this batch shipped without: an Order activated ahead of
+    // its service start date has no period covering today, and used to
+    // contribute nothing — zeroing the Contract overnight.
+    @IsTest
+    static void chooseCoveringPeriods_usesFirstPeriodWhenServiceStartsInFuture() {
+        Datetime now = Datetime.now();
+        Id assetId = fakeId(Asset.SObjectType);
+        List<AssetStatePeriod> periods = new List<AssetStatePeriod>{
+            statePeriod(assetId, 500, 'Infrastructure', now.addDays(30), now.addDays(395))
+        };
+
+        List<AssetStatePeriod> chosen =
+            ContractNightlyRollupBatch.chooseCoveringPeriods(periods, now);
+
+        System.assertEquals(1, chosen.size(),
+            'An Asset whose service has not started yet must still contribute a period.');
+        System.assertEquals(500, chosen[0].Mrr,
+            'It contributes its first period MRR, so the Contract keeps the value stamped at activation.');
+    }
+
+    @IsTest
+    static void chooseCoveringPeriods_prefersThePeriodCoveringNowOverALaterOne() {
+        Datetime now = Datetime.now();
+        Id assetId = fakeId(Asset.SObjectType);
+        List<AssetStatePeriod> periods = new List<AssetStatePeriod>{
+            statePeriod(assetId, 100, 'Infrastructure', now.addDays(-60), now.addDays(-1)),
+            statePeriod(assetId, 200, 'Infrastructure', now.addDays(-1), now.addDays(60)),
+            statePeriod(assetId, 300, 'Infrastructure', now.addDays(61), now.addDays(400))
+        };
+
+        List<AssetStatePeriod> chosen =
+            ContractNightlyRollupBatch.chooseCoveringPeriods(periods, now);
+
+        System.assertEquals(1, chosen.size(), 'Exactly one period per Asset reaches the rollup.');
+        System.assertEquals(200, chosen[0].Mrr,
+            'A started Asset still uses the period covering now — unchanged behaviour, e.g. a ramp step.');
+    }
+
+    @IsTest
+    static void chooseCoveringPeriods_keepsOnePeriodPerAssetAcrossAssets() {
+        Datetime now = Datetime.now();
+        Id started = fakeId(Asset.SObjectType);
+        Id notYetStarted = fakeId(Asset.SObjectType);
+        List<AssetStatePeriod> periods = new List<AssetStatePeriod>{
+            statePeriod(started, 150, 'Infrastructure', now.addDays(-10), now.addDays(355)),
+            statePeriod(notYetStarted, 250, 'Service Desk', now.addDays(45), now.addDays(410))
+        };
+
+        Map<Id, Id> contractByAsset = new Map<Id, Id>();
+        Id contractId = fakeId(Contract.SObjectType);
+        contractByAsset.put(started, contractId);
+        contractByAsset.put(notYetStarted, contractId);
+
+        Map<Id, Decimal> totals = ContractNightlyRollupBatch.mrrByContract(
+            new Set<Id>{ contractId },
+            contractByAsset,
+            ContractNightlyRollupBatch.chooseCoveringPeriods(periods, now)
+        );
+
+        System.assertEquals(400, totals.get(contractId),
+            'A Contract mixing in-service and not-yet-started Assets rolls up both, not just the live one.');
+    }
+
+    @IsTest
+    static void execute_skipsContractsWhoseRollupDidNotChange() {
+        Account acc = newTestAccount();
+        insert acc;
+
+        Contract con = new Contract(AccountId = acc.Id, Status = 'Draft');
+        insert con;
+        con.Status = 'Activated';
+        update con;
+
+        Test.startTest();
+        ContractNightlyRollupBatch.recalculateContracts(new Set<Id>{ con.Id });
+        System.assertEquals(1, ContractNightlyRollupBatch.lastUpdateCount,
+            'First run: the blank rollup fields are written as 0, so the Contract is saved.');
+
+        ContractNightlyRollupBatch.recalculateContracts(new Set<Id>{ con.Id });
+        System.assertEquals(0, ContractNightlyRollupBatch.lastUpdateCount,
+            'Second run: nothing changed, so the Contract must not be saved again '
+            + '(each save re-flags it for the ServiceNow integration).');
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void hasRollupChanged_detectsChangedBlankAndUnchangedValues() {
+        List<String> fields = ContractNightlyRollupBatch.rollupFieldNames();
+        Contract current = new Contract(Current_MRR__c = 100, Current_TCV__c = 1200);
+        Contract target = new Contract(Current_MRR__c = 100.00, Current_TCV__c = 1200);
+        for (String suffix : FinancialMetricsService.LOB_TO_SUFFIX.values()) {
+            current.put('Current_MRR_' + suffix + '__c', 0);
+            target.put('Current_MRR_' + suffix + '__c', 0);
+        }
+        System.assertEquals(false, ContractNightlyRollupBatch.hasRollupChanged(current, target, fields),
+            'Same values (100 vs 100.00) are not a change.');
+
+        target.Current_TCV__c = 1300;
+        System.assertEquals(true, ContractNightlyRollupBatch.hasRollupChanged(current, target, fields),
+            'A different TCV is a change.');
+
+        target.Current_TCV__c = 1200;
+        current.Current_MRR__c = null;
+        target.Current_MRR__c = 0;
+        System.assertEquals(true, ContractNightlyRollupBatch.hasRollupChanged(current, target, fields),
+            'Blank -> 0 is a change, so never-rolled-up Contracts still get their first values.');
+
+        System.assertEquals(true, ContractNightlyRollupBatch.hasRollupChanged(null, target, fields),
+            'A Contract that could not be read is saved rather than skipped.');
     }
 
     @IsTest

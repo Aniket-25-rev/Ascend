@@ -65,10 +65,13 @@ private class FinancialMetricsServiceTest {
         return c;
     }
 
+    // Est_Start_Date__c is required test data: Quote_Name_Auto_Population copies it to a
+    // new quote's StartDate, and Opportunity_AfterTriggerFlow then sets a Change Order
+    // opportunity's CloseDate to that StartDate - 7, failing REQUIRED_FIELD_MISSING when blank.
     private static Opportunity buildOpportunity(String name, Id contractId, String type) {
         return new Opportunity(
             Name = name, StageName = 'Generate', CloseDate = Date.today().addDays(30),
-            ContractId = contractId, Type = type
+            ContractId = contractId, Type = type, Est_Start_Date__c = Date.today().addDays(30)
         );
     }
 
@@ -76,7 +79,7 @@ private class FinancialMetricsServiceTest {
         return new Quote(
             Name = name, OpportunityId = opportunityId, ContractId = contractId,
             Status = status, Approval_Scenario__c = 'Financial Metrics test data',
-            Contract_Term_Months__c = TERM
+            Contract_Term_Months__c = TERM, StartDate = Date.today().addDays(30)
         );
     }
 
@@ -117,6 +120,17 @@ private class FinancialMetricsServiceTest {
         return (QuoteLineItem) JSON.deserialize(JSON.serialize(raw), QuoteLineItem.class);
     }
 
+    // Attaches an in-memory ramp segment (a QuoteLineGroup with IsRamped = true)
+    // to a line, the shape loadLines() sees after its relationship query.
+    private static QuoteLineItem inSegment(QuoteLineItem line, String name, Date start, Integer sortOrder) {
+        Map<String, Object> raw = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(line));
+        raw.put('QuoteLineGroup', new Map<String, Object>{
+            'attributes' => new Map<String, Object>{ 'type' => 'QuoteLineGroup' },
+            'Name' => name, 'IsRamped' => true, 'StartDate' => start, 'SortOrder' => sortOrder
+        });
+        return (QuoteLineItem) JSON.deserialize(JSON.serialize(raw), QuoteLineItem.class);
+    }
+
     private static AssetStatePeriod statePeriod(Datetime startDate, Datetime endDate, Decimal mrr) {
         Map<String, Object> raw = new Map<String, Object>{
             'attributes' => new Map<String, Object>{ 'type' => 'AssetStatePeriod' },
@@ -137,7 +151,9 @@ private class FinancialMetricsServiceTest {
                    Net_MRR_Private_Cloud__c, Net_MRR_VOIP__c,
                    MRR_Change_Pct_Cyber__c, MRR_Change_Pct_Desk__c, MRR_Change_Pct_Infra__c,
                    MRR_Change_Pct_Private_Cloud__c, MRR_Change_Pct_VOIP__c,
-                   Net_Less_Than_Existing__c
+                   Net_Less_Than_Existing__c,
+                   Loss_MRR_Cyber__c, Loss_MRR_Desk__c, Loss_MRR_Infra__c,
+                   Loss_MRR_Private_Cloud__c, Loss_MRR_VOIP__c
             FROM Quote WHERE Id = :quoteId
         ];
     }
@@ -159,7 +175,7 @@ private class FinancialMetricsServiceTest {
     }
 
     private static Opportunity reloadOpportunity(Id opportunityId) {
-        return [SELECT Id, Booked_MRR__c, Loss_MRR__c FROM Opportunity WHERE Id = :opportunityId];
+        return [SELECT Id, Booked_MRR__c, Loss_MRR__c, Loss_Type__c FROM Opportunity WHERE Id = :opportunityId];
     }
 
     private static void activateContract(Id contractId) {
@@ -535,6 +551,178 @@ private class FinancialMetricsServiceTest {
     }
 
     @IsTest
+    static void testAmendmentLossSplitsAcrossLinesOfBusiness() {
+        Contract contract = baselineContract(3000, 36000, new Map<String, Decimal>{
+            'Desk' => 2000, 'Cyber' => 1000
+        });
+        Map<String, Id> products = productIds();
+
+        Opportunity opp = buildOpportunity('FM Loss Split Opp', contract.Id, 'Change Order');
+        insert opp;
+        Quote amend = buildQuote('FM Loss Split Q', opp.Id, contract.Id, 'Draft');
+        insert amend;
+        asActionType(amend.Id, 'Amend');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            amend.Id => new List<QuoteLineItem>{
+                rawLine(amend.Id, products.get('FM Desk Product'), LOB_DESK, 1, -400, -4800),
+                rawLine(amend.Id, products.get('FM Cyber Product'), LOB_CYBER, 1, -150, -1800),
+                rawLine(amend.Id, products.get('FM Infra Product'), LOB_INFRA, 1, 250, 3000)
+            }
+        };
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ amend.Id });
+
+        Test.startTest();
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ amend.Id });
+        Test.stopTest();
+
+        System.assertEquals(-550, reloadOpportunity(opp.Id).Loss_MRR__c,
+            'The opportunity still carries the total');
+
+        Quote result = reload(amend.Id);
+        System.assertEquals(-400, result.Loss_MRR_Desk__c, 'Desk carries its own drop');
+        System.assertEquals(-150, result.Loss_MRR_Cyber__c, 'Cyber carries its own drop');
+        System.assertEquals(null, result.Loss_MRR_Infra__c,
+            'A line of business that grew records no loss, not zero');
+        System.assertEquals(null, result.Loss_MRR_VOIP__c, 'An untouched bucket stays null');
+    }
+
+    @IsTest
+    static void testAmendmentLossExcludesAnUnbucketedLineFromEveryBucket() {
+        Contract contract = baselineContract(2000, 24000, new Map<String, Decimal>{ 'Desk' => 2000 });
+        Map<String, Id> products = productIds();
+
+        Opportunity opp = buildOpportunity('FM Loss Unbucketed Opp', contract.Id, 'Change Order');
+        insert opp;
+        Quote amend = buildQuote('FM Loss Unbucketed Q', opp.Id, contract.Id, 'Draft');
+        insert amend;
+        asActionType(amend.Id, 'Amend');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            amend.Id => new List<QuoteLineItem>{
+                rawLine(amend.Id, products.get('FM Desk Product'), LOB_DESK, 1, -100, -1200),
+                rawLine(amend.Id, products.get('FM Cyber Product'), LOB_UNBUCKETED, 1, -75, -900)
+            }
+        };
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ amend.Id });
+
+        Test.startTest();
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ amend.Id });
+        Test.stopTest();
+
+        System.assertEquals(-175, reloadOpportunity(opp.Id).Loss_MRR__c,
+            'The total counts every negative recurring line whatever its line of business');
+
+        Quote result = reload(amend.Id);
+        System.assertEquals(-100, result.Loss_MRR_Desk__c, 'Only the mapped drop reaches a bucket');
+        System.assertEquals(null, result.Loss_MRR_Cyber__c,
+            'An unmapped line of business lands in no bucket, so the buckets under-sum the total');
+    }
+
+    @IsTest
+    static void testRenewalLossCountsAShrunkProductEvenWhenItsLobGrew() {
+        Contract contract = baselineContract(4450, 53400, new Map<String, Decimal>{
+            'Infra' => 4450
+        });
+        Map<String, Id> products = productIds();
+        Id architecture = products.get('FM Infra Product');
+        Id backup = products.get('FM Bundle Parent Product');
+
+        Opportunity opp = buildOpportunity('FM Intra Lob Opp', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM Intra Lob Q', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.assetBaselineOverride = new Map<Id, Map<Id, Decimal>>{
+            contract.Id => new Map<Id, Decimal>{ architecture => 2850, backup => 1600 }
+        };
+        FinancialMetricsService.assetBaselineLobOverride = new Map<Id, Map<Id, String>>{
+            contract.Id => new Map<Id, String>{ architecture => LOB_INFRA, backup => LOB_INFRA }
+        };
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                delta(renew.Id, architecture, LOB_INFRA, 15, 296.4),
+                delta(renew.Id, backup, LOB_INFRA, 5, 166.4)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        Quote result = reload(renew.Id);
+        System.assertEquals(5278, result.Current_MRR_Infra__c,
+            'The line of business grew overall, 4450 up to 5278');
+        System.assertEquals(-768, result.Loss_MRR_Infra__c,
+            'The shrunk product is still a loss, 1600 down to 832, and the other products '
+            + 'growth must not net it away');
+        System.assertEquals(-768, reloadOpportunity(opp.Id).Loss_MRR__c,
+            'The opportunity total agrees with the bucket');
+    }
+
+    @IsTest
+    static void testRenewalLossSplitsByTheAssetBaselineLineOfBusiness() {
+        Contract contract = baselineContract(900, 10800, new Map<String, Decimal>{
+            'Desk' => 600, 'Cyber' => 300
+        });
+        Map<String, Id> products = productIds();
+        Id desk = products.get('FM Desk Product');
+        Id cyber = products.get('FM Cyber Product');
+
+        Opportunity opp = buildOpportunity('FM Renew Loss Opp', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM Renew Loss Q', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.assetBaselineOverride = new Map<Id, Map<Id, Decimal>>{
+            contract.Id => new Map<Id, Decimal>{ desk => 600, cyber => 300 }
+        };
+        FinancialMetricsService.assetBaselineLobOverride = new Map<Id, Map<Id, String>>{
+            contract.Id => new Map<Id, String>{ desk => LOB_DESK, cyber => LOB_CYBER }
+        };
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                rawLine(renew.Id, desk, LOB_DESK, 1, 500, 6000)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        System.assertEquals(-400, reloadOpportunity(opp.Id).Loss_MRR__c,
+            'Desk fell 100 and Cyber was dropped entirely for 300');
+
+        Quote result = reload(renew.Id);
+        System.assertEquals(-100, result.Loss_MRR_Desk__c, 'Desk shortfall is 600 down to 500');
+        System.assertEquals(-300, result.Loss_MRR_Cyber__c,
+            'A product dropped from the renewal has no quote line, so its bucket must come '
+            + 'from the asset baseline line of business');
+        System.assertEquals(null, result.Loss_MRR_Infra__c, 'Untouched buckets stay null');
+    }
+
+    @IsTest
+    static void testRenewalWalkAwayStillStampsOnlyTheOpportunityTotal() {
+        Contract contract = baselineContract(1500, 18000, new Map<String, Decimal>{
+            'Desk' => 900, 'Infra' => 600
+        });
+
+        Opportunity opp = buildOpportunity('FM Walk Split Opp', contract.Id, 'Renewal');
+        insert opp;
+
+        Test.startTest();
+        FinancialMetricsService.stampRenewalWalkAway(new Set<Id>{ opp.Id });
+        Test.stopTest();
+
+        Opportunity result = reloadOpportunity(opp.Id);
+        System.assertEquals(-1500, result.Loss_MRR__c, 'A walk away loses the whole book');
+        System.assertEquals(0, result.Booked_MRR__c, 'Nothing is booked on a walk away');
+    }
+
+    @IsTest
     static void testIsNewBusinessTreatsBlankAndNewAsNewBusiness() {
         System.assertEquals(true, FinancialMetricsService.isNewBusiness(null),
             'A new business quote carries a blank OriginalActionType in this org');
@@ -763,8 +951,8 @@ private class FinancialMetricsServiceTest {
         System.assertEquals(100, result.Current_MRR_VOIP__c, 'VOIP is brand new on this quote');
         System.assertEquals(null, result.MRR_Change_Pct_VOIP__c,
             'A brand new LOB divides by zero, so the percentage must be blank rather than an error');
-        System.assertEquals(100, result.MRR_Change_Pct_Desk__c,
-            'Desk has no line on this quote, so its Net equals its baseline at 100 percent');
+        System.assertEquals(0, result.MRR_Change_Pct_Desk__c,
+            'Desk has no line on this quote, so its Net equals its baseline and nothing changed');
         System.assertEquals(0, FinancialMetricsService.faultLog.size(), 'Zero division must not raise a fault');
     }
 
@@ -788,6 +976,47 @@ private class FinancialMetricsServiceTest {
         System.assertEquals(0, FinancialMetricsService.sumNegativeMrr(lines), 'Nothing negative here');
     }
 
+    private static QuoteLineItem withProductLob(QuoteLineItem line, String productLob) {
+        Map<String, Object> raw = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(line));
+        raw.put('Product2', new Map<String, Object>{
+            'attributes' => new Map<String, Object>{ 'type' => 'Product2' },
+            'Service_Offering__c' => productLob
+        });
+        return (QuoteLineItem) JSON.deserialize(JSON.serialize(raw), QuoteLineItem.class);
+    }
+
+    // Quote 00017088: a full cancel whose lines RCA built from assets with a blank
+    // Line_of_Business__c. Every LOB bucket and Loss MRR by LOB read 0 even though
+    // each product carries a Line of Business.
+    @IsTest
+    static void testBlankLineLobFallsBackToTheProductLineOfBusiness() {
+        Map<String, Id> products = productIds();
+        List<QuoteLineItem> lines = new List<QuoteLineItem>{
+            withProductLob(delta(null, products.get('FM Desk Product'), null, -1, 41), LOB_DESK),
+            withProductLob(delta(null, products.get('FM Infra Product'), null, -1, 6966), LOB_INFRA),
+            withProductLob(delta(null, products.get('FM Cyber Product'), LOB_VOIP, -1, 10), LOB_CYBER),
+            withProductLob(delta(null, products.get('FM Bundle Parent Product'), null, -1, 5), LOB_UNBUCKETED)
+        };
+
+        Map<String, Decimal> byLob = FinancialMetricsService.sumMrrByLob(lines);
+        System.assertEquals(-41, byLob.get('Desk'), 'Blank line LOB uses the product Line of Business');
+        System.assertEquals(-6966, byLob.get('Infra'), 'Blank line LOB uses the product Line of Business');
+        System.assertEquals(-10, byLob.get('VOIP'), 'A line\'s own LOB still wins over the product');
+        System.assertEquals(0, byLob.get('Cyber'), 'The product LOB is ignored when the line has its own');
+
+        Map<String, Decimal> lossByLob = FinancialMetricsService.sumNegativeMrrByLob(lines);
+        System.assertEquals(-41, lossByLob.get('Desk'), 'Loss MRR by LOB uses the same fallback');
+        System.assertEquals(-6966, lossByLob.get('Infra'), 'Loss MRR by LOB uses the same fallback');
+
+        Map<String, Decimal> renewedByLob = FinancialMetricsService.sumRenewedMrrByLob(new List<QuoteLineItem>{
+            withProductLob(delta(null, products.get('FM Desk Product'), null, 1, 57), LOB_DESK)
+        });
+        System.assertEquals(57, renewedByLob.get('Desk'), 'Renewal buckets use the same fallback');
+
+        System.assertEquals(LOB_DESK, FinancialMetricsService.lobOf(' ', LOB_DESK), 'Whitespace counts as blank');
+        System.assertEquals(null, FinancialMetricsService.lobOf((QuoteLineItem) null), 'Null line has no LOB');
+    }
+
     @IsTest
     static void testSumNegativeMrrIgnoresPositivesAndOneTime() {
         Map<String, Id> products = productIds();
@@ -798,6 +1027,87 @@ private class FinancialMetricsServiceTest {
         };
         System.assertEquals(-300, FinancialMetricsService.sumNegativeMrr(lines),
             'Only recurring negative deltas count toward loss');
+    }
+
+    // RCA does not reprice Cancel/Amend lines for assets already at
+    // PricingSource = LastTransaction: NetUnitPrice stays blank, NetTotalPrice
+    // carries the prorated amount, and the MRR__c formula reads 0. Seen on
+    // contracts 00001930 / 00001934 - every cancel line at 0 MRR, no loss.
+    @IsTest
+    static void testCancellationWithUnpricedLinesFallsBackToTheAssetUnitMrr() {
+        Contract contract = baselineContract(725, 8700, new Map<String, Decimal>{ 'Desk' => 725 });
+        Map<String, Id> products = productIds();
+        Id premium = products.get('FM Desk Product');
+        Id standard = products.get('FM Cyber Product');
+
+        Opportunity opp = buildOpportunity('FM Unpriced Cancel Opp', contract.Id, 'Full Churn');
+        insert opp;
+        Quote cancel = buildQuote('FM Unpriced Cancel', opp.Id, contract.Id, 'Draft');
+        insert cancel;
+        asActionType(cancel.Id, 'Cancel');
+
+        // Asset book: 10 units of premium at 67 each, 1 unit of standard at 55.
+        FinancialMetricsService.assetBaselineOverride = new Map<Id, Map<Id, Decimal>>{
+            contract.Id => new Map<Id, Decimal>{ premium => 670, standard => 55 }
+        };
+        FinancialMetricsService.assetUnitMrrOverride = new Map<Id, Map<Id, Decimal>>{
+            contract.Id => new Map<Id, Decimal>{ premium => 67, standard => 55 }
+        };
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            cancel.Id => new List<QuoteLineItem>{
+                // Partial: 3 of the 10 premium units, unit price blank, MRR formula 0.
+                rawLine(cancel.Id, premium, LOB_DESK, -3, 0, -1336.78),
+                rawLine(cancel.Id, standard, LOB_DESK, -1, 0, -365.79)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ cancel.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ cancel.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ cancel.Id });
+        Test.stopTest();
+
+        Quote result = reload(cancel.Id);
+        System.assertEquals(-256, result.Current_MRR__c,
+            'Unpriced cancel lines are valued at the asset unit MRR: 3 x -67 + 1 x -55');
+        System.assertEquals(-256, result.Current_MRR_Desk__c, 'The LOB bucket agrees');
+        System.assertEquals(-256, result.Loss_MRR_Desk__c,
+            'Loss by LOB is populated at recalc time, not left blank by the 0 MRR formula');
+        System.assertEquals(469, result.Net_MRR__c, 'Net is Existing 725 less the 256 cancelled');
+
+        Opportunity opp2 = reloadOpportunity(opp.Id);
+        System.assertEquals(-256, opp2.Loss_MRR__c, 'The opportunity loss is the cancelled MRR');
+        System.assertEquals(469, opp2.Booked_MRR__c, 'Booked is the net after cancellation');
+    }
+
+    @IsTest
+    static void testUnitMrrFallbackOnlyAppliesToLinesTheFormulaCouldNotPrice() {
+        Map<String, Id> products = productIds();
+        Id desk = products.get('FM Desk Product');
+        Id cyber = products.get('FM Cyber Product');
+        Map<Id, Decimal> unitMrr = new Map<Id, Decimal>{ desk => 67, cyber => 200 };
+
+        QuoteLineItem priced = delta(null, desk, LOB_DESK, -2, 25);
+        System.assertEquals(-50, FinancialMetricsService.mrrOf(priced, unitMrr),
+            'A line with a NetUnitPrice keeps its own MRR even if the asset book says otherwise');
+
+        QuoteLineItem unpriced = rawLine(null, desk, LOB_DESK, -2, 0, -300);
+        System.assertEquals(-134, FinancialMetricsService.mrrOf(unpriced, unitMrr),
+            'Blank NetUnitPrice and 0 MRR falls back to unit MRR x quantity');
+        System.assertEquals(0, FinancialMetricsService.mrrOf(unpriced, null),
+            'Without an asset book there is nothing to fall back to');
+
+        QuoteLineItem unknownProduct = rawLine(null, products.get('FM Infra Product'), LOB_INFRA, -1, 0, -100);
+        System.assertEquals(0, FinancialMetricsService.mrrOf(unknownProduct, unitMrr),
+            'A product missing from the asset book is left at the formula value');
+
+        QuoteLineItem explicitMrr = rawLine(null, cyber, LOB_CYBER, -1, -180, -2160);
+        System.assertEquals(-180, FinancialMetricsService.mrrOf(explicitMrr, unitMrr),
+            'A non-zero MRR is trusted as-is');
+
+        System.assertEquals(-184, FinancialMetricsService.sumNegativeMrr(
+            new List<QuoteLineItem>{ priced, unpriced }, unitMrr),
+            'sumNegativeMrr uses the same resolution: -50 priced + -134 unpriced');
     }
 
     @IsTest
@@ -1275,8 +1585,7 @@ private class FinancialMetricsServiceTest {
         Id kept = products.get('FM Desk Product');
 
         Test.startTest();
-        Decimal loss = FinancialMetricsService.renewalGrossLoss(
-            new Map<Id, Decimal>{ dropped => 55, kept => 600 },
+        Decimal loss = FinancialMetricsService.renewalGrossLoss(new Map<Id, Decimal>{ dropped => 55, kept => 600 },
             new List<QuoteLineItem>{
                 rawLine(null, dropped, LOB_CYBER, 0, -55, -660),
                 rawLine(null, kept, LOB_DESK, 4, 600, 7200)
@@ -1486,5 +1795,415 @@ private class FinancialMetricsServiceTest {
         System.assertEquals(-190, loss, 'Amendment loss is still gross negative');
         System.assertEquals(-190, byLob.get('Cyber'),
             'Amendment LOB buckets still carry negative deltas');
+    }
+
+    // =========================================================
+    // NRR / GRR — ADDED
+    // NRR = (Starting + Expansion - Churn) / Starting x 100
+    // GRR = (Starting - Churn) / Starting x 100
+    // Implemented in stampOpportunityMetrics as:
+    //   NRR__c = booked / Existing_MRR__c x 100   (booked is the same
+    //            action-type-normalized resulting total already stamped
+    //            onto Opportunity.Booked_MRR__c - NOT raw Current_MRR__c,
+    //            which is only a delta for Amend/Cancel)
+    //   GRR__c = (Existing_MRR__c + Loss_MRR__c) / Existing_MRR__c x 100
+    // =========================================================
+
+    private static Quote reloadRetention(Id quoteId) {
+        return [
+            SELECT Id, NRR__c, GRR__c, Existing_MRR__c, Current_MRR__c
+            FROM Quote WHERE Id = :quoteId
+        ];
+    }
+
+    @IsTest
+    static void testNrrAndGrrBlankForNewBusiness() {
+        Map<String, Id> products = productIds();
+
+        Opportunity opp = buildOpportunity('FM NRR New Business Opp', null, 'New Business');
+        insert opp;
+        Quote newBusiness = buildQuote('FM NRR New Business', opp.Id, null, 'Draft');
+        insert newBusiness;
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            newBusiness.Id => new List<QuoteLineItem>{
+                delta(newBusiness.Id, products.get('FM Desk Product'), LOB_DESK, 10, 50)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ newBusiness.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ newBusiness.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ newBusiness.Id });
+        Test.stopTest();
+
+        Quote result = reloadRetention(newBusiness.Id);
+        System.assertEquals(null, result.NRR__c,
+            'No Existing MRR baseline means NRR is undefined, not zero');
+        System.assertEquals(null, result.GRR__c,
+            'No Existing MRR baseline means GRR is undefined, not zero');
+    }
+
+    @IsTest
+    static void testNrrAndGrrBothOneHundredWhenRenewalHasNoChange() {
+        Contract contract = baselineContract(1000, 12000, new Map<String, Decimal>{ 'Desk' => 1000 });
+        Map<String, Id> products = productIds();
+        Id product = products.get('FM Desk Product');
+
+        assetBaseline(contract.Id, new Map<Id, Decimal>{ product => 1000 });
+
+        Opportunity opp = buildOpportunity('FM NRR Clean Renewal Opp', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM NRR Clean Renewal', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                delta(renew.Id, product, LOB_DESK, 10, 100)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ renew.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ renew.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        Quote result = reloadRetention(renew.Id);
+        System.assertEquals(1000, result.Existing_MRR__c, 'Existing copied from the contract baseline');
+        System.assertEquals(1000, result.Current_MRR__c, 'Renewed at the same 10 x 100');
+        System.assertEquals(100.00, result.NRR__c, 'No expansion or churn: NRR is exactly 100%');
+        System.assertEquals(100.00, result.GRR__c, 'No churn: GRR is exactly 100%');
+    }
+
+    @IsTest
+    static void testNrrAndGrrEqualWhenRenewalLosesAProductWithNoExpansion() {
+        Contract contract = baselineContract(1000, 12000, new Map<String, Decimal>{
+            'Desk' => 600, 'Cyber' => 400
+        });
+        Map<String, Id> products = productIds();
+        Id keptProduct = products.get('FM Desk Product');
+        Id droppedProduct = products.get('FM Cyber Product');
+
+        assetBaseline(contract.Id, new Map<Id, Decimal>{
+            keptProduct => 600, droppedProduct => 400
+        });
+
+        Opportunity opp = buildOpportunity('FM NRR Partial Loss Opp', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM NRR Partial Loss', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                delta(renew.Id, keptProduct, LOB_DESK, 4, 150)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ renew.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ renew.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        Opportunity resultOpp = reloadOpportunity(opp.Id);
+        System.assertEquals(-400, resultOpp.Loss_MRR__c, 'The dropped Cyber product is the whole loss');
+
+        Quote result = reloadRetention(renew.Id);
+        System.assertEquals(60.00, result.NRR__c,
+            'No expansion to offset the loss: NRR is booked (600) over existing (1000)');
+        System.assertEquals(60.00, result.GRR__c,
+            'Same figure as NRR here since there is no expansion component to exclude');
+    }
+
+    @IsTest
+    static void testNrrExceedsGrrWhenRenewalHasBothLossAndExpansion() {
+        Contract contract = baselineContract(1000, 12000, new Map<String, Decimal>{
+            'Desk' => 600, 'Cyber' => 400
+        });
+        Map<String, Id> products = productIds();
+        Id keptProduct = products.get('FM Desk Product');
+        Id droppedProduct = products.get('FM Cyber Product');
+        Id expandedProduct = products.get('FM Infra Product');
+
+        assetBaseline(contract.Id, new Map<Id, Decimal>{
+            keptProduct => 600, droppedProduct => 400
+        });
+
+        Opportunity opp = buildOpportunity('FM NRR Loss Plus Expansion Opp', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM NRR Loss Plus Expansion', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                delta(renew.Id, keptProduct, LOB_DESK, 4, 150),
+                delta(renew.Id, expandedProduct, LOB_INFRA, 1, 300)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ renew.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ renew.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        Opportunity resultOpp = reloadOpportunity(opp.Id);
+        System.assertEquals(-400, resultOpp.Loss_MRR__c,
+            'The new Infra product must not offset the dropped Cyber product - loss stays gross');
+        System.assertEquals(900, resultOpp.Booked_MRR__c, 'Booked is kept (600) plus the new Infra (300)');
+
+        Quote result = reloadRetention(renew.Id);
+        System.assertEquals(90.00, result.NRR__c, 'NRR includes the Infra expansion: 900 / 1000');
+        System.assertEquals(60.00, result.GRR__c, 'GRR excludes the expansion: (1000 - 400) / 1000');
+        System.assert(result.NRR__c > result.GRR__c,
+            'Expansion must make NRR strictly greater than GRR whenever there is also a loss');
+    }
+
+    @IsTest
+    static void testNrrUsesBookedTotalNotRawDeltaForAmendments() {
+        Contract contract = baselineContract(6000, 72000, new Map<String, Decimal>{
+            'Desk' => 4000, 'Cyber' => 2000
+        });
+        Map<String, Id> products = productIds();
+
+        Opportunity opp = buildOpportunity('FM NRR Amend Opp', contract.Id, 'Change Order');
+        insert opp;
+        Quote amend = buildQuote('FM NRR Amend', opp.Id, contract.Id, 'Draft');
+        insert amend;
+        asActionType(amend.Id, 'Amend');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            amend.Id => new List<QuoteLineItem>{
+                delta(amend.Id, products.get('FM Desk Product'), LOB_DESK, -10, 100),
+                delta(amend.Id, products.get('FM Cyber Product'), LOB_CYBER, 5, 200),
+                delta(amend.Id, products.get('FM Infra Product'), LOB_INFRA, 10, 400)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ amend.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ amend.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ amend.Id });
+        Test.stopTest();
+
+        Opportunity resultOpp = reloadOpportunity(opp.Id);
+        System.assertEquals(10000, resultOpp.Booked_MRR__c,
+            'Booked for an amendment is the delta (4000) plus the existing baseline (6000)');
+        System.assertEquals(-1000, resultOpp.Loss_MRR__c, 'Only the Desk reduction counts as loss');
+
+        Quote result = reloadRetention(amend.Id);
+        System.assertEquals(4000, result.Current_MRR__c,
+            'Current is still only the raw delta sum, per the existing worked example');
+        System.assertEquals(166.67, result.NRR__c,
+            'NRR must use the booked total (10000), not the raw delta (4000) - '
+            + '4000/6000 would wrongly read as a loss when this amendment is actually growth');
+        System.assertEquals(83.33, result.GRR__c,
+            'GRR excludes the Cyber/Infra expansion: (6000 - 1000) / 6000');
+    }
+
+    @IsTest
+    static void testLossTypeIsRenewalPartialWhenARenewalLosesAProduct() {
+        Contract contract = baselineContract(1000, 12000, new Map<String, Decimal>{ 'Desk' => 1000 });
+        Map<String, Id> products = productIds();
+        Id keptProduct = products.get('FM Desk Product');
+        Id droppedProduct = products.get('FM Cyber Product');
+
+        assetBaseline(contract.Id, new Map<Id, Decimal>{
+            keptProduct => 600, droppedProduct => 400
+        });
+
+        Opportunity opp = buildOpportunity('FM Loss Type Partial', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM Loss Type Partial Q', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                delta(renew.Id, keptProduct, LOB_DESK, 4, 150)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ renew.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        Opportunity result = reloadOpportunity(opp.Id);
+        System.assertEquals('Renewal - Partial', result.Loss_Type__c,
+            'A renewal that still closes Won but loses MRR is a partial renewal loss');
+    }
+
+    @IsTest
+    static void testLossTypeIsRenewalFullOnWalkAway() {
+        Contract contract = baselineContract(1007.23, 18251.76, null);
+
+        Opportunity renewalOpp = buildOpportunity('FM Loss Type Full', contract.Id, 'Renewal');
+        insert renewalOpp;
+
+        Test.startTest();
+        FinancialMetricsService.stampRenewalWalkAway(new Set<Id>{ renewalOpp.Id });
+        Test.stopTest();
+
+        Opportunity result = reloadOpportunity(renewalOpp.Id);
+        System.assertEquals('Renewal - Full', result.Loss_Type__c,
+            'A closed lost renewal opportunity that never renewed is a full renewal loss');
+    }
+
+    @IsTest
+    static void testLossTypeStaysBlankForAnAmendmentDrivenLoss() {
+        Contract contract = baselineContract(500, 6000, new Map<String, Decimal>{ 'Infra' => 500 });
+        Map<String, Id> products = productIds();
+
+        Opportunity opp = buildOpportunity('FM Loss Type Amend', contract.Id, 'Change Order');
+        insert opp;
+        Quote swap = buildQuote('FM Loss Type Amend Q', opp.Id, contract.Id, 'Draft');
+        insert swap;
+        asActionType(swap.Id, 'Amend');
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            swap.Id => new List<QuoteLineItem>{
+                delta(swap.Id, products.get('FM Cyber Product'), LOB_CYBER, 1, 72),
+                delta(swap.Id, products.get('FM Infra Product'), LOB_INFRA, -1, 190)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ swap.Id });
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ swap.Id }, null);
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ swap.Id });
+        Test.stopTest();
+
+        Opportunity result = reloadOpportunity(opp.Id);
+        System.assertEquals(-190, result.Loss_MRR__c, 'An amendment can still carry a loss');
+        System.assertEquals(null, result.Loss_Type__c,
+            'Loss Type is renewal-specific; an amendment-driven loss is not a renewal loss');
+    }
+
+    // Quote 00016020: a three-year ramp of 124/month booked Current MRR 382 -
+    // Year 1 (124) + Year 2 (129) + Year 3 (129). Each segment repeats every
+    // recurring line, so MRR must come from the first segment only, while TCV
+    // still adds up every segment.
+    @IsTest
+    static void testRampedQuoteBooksMrrFromItsFirstSegmentOnly() {
+        Map<String, Id> products = productIds();
+        Id desk = products.get('FM Desk Product');
+        Id cyber = products.get('FM Cyber Product');
+        Date year1 = Date.newInstance(2026, 8, 1);
+
+        Opportunity opp = buildOpportunity('FM Ramp Opp', null, 'New Business');
+        insert opp;
+        Quote ramp = buildQuote('FM Ramp', opp.Id, null, 'Draft');
+        insert ramp;
+
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            ramp.Id => new List<QuoteLineItem>{
+                // Listed out of order on purpose: the earliest StartDate is segment 1.
+                inSegment(delta(ramp.Id, desk, LOB_DESK, 1, 55), 'Year 3', year1.addYears(2), 3),
+                inSegment(delta(ramp.Id, cyber, LOB_CYBER, 1, 74), 'Year 3', year1.addYears(2), 3),
+                inSegment(delta(ramp.Id, desk, LOB_DESK, 1, 50), 'Year 1', year1, 1),
+                inSegment(delta(ramp.Id, cyber, LOB_CYBER, 1, 74), 'Year 1', year1, 1),
+                inSegment(line(ramp.Id, products.get('FM Infra Product'), LOB_INFRA, 1, 500, 'OneTime'),
+                    'Year 1', year1, 1),
+                inSegment(delta(ramp.Id, desk, LOB_DESK, 1, 55), 'Year 2', year1.addYears(1), 2),
+                inSegment(delta(ramp.Id, cyber, LOB_CYBER, 1, 74), 'Year 2', year1.addYears(1), 2)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.recalcNetMetrics(new Set<Id>{ ramp.Id }, null);
+        Test.stopTest();
+
+        Quote result = reload(ramp.Id);
+        System.assertEquals(124, result.Current_MRR__c,
+            'Year 1 only: 50 + 74. Summing all three segments would have booked 382');
+        System.assertEquals(50, result.Current_MRR_Desk__c, 'Desk is the Year 1 desk line');
+        System.assertEquals(74, result.Current_MRR_Cyber__c, 'Cyber is the Year 1 cyber line');
+        System.assertEquals(0, result.Current_MRR_Infra__c, 'A one-time fee is never MRR');
+        System.assertEquals(124, result.Net_MRR__c, 'No baseline, so Net equals Current');
+        System.assertEquals((50 + 74) * TERM + (55 + 74) * TERM + (55 + 74) * TERM + 500 * TERM,
+            result.Current_TCV__c, 'TCV is the whole ramp: every segment plus the one-time fee');
+    }
+
+    // A ramped renewal restates the book once per segment. Diffing all of them
+    // against the asset baseline would read a 100/month product renewed at
+    // 80 + 120 = 200 and hide the Year 1 shortfall entirely.
+    @IsTest
+    static void testRampedRenewalDiffsTheFirstSegmentAgainstTheAssetBook() {
+        Contract contract = baselineContract(100, 1200, new Map<String, Decimal>{ 'Desk' => 100 });
+        Map<String, Id> products = productIds();
+        Id desk = products.get('FM Desk Product');
+        Date year1 = Date.newInstance(2027, 8, 1);
+
+        Opportunity opp = buildOpportunity('FM Ramp Renew Opp', contract.Id, 'Renewal');
+        insert opp;
+        Quote renew = buildQuote('FM Ramp Renew', opp.Id, contract.Id, 'Draft');
+        insert renew;
+        asActionType(renew.Id, 'Renew');
+
+        FinancialMetricsService.assetBaselineOverride = new Map<Id, Map<Id, Decimal>>{
+            contract.Id => new Map<Id, Decimal>{ desk => 100 }
+        };
+        FinancialMetricsService.assetBaselineLobOverride = new Map<Id, Map<Id, String>>{
+            contract.Id => new Map<Id, String>{ desk => LOB_DESK }
+        };
+        FinancialMetricsService.lineOverride = new Map<Id, List<QuoteLineItem>>{
+            renew.Id => new List<QuoteLineItem>{
+                inSegment(delta(renew.Id, desk, LOB_DESK, 1, 80), 'Year 1', year1, 1),
+                inSegment(delta(renew.Id, desk, LOB_DESK, 1, 120), 'Year 2', year1.addYears(1), 2)
+            }
+        };
+
+        Test.startTest();
+        FinancialMetricsService.stampPreviousMetrics(new Set<Id>{ renew.Id });
+        FinancialMetricsService.stampOpportunityMetrics(new Set<Id>{ renew.Id });
+        Test.stopTest();
+
+        Quote result = reload(renew.Id);
+        System.assertEquals(80, result.Current_MRR__c, 'The renewal books its Year 1 run-rate');
+        System.assertEquals(80, result.Current_MRR_Desk__c, 'Desk renews at the Year 1 figure');
+        System.assertEquals(-20, result.Loss_MRR_Desk__c, 'Year 1 renews 100 down to 80');
+        System.assertEquals(80 * TERM + 120 * TERM, result.Current_TCV__c,
+            'TCV still spans both segments');
+
+        Opportunity stamped = reloadOpportunity(opp.Id);
+        System.assertEquals(80, stamped.Booked_MRR__c, 'Booked MRR is the Year 1 figure, not 200');
+        System.assertEquals(-20, stamped.Loss_MRR__c, 'Loss MRR is the Year 1 shortfall');
+    }
+
+    // The first segment is the earliest StartDate, whatever RCA's SortOrder
+    // says (a mid-term amendment's segments carry -999999999 and up), and a
+    // quote with no ramped group is left exactly as it was.
+    @IsTest
+    static void testFirstSegmentIsTheEarliestStartAndUnrampedLinesAreUntouched() {
+        Map<String, Id> products = productIds();
+        Id desk = products.get('FM Desk Product');
+        Date amendStart = Date.newInstance(2028, 3, 1);
+
+        List<QuoteLineItem> midRamp = new List<QuoteLineItem>{
+            inSegment(delta(null, desk, LOB_DESK, 1, 60), 'Year 3', amendStart.addMonths(5), -999999998),
+            inSegment(delta(null, desk, LOB_DESK, 1, 50), 'Year 2 - Amend', amendStart, -999999999),
+            delta(null, products.get('FM Cyber Product'), LOB_CYBER, 1, 30)
+        };
+        System.assertEquals(80, FinancialMetricsService.sumBookedMrr(midRamp),
+            'Year 2 - Amend starts first (50) and the ungrouped line (30) always counts');
+        System.assertEquals(-999999999,
+            FinancialMetricsService.mrrLines(midRamp)[0].QuoteLineGroup.SortOrder,
+            'The earliest-starting segment survives regardless of its SortOrder');
+        System.assertEquals((60 + 50 + 30) * TERM, FinancialMetricsService.sumTcv(midRamp),
+            'TCV is never filtered');
+
+        List<QuoteLineItem> flat = new List<QuoteLineItem>{
+            delta(null, desk, LOB_DESK, -3, 100),
+            delta(null, desk, LOB_DESK, 5, 200)
+        };
+        System.assertEquals(flat, FinancialMetricsService.mrrLines(flat),
+            'No ramped group means the same list comes straight back');
+        System.assertEquals(700, FinancialMetricsService.sumBookedMrr(flat), 'Unramped sums are unchanged');
+        System.assertEquals(-300, FinancialMetricsService.sumNegativeMrr(flat), 'Unramped losses are unchanged');
     }
 }

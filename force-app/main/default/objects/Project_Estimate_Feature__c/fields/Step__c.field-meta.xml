@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Step__c</fullName>
+    <label>Step</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Activities</fullName>
+                <default>false</default>
+                <label>Activities</label>
+            </value>
+            <value>
+                <fullName>Out of Scope</fullName>
+                <default>false</default>
+                <label>Out of Scope</label>
+            </value>
+            <value>
+                <fullName>Assumptions</fullName>
+                <default>false</default>
+                <label>Assumptions</label>
+            </value>
+            <value>
+                <fullName>Client Responsibilities</fullName>
+                <default>false</default>
+                <label>Client Responsibilities</label>
+            </value>
+            <value>
+                <fullName>Acceptance Criteria</fullName>
+                <default>false</default>
+                <label>Acceptance Criteria</label>
+            </value>
+            <value>
+                <fullName>Phase Deliverables</fullName>
+                <default>false</default>
+                <label>Phase Deliverables</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

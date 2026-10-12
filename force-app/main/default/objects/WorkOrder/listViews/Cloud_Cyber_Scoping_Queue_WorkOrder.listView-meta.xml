@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cloud_Cyber_Scoping_Queue_WorkOrder</fullName>
+    <filterScope>Queue</filterScope>
+    <label>Cloud/Cyber Scoping Queue</label>
+    <queue>Cloud_Cyber_Scoping_Queue</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

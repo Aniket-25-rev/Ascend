@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cloud_Infrastructure_Work_Order_Queue_WorkOrder</fullName>
+    <columns>Name</columns>
+    <columns>StartDate</columns>
+    <columns>Preferred_Vendor__c</columns>
+    <columns>Account</columns>
+    <columns>Subject</columns>
+    <columns>Status</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RecordType</field>
+        <operation>equals</operation>
+        <value>WorkOrder.Cloud_Infrastructure</value>
+    </filters>
+    <label>Cloud &amp; Infrastructure Work Order Queue</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

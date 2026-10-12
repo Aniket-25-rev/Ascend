@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Prospects_Active</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>ACCOUNT.INDUSTRY</columns>
+    <columns>ACCOUNT.RATING</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Prospect</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.ADDRESS1_STATE</field>
+        <operation>equals</operation>
+        <value>IL</value>
+    </filters>
+    <label>My Prospects - Active</label>
+</ListView>
