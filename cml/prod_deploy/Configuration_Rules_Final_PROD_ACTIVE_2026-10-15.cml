@@ -1,0 +1,817 @@
+@(contextPath = "SalesTransaction.OriginalActionTypecml__c")
+extern string OriginalActionTypeFormula = "";
+
+@(contextPath = "SalesTransaction.Onboarding_Fee_Amortized__c")
+extern string OnboardingFeeAmortized = "No";
+
+@(contextPath = "SalesTransaction.Onboarding_Fee_Waived__c")
+extern boolean OnboardingFeeWaived = false;
+
+type LineItem;
+
+// Bundle types
+type ServiceDeskProductClass : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+}
+
+type serviceDeskOnboardingFee : LineItem;
+
+type serviceDeskMonthlyOnboardingFeeMonthly : LineItem;
+
+// ===================== CYBERSECURITY =====================
+type CybersecurityProductClass : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+    // AC-2: Quote Line Group Id of the line (one group per ramp year).
+
+    @(tagName = "SalesTransactionItemGroup", defaultValue = "")
+    string lineGroup;
+
+    // AC-2: "true" when the line is in a ramped line group, else "false".
+
+    @(tagName = "IsLineGroupRamped__std", defaultValue = "false")
+    string lineGroupRamped;
+
+    // NEW: total quantity after this transaction (Amend = start + change)
+
+    @(tagName = "ItemEndQuantity", defaultValue = "0")
+    decimal(2) endQty;
+
+}
+
+type CyberSecurityRenewal : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+}
+
+type cybersecurityOnboardingFee : LineItem;
+
+type cybersecurityMonthlyOnboardingFee : LineItem;
+
+// ===================== INFRASTRUCTURE =====================
+type InfrastructureProductClass : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+    // NEW: total quantity after this transaction (Amend = start + change)
+
+    @(tagName = "ItemEndQuantity", defaultValue = "0")
+    decimal(2) endQty;
+
+}
+
+type InfrastructureRenewal : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+}
+
+type infrastructureOnboardingFee : LineItem;
+
+type infrastructureMonthlyOnboardingFee : LineItem;
+
+// ===================== PRIVATE CLOUD =====================
+type PrivateCloudProductClass : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+}
+
+type privateCloudOnboardingFee : LineItem;
+
+type privateCloudMonthlyOnboardingFee : LineItem;
+
+// ===================== CORE SUPPORT =====================
+// Core Support - One-Time Onboarding Fee
+type CoreSupportOneTimeOnboardingFee : LineItem;
+
+// Core Support children that only had a classification-level type (need their own type for the bundle relation)
+type AscendDefendSIEMServers : CybersecurityProductClass;
+
+type PatchManagementDeviceMgmtPatchingServerLicensing : InfrastructureProductClass;
+
+/*   type CoreSupportBundleClass : LineItem {
+    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    string lineActionType;
+
+}
+*/
+// Minimum Dollr Amount
+// type ManagedSecurityAwarenessProgramPerUser : LineItem;
+// @(split = false)
+type ManagedSecurityAwarenessProgramPerUser : CybersecurityProductClass;
+
+// @(split = false)
+type ManagedSecurityAwarenessProgramLicensingMain : CybersecurityProductClass;
+
+// @(split = false)
+type ManagedSecurityAwarenessProgramLicensingRenew : CybersecurityProductClass;
+
+// type ManagedSecurityAwarenessProgramLicensingRenew : CybersecurityProductClass ;
+type MonitoringServicesPerDevice : InfrastructureProductClass;
+
+type MonitoringInfrastructureLicense : InfrastructureProductClass;
+
+// Product Constraints AC - 1
+type ManagedEndpointSecurityCybereasonServices : CybersecurityProductClass;
+
+type ManagedEndpointSecurityCybereasonLicensing : CybersecurityProductClass;
+
+type ManagedSecurityAwarenessProgramCompliancePlusLicense : CybersecurityProductClass;
+
+type ManagedSecurityAwarenessProgramPhishERLicense : CybersecurityProductClass;
+
+// Product Constraints AC- 3
+type VulnerabilityManagementScanningServiceSmallEnvironment : CybersecurityProductClass;
+
+type VulnerabilityManagementScanningServiceMediumEnvironment : CybersecurityProductClass;
+
+type VulnerabilityManagementScanningServiceLargeEnvironment : CybersecurityProductClass;
+
+//type VulnerabilityManagementLicensingBase : LineItem;
+type VulnerabilityManagementLicensingBase : CybersecurityProductClass {
+    int lineItemQuantity = this.quantity;
+
+}
+
+type VulnerabilityManagementAdvisoryServicesMonthly : CybersecurityProductClass;
+
+type VulnerabilityManagementAdvisoryServiceQuarterly : CybersecurityProductClass;
+
+type VulnerabilityManagementCloudAgentsLicensing : CybersecurityProductClass;
+
+type VulnerabilityManagementAdditionalNetworksLicensing : CybersecurityProductClass;
+
+type VulnerabilityManagementVirtualScannerLicensing : CybersecurityProductClass;
+
+type VulnerabilityManagementWebAppScanningLicensing : CybersecurityProductClass;
+
+// ==========================
+// Product Constraints AC-4 TYPE DECLARATIONS
+// ==========================
+type AscendDefendShield : CybersecurityProductClass;
+
+type AscendDefendGuardian : CybersecurityProductClass;
+
+type AscendDefendSIEMBaseFee : CybersecurityProductClass;
+
+type AscendDefendSIEMEndpoints : CybersecurityProductClass;
+
+type AscendDefendServers : CybersecurityProductClass;
+
+//type AscendDefendServers : LineItem {
+    //    @(tagName = "SalesTransactionActionType", defaultValue = "")
+    //    string lineActionType;
+    //}
+    type AscendDefendSIEMIntegration : CybersecurityProductClass;
+
+    // Product Constraints AC - 5
+    // ==========================
+    // AC-5 TYPE DECLARATIONS
+    // ==========================
+    type BaaSDattoManagement1 : InfrastructureProductClass;
+
+    // Siris 4 (Renewals Only)
+    type DattoSiris42TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris46TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris412TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    // Siris 5 (Renewals Only)
+    type DattoSiris52TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris53TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris54TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris56TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris58TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris512TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris518TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris524TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris536TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    // Siris 6
+    type DattoSiris62TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris63TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris64TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris66TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris68TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris612TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris618TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris624TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris636TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris648TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris660TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris680TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris6100TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    type DattoSiris6120TBAppliancewithInfiniteCloudRetention : InfrastructureProductClass;
+
+    // Siris X
+    @(split = false)
+    type DattoSirisX2TBApplianceperAgent : InfrastructureProductClass;
+
+    @(split = false)
+    type DattoSirisX4TBApplianceperAgent : InfrastructureProductClass;
+
+    // Product Constraints AC - 6
+    type ManagedServiceDeskUserSupportPerTicket : ServiceDeskProductClass;
+
+    // Product Constraints Ac - 7
+    type UnifiedITPoweredbyServiceNow : ServiceDeskProductClass;
+
+    type ServiceNowITILFulfillerLicense : ServiceDeskProductClass;
+
+    type ManagedServiceDeskWorkstationSupportWindowsOS : ServiceDeskProductClass;
+
+    type ManagedServiceDeskEOSWorkstationSupport : ServiceDeskProductClass;
+
+    // Infrastructure Qualifying SKUs
+    type ManagedServerPhysicalWindowsServer : InfrastructureProductClass;
+
+    type ManagedServerVirtualWindowsServer : InfrastructureProductClass;
+
+    type ManagedServerVMwareHypervisor : InfrastructureProductClass;
+
+    type ManagedServerCloudWindowsServer : InfrastructureProductClass;
+
+    type ManagedServerExchangeServer : InfrastructureProductClass;
+
+    type ManagedStorage : InfrastructureProductClass;
+
+    type ManagedNetworkAccessSwitchManagementStandardSupport : InfrastructureProductClass;
+
+    type ManagedNetworkCoreSwitchManagementStandardSupport : InfrastructureProductClass;
+
+    type ManagedNetworkRouterandISPManagementStandardSupport : InfrastructureProductClass;
+
+    type FieldSupportServicesServerandStorage : InfrastructureProductClass;
+
+    type FieldSupportServicesNetworking : InfrastructureProductClass;
+
+    type Managed365 : InfrastructureProductClass;
+
+    type Managed365AdvancedSharePointServices : InfrastructureProductClass;
+
+    type ArchitectureasaService : InfrastructureProductClass;
+
+    type vCISO : CybersecurityProductClass;
+
+    type ManagedFirewallStandardSupport : InfrastructureProductClass;
+
+    type PatchManagementWorkstations : InfrastructureProductClass;
+
+    type PatchManagementWindowsServers : InfrastructureProductClass;
+
+    type ManagedNetworkRouterandISPManagementNonStandardSupport : InfrastructureProductClass;
+
+    type ManagedNetworkLoadBalancerManagementNonStandardSupport : InfrastructureProductClass;
+
+    type ManagedFirewallNonStandardSupport : InfrastructureProductClass;
+
+    type ManagedBackupClientOwned : InfrastructureProductClass;
+
+    type BackupasaServiceforO365LegacyDatto : InfrastructureProductClass;
+
+    type ManagedDNSSecurityServices : InfrastructureProductClass;
+
+    type BaaSRestoreTesting : InfrastructureProductClass;
+
+    type AscendvCIOServices : InfrastructureProductClass;
+
+    type PatchManagementLinuxServers : InfrastructureProductClass;
+
+    type PatchManagementVMwareHosts : InfrastructureProductClass;
+
+    type ManagedNetworkAccessSwitchManagementNonStandardSupport : InfrastructureProductClass;
+
+    type ManagedNetworkCoreSwitchManagementNonStandardSupport : InfrastructureProductClass;
+
+    type ManagedNetworkWirelessManagementNonStandardSupportControllerBasedAP : InfrastructureProductClass;
+
+    type ManagedNetworkWirelessManagementStandardSupportControllerBasedAP : InfrastructureProductClass;
+
+    type ManagedNetworkWirelessManagementNonStandardSupportStandaloneAP : InfrastructureProductClass;
+
+    type ManagedNetworkWirelessManagementStandardSupportStandaloneAP : InfrastructureProductClass;
+
+    type BaaSBackupMaintenance : InfrastructureProductClass;
+
+    type EmbeddedExperts : InfrastructureProductClass;
+
+    type NvYAPrepaidBlockHours : InfrastructureProductClass;
+
+    type BaaSMicrosoft365BackupMaintenancePerUser : InfrastructureProductClass;
+
+    // Cyber Security Skus
+    type DarkWebMonitoring : CybersecurityProductClass;
+
+    type SecurityEngineeringServices : CybersecurityProductClass;
+
+    type ManagedSecurityAwarenessProgramMonthlyAdvisoryServices : CybersecurityProductClass;
+
+    type ManagedSecurityAwarenessProgramQuarterlyAdvisoryServices : CybersecurityProductClass;
+
+    type PTaaSQuarterlyPenetrationTesting : CybersecurityProductClass;
+
+    // Core Support Types
+    type BaaSMicrosoft365CloudStorage : InfrastructureProductClass;
+
+    type ServiceNowManagerLicense : ServiceDeskProductClass;
+
+    type PatchManagementFirewallPatchingLicense : InfrastructureProductClass;
+
+    type AscendIntelligencePlatformAdministrationStarter : LineItem;
+
+    type BaaSMicrosoft365VeeamBackupLicensing : InfrastructureProductClass;
+
+    type AscendIntelligencePlatformSubscriptionStarter : LineItem;
+
+    type ManagedServiceDeskUserSupportPerUser : ServiceDeskProductClass;
+
+    type PatchManagementDeviceMgmtPatchingLicensing : InfrastructureProductClass;
+
+    // Core Support (bundle). Every child line needs its own relation here, otherwise the solver fails
+    // ("Unable to find a relation in type 'CoreSupport'...") and no quote-level rule runs.
+    // One exact type per relation, so each relation needs exactly ONE association (its bundle component).
+    type CoreSupport : LineItem {
+        @(tagName = "SalesTransactionActionType", defaultValue = "")
+        string lineActionType;
+
+        relation patchFirewallLicense : PatchManagementFirewallPatchingLicense[0..9999];
+
+        relation siemWorkstations : AscendDefendSIEMEndpoints[0..9999];
+
+        relation monitoringLicense : MonitoringInfrastructureLicense[0..9999];
+
+        relation monitoringServices : MonitoringServicesPerDevice[0..9999];
+
+        relation patchWorkstations : PatchManagementWorkstations[0..9999];
+
+        relation managed365 : Managed365[0..9999];
+
+        relation patchWindowsServers : PatchManagementWindowsServers[0..9999];
+
+        relation networkRouterIsp : ManagedNetworkRouterandISPManagementStandardSupport[0..9999];
+
+        relation baasVeeamLicensing : BaaSMicrosoft365VeeamBackupLicensing[0..9999];
+
+        relation darkWebMonitoring : DarkWebMonitoring[0..9999];
+
+        relation ascendDefendShield : AscendDefendShield[0..9999];
+
+        relation ascendDefendServers : AscendDefendServers[0..9999];
+
+        relation siemBaseFee : AscendDefendSIEMBaseFee[0..9999];
+
+        relation baasCloudStorage : BaaSMicrosoft365CloudStorage[0..9999];
+
+        relation msapLicensing : ManagedSecurityAwarenessProgramLicensingMain[0..9999];
+
+        relation serviceNowManager : ServiceNowManagerLicense[0..9999];
+
+        relation serviceDeskPerUser : ManagedServiceDeskUserSupportPerUser[0..9999];
+
+        relation serviceDeskWorkstation : ManagedServiceDeskWorkstationSupportWindowsOS[0..9999];
+
+        relation virtualWindowsServer : ManagedServerVirtualWindowsServer[0..9999];
+
+        relation networkAccessSwitch : ManagedNetworkAccessSwitchManagementStandardSupport[0..9999];
+
+        relation baasBackupMaintenance : BaaSMicrosoft365BackupMaintenancePerUser[0..9999];
+
+        relation msapPerUser : ManagedSecurityAwarenessProgramPerUser[0..9999];
+
+        relation firewallStandard : ManagedFirewallStandardSupport[0..9999];
+
+        relation patchWorkstationLicensing : PatchManagementDeviceMgmtPatchingLicensing[0..9999];
+
+        relation networkWirelessController : ManagedNetworkWirelessManagementStandardSupportControllerBasedAP[0..9999];
+
+        relation aipSubscription : AscendIntelligencePlatformSubscriptionStarter[0..9999];
+
+        relation aipAdministration : AscendIntelligencePlatformAdministrationStarter[0..9999];
+
+        relation siemServers : AscendDefendSIEMServers[0..9999];
+
+        relation patchServerLicensing : PatchManagementDeviceMgmtPatchingServerLicensing[0..9999];
+
+        // Quantity match inside the bundle (New / Renew: line quantity)
+
+        message(OriginalActionTypeFormula != "Amend" && msapPerUser[ManagedSecurityAwarenessProgramPerUser] > 0 && msapLicensing[ManagedSecurityAwarenessProgramLicensingMain] > 0 && msapPerUser[ManagedSecurityAwarenessProgramPerUser] != msapLicensing[ManagedSecurityAwarenessProgramLicensingMain], "Managed Security Awareness Per User and Licensing quantities do not match. Please make both quantities the same.", "Error");
+
+        message(OriginalActionTypeFormula != "Amend" && monitoringServices[MonitoringServicesPerDevice] > 0 && monitoringLicense[MonitoringInfrastructureLicense] > 0 && monitoringServices[MonitoringServicesPerDevice] != monitoringLicense[MonitoringInfrastructureLicense], "Monitoring Services Per Device and Infrastructure License quantities do not match. Please make both quantities the same.", "Error");
+
+        // Quantity match inside the bundle (Amend: End Quantity)
+
+        message(OriginalActionTypeFormula == "Amend" && msapPerUser[ManagedSecurityAwarenessProgramPerUser].sum(endQty) > 0 && msapLicensing[ManagedSecurityAwarenessProgramLicensingMain].sum(endQty) > 0 && msapPerUser[ManagedSecurityAwarenessProgramPerUser].sum(endQty) != msapLicensing[ManagedSecurityAwarenessProgramLicensingMain].sum(endQty), "Managed Security Awareness Per User and Licensing quantities do not match. Please make both quantities the same.", "Error");
+
+        message(OriginalActionTypeFormula == "Amend" && monitoringServices[MonitoringServicesPerDevice].sum(endQty) > 0 && monitoringLicense[MonitoringInfrastructureLicense].sum(endQty) > 0 && monitoringServices[MonitoringServicesPerDevice].sum(endQty) != monitoringLicense[MonitoringInfrastructureLicense].sum(endQty), "Monitoring Services Per Device and Infrastructure License quantities do not match. Please make both quantities the same.", "Error");
+
+    }
+
+    @(virtual = true)
+    type Quote {
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation cyber : ServiceDeskProductClass[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation onboarding : serviceDeskOnboardingFee;
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation monthlyOnboarding : serviceDeskMonthlyOnboardingFeeMonthly;
+
+        // ---- Cybersecurity ----
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation cybersecurity : CybersecurityProductClass[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation cybersecurityRenewal : CyberSecurityRenewal[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation cybersecurityOnboarding : cybersecurityOnboardingFee;
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation monthlycybersecurityOnboarding : cybersecurityMonthlyOnboardingFee;
+
+        // ---- Infrastructure ----
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation infrastructure : InfrastructureProductClass[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation infrastructureRen : InfrastructureRenewal[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation infrastructureOnboarding : infrastructureOnboardingFee;
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation monthlyinfrastructureOnboarding : infrastructureMonthlyOnboardingFee;
+
+        // ---- Private Cloud ----
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation privateCloud : PrivateCloudProductClass[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation privateCloudOnboarding : privateCloudOnboardingFee;
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation monthlyprivateCloudOnboarding : privateCloudMonthlyOnboardingFee;
+
+        // ---- Core Support ----
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation coreSupport : CoreSupport[0..9999];
+
+        @(sourceContextNode = "SalesTransaction.SalesTransactionItem")
+        relation coreSupportOnboarding : CoreSupportOneTimeOnboardingFee;
+
+        // AGGREGATE VARIABLES - AC-5
+
+        // ==========================
+
+        int totalSiris5 = infrastructure[DattoSiris52TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris53TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris54TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris56TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris58TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris512TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris518TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris524TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris536TBAppliancewithInfiniteCloudRetention];
+
+        int totalSiris4 = infrastructure[DattoSiris42TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris46TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris412TBAppliancewithInfiniteCloudRetention];
+
+        int totalSiris6 = infrastructure[DattoSiris62TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris63TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris64TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris66TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris68TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris612TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris618TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris624TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris636TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris648TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris660TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris680TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris6100TBAppliancewithInfiniteCloudRetention]
+        + infrastructure[DattoSiris6120TBAppliancewithInfiniteCloudRetention];
+
+        int totalNonSirisX = totalSiris4 + totalSiris5 + totalSiris6;
+
+        int totalAppliances = totalNonSirisX
+        + infrastructure[DattoSirisX2TBApplianceperAgent]
+        + infrastructure[DattoSirisX4TBApplianceperAgent];
+
+        // RELATIONS - CYBERSECURITY QUALIFYING SKUs
+
+        // AC-6: Per-User and Per-Ticket mutual exclusion
+
+        message(cyber[ManagedServiceDeskUserSupportPerUser] > 0 && cyber[ManagedServiceDeskUserSupportPerTicket] > 0, "Cannot select both Service Desk Per-User and Per-Ticket support models. Please choose one.", "Error");
+
+        constraint(cyber[ManagedServiceDeskUserSupportPerUser] > 0 -> cyber[ManagedServiceDeskUserSupportPerTicket] == 0, "Cannot select both Service Desk Per-User and Per-Ticket support models.");
+
+        constraint(cyber[ManagedServiceDeskUserSupportPerTicket] > 0 -> cyber[ManagedServiceDeskUserSupportPerUser] == 0, "Cannot select both Service Desk Per-User and Per-Ticket support models.");
+
+        // ==========================
+
+
+        //  require(cyber[ServiceDeskProductClass].count(lineActionType=="") + cyber[ServiceDeskProductClass].count(lineActionType=="Add") > 0, onboarding[serviceDeskOnboardingFee] == 1, "Onboarding fee required for new Service Desk lines.");
+
+
+        // require(cyber[ServiceDeskProductClass].count(lineActionType=="") + cyber[ServiceDeskProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false, onboarding[serviceDeskOnboardingFee] == 1, "Onboarding fee required for new Service Desk lines.");
+
+        require(cyber[ServiceDeskProductClass].count(lineActionType=="") + cyber[ServiceDeskProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false && onboarding[serviceDeskOnboardingFee] == 0, onboarding[serviceDeskOnboardingFee] == 1, "Onboarding fee required for new Service Desk lines.");
+
+        // Minimum Dollar Amount
+
+
+        // constraint(cyber[ServiceDeskProductClass].count(lineActionType=="") + cyber[ServiceDeskProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false -> onboarding[serviceDeskOnboardingFee] == 1, "Onboarding fee required for new Service Desk lines.");
+
+        require(cyber[ServiceDeskProductClass].count(lineActionType=="") + cyber[ServiceDeskProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "Yes" && OnboardingFeeWaived == false, monthlyOnboarding[serviceDeskMonthlyOnboardingFeeMonthly] == 1, "Onboarding fee required for new Service Desk lines.");
+
+        require(cybersecurity[CybersecurityProductClass].count(lineActionType=="") + cybersecurity[CybersecurityProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false, cybersecurityOnboarding[cybersecurityOnboardingFee] == 1, "Onboarding fee required for new Cybersecurity lines.");
+
+        // Renewal Only Skus
+
+        require(cybersecurityRenewal[CyberSecurityRenewal].count(lineActionType=="") + cybersecurityRenewal[CyberSecurityRenewal].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false, cybersecurityOnboarding[cybersecurityOnboardingFee] == 1, "Onboarding fee required for new Cybersecurity lines.");
+
+        require(cybersecurity[CybersecurityProductClass].count(lineActionType=="") + cybersecurity[CybersecurityProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "Yes" && OnboardingFeeWaived == false, monthlycybersecurityOnboarding[cybersecurityMonthlyOnboardingFee] == 1, "Onboarding fee required for new Cybersecurity lines.");
+
+        // Renewal Only Skus
+
+        require(cybersecurityRenewal[CyberSecurityRenewal].count(lineActionType=="") + cybersecurityRenewal[CyberSecurityRenewal].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "Yes" && OnboardingFeeWaived == false, monthlycybersecurityOnboarding[cybersecurityMonthlyOnboardingFee] == 1, "Onboarding fee required for new Cybersecurity lines.");
+
+        require(infrastructure[InfrastructureProductClass].count(lineActionType=="") + infrastructure[InfrastructureProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false, infrastructureOnboarding[infrastructureOnboardingFee] == 1, "Onboarding fee required for new Infrastructure lines.");
+
+        require(infrastructureRen[InfrastructureRenewal].count(lineActionType=="") + infrastructureRen[InfrastructureRenewal].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false, infrastructureOnboarding[infrastructureOnboardingFee] == 1, "Onboarding fee required for new Infrastructure lines.");
+
+        require(infrastructure[InfrastructureProductClass].count(lineActionType=="") + infrastructure[InfrastructureProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "Yes" && OnboardingFeeWaived == false, monthlyinfrastructureOnboarding[infrastructureMonthlyOnboardingFee] == 1, "Onboarding fee required for new Infrastructure lines.");
+
+        require(infrastructureRen[InfrastructureRenewal].count(lineActionType=="") + infrastructureRen[InfrastructureRenewal].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "Yes" && OnboardingFeeWaived == false, monthlyinfrastructureOnboarding[infrastructureMonthlyOnboardingFee] == 1, "Onboarding fee required for new Infrastructure lines.");
+
+        require(privateCloud[PrivateCloudProductClass].count(lineActionType=="") + privateCloud[PrivateCloudProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "No" && OnboardingFeeWaived == false, privateCloudOnboarding[privateCloudOnboardingFee] == 1, "Onboarding fee required for new Private Cloud lines.");
+
+        require(privateCloud[PrivateCloudProductClass].count(lineActionType=="") + privateCloud[PrivateCloudProductClass].count(lineActionType=="Add") > 0 && OnboardingFeeAmortized == "Yes" && OnboardingFeeWaived == false, monthlyprivateCloudOnboarding[privateCloudMonthlyOnboardingFee] == 1, "Onboarding fee required for new Private Cloud lines.");
+
+        // Core Support: auto-add ONE One-Time Onboarding Fee for a NEW Core Support bundle.
+
+
+        // Ramp quotes: the bundle sits in every ramp-year group, but the count is quote-wide, so only ONE fee is added.
+
+
+        // Amend/Renew: carried-over bundles are not "" / "Add", so no fee is added.
+
+        require(coreSupport[CoreSupport].count(lineActionType=="") + coreSupport[CoreSupport].count(lineActionType=="Add") > 0 && OnboardingFeeWaived == false && coreSupportOnboarding[CoreSupportOneTimeOnboardingFee] == 0, coreSupportOnboarding[CoreSupportOneTimeOnboardingFee] == 1, "Core Support - One-Time Onboarding Fee is required for new Core Support lines.");
+
+        // Minimum dollar amount
+
+        // constraint((OriginalActionTypeFormula != "Renew" && OriginalActionTypeFormula != "Amend") -> (cybersecurity[ManagedSecurityAwarenessProgramPerUser] -> cybersecurity[ManagedSecurityAwarenessProgramLicensingMain] == cybersecurity[ManagedSecurityAwarenessProgramPerUser]), "Managed Security Service and Licensing quantities must match.");
+
+        //	constraint((OriginalActionTypeFormula != "Renew" && OriginalActionTypeFormula != "Amend") -> (cybersecurity[ManagedSecurityAwarenessProgramLicensingMain] -> cybersecurity[ManagedSecurityAwarenessProgramPerUser] == cybersecurity[ManagedSecurityAwarenessProgramLicensingMain]), "Managed Security Licensing and Service quantities must match.");
+
+        // AC-2 Security Awareness: messages only (no auto-add)
+
+        // Per User added, Licensing missing
+
+        message((OriginalActionTypeFormula != "Renew" && OriginalActionTypeFormula != "Amend") && cybersecurity[ManagedSecurityAwarenessProgramPerUser] > 0 && cybersecurity[ManagedSecurityAwarenessProgramLicensingMain] == 0, "Managed Security Awareness Licensing is missing. Please add Licensing with the same quantity as Per User.", "Error");
+
+        // Licensing added, Per User missing
+
+        message((OriginalActionTypeFormula != "Renew" && OriginalActionTypeFormula != "Amend") && cybersecurity[ManagedSecurityAwarenessProgramLicensingMain] > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser] == 0, "Managed Security Awareness Per User is missing. Please add Per User with the same quantity as Licensing.", "Error");
+
+        // Both present, quantities differ
+
+        message((OriginalActionTypeFormula != "Renew" && OriginalActionTypeFormula != "Amend") && cybersecurity[ManagedSecurityAwarenessProgramPerUser] > 0 && cybersecurity[ManagedSecurityAwarenessProgramLicensingMain] > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser] != cybersecurity[ManagedSecurityAwarenessProgramLicensingMain], "Managed Security Awareness Per User and Licensing quantities do not match. Please make both quantities the same.", "Error");
+
+        // Monitoring: messages only (no auto-add)
+
+        // Service added, License missing
+
+        message(OriginalActionTypeFormula != "Amend" && infrastructure[MonitoringServicesPerDevice] > 0 && infrastructure[MonitoringInfrastructureLicense] == 0, "Monitoring Infrastructure License is missing. Please add License with the same quantity as Monitoring Services Per Device.", "Error");
+
+        // License added, Service missing
+
+        message(OriginalActionTypeFormula != "Amend" && infrastructure[MonitoringInfrastructureLicense] > 0 && infrastructure[MonitoringServicesPerDevice] == 0, "Monitoring Services Per Device is missing. Please add Services Per Device with the same quantity as Monitoring Infrastructure License.", "Error");
+
+        // Both present, quantities differ
+
+        message(OriginalActionTypeFormula != "Amend" && infrastructure[MonitoringServicesPerDevice] > 0 && infrastructure[MonitoringInfrastructureLicense] > 0 && infrastructure[MonitoringServicesPerDevice] != infrastructure[MonitoringInfrastructureLicense], "Monitoring Services Per Device and Infrastructure License quantities do not match. Please make both quantities the same.", "Error");
+
+        // ===================== NEW: Amend / Renew quantity match =====================
+
+        // Same messages as New quotes. Uses End Quantity (total after the change), not the amend delta.
+
+        // ---- Security Awareness: Amend + Renew (existing rules skip both) ----
+
+        // Licensing can be the Main or the Renew Licensing SKU, so both are added together.
+
+        message((OriginalActionTypeFormula == "Amend" || OriginalActionTypeFormula == "Renew") && cybersecurity[ManagedSecurityAwarenessProgramPerUser].sum(endQty) > 0 && (cybersecurity[ManagedSecurityAwarenessProgramLicensingMain].sum(endQty) + cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew].sum(endQty)) == 0, "Managed Security Awareness Licensing is missing. Please add Licensing with the same quantity as Per User.", "Error");
+
+        message((OriginalActionTypeFormula == "Amend" || OriginalActionTypeFormula == "Renew") && (cybersecurity[ManagedSecurityAwarenessProgramLicensingMain].sum(endQty) + cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew].sum(endQty)) > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser].sum(endQty) == 0, "Managed Security Awareness Per User is missing. Please add Per User with the same quantity as Licensing.", "Error");
+
+        message((OriginalActionTypeFormula == "Amend" || OriginalActionTypeFormula == "Renew") && cybersecurity[ManagedSecurityAwarenessProgramPerUser].sum(endQty) > 0 && (cybersecurity[ManagedSecurityAwarenessProgramLicensingMain].sum(endQty) + cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew].sum(endQty)) > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser].sum(endQty) != (cybersecurity[ManagedSecurityAwarenessProgramLicensingMain].sum(endQty) + cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew].sum(endQty)), "Managed Security Awareness Per User and Licensing quantities do not match. Please make both quantities the same.", "Error");
+
+        // ---- Monitoring: Amend only (existing rules already work on New and Renew) ----
+
+        message(OriginalActionTypeFormula == "Amend" && infrastructure[MonitoringServicesPerDevice].sum(endQty) > 0 && infrastructure[MonitoringInfrastructureLicense].sum(endQty) == 0, "Monitoring Infrastructure License is missing. Please add License with the same quantity as Monitoring Services Per Device.", "Error");
+
+        message(OriginalActionTypeFormula == "Amend" && infrastructure[MonitoringInfrastructureLicense].sum(endQty) > 0 && infrastructure[MonitoringServicesPerDevice].sum(endQty) == 0, "Monitoring Services Per Device is missing. Please add Services Per Device with the same quantity as Monitoring Infrastructure License.", "Error");
+
+        message(OriginalActionTypeFormula == "Amend" && infrastructure[MonitoringServicesPerDevice].sum(endQty) > 0 && infrastructure[MonitoringInfrastructureLicense].sum(endQty) > 0 && infrastructure[MonitoringServicesPerDevice].sum(endQty) != infrastructure[MonitoringInfrastructureLicense].sum(endQty), "Monitoring Services Per Device and Infrastructure License quantities do not match. Please make both quantities the same.", "Error");
+
+        // constraint(infrastructure[MonitoringServicesPerDevice] -> infrastructure[MonitoringInfrastructureLicense] == infrastructure[MonitoringServicesPerDevice], "Monitoring Service and Licensing quantities must match.");
+
+        // constraint(infrastructure[MonitoringInfrastructureLicense] -> infrastructure[MonitoringServicesPerDevice] == infrastructure[MonitoringInfrastructureLicense], "Monitoring Licensing and Service quantities must match.");
+
+        // constraint(cybersecurity[ManagedEndpointSecurityCybereasonServices] -> cybersecurity[ManagedEndpointSecurityCybereasonLicensing] == cybersecurity[ManagedEndpointSecurityCybereasonServices], "Cybereason Services and Licensing quantities must match.");
+
+        constraint(cybersecurity[ManagedEndpointSecurityCybereasonServices] -> cybersecurity[ManagedEndpointSecurityCybereasonLicensing] == cybersecurity[ManagedEndpointSecurityCybereasonServices], "Cybereason Services and Licensing quantities must match.");
+
+        constraint(cybersecurity[ManagedEndpointSecurityCybereasonLicensing] -> cybersecurity[ManagedEndpointSecurityCybereasonServices] == cybersecurity[ManagedEndpointSecurityCybereasonLicensing], "Licensing Services and Cybereason quantities must match.");
+
+        //  constraint((OriginalActionTypeFormula == "Renew") -> (cybersecurity[ManagedSecurityAwarenessProgramPerUser] -> cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew] == cybersecurity[ManagedSecurityAwarenessProgramPerUser]), "Managed Security Licensing must match Service quantity on Renew.");
+
+        //  constraint((OriginalActionTypeFormula == "Renew") -> (cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew] -> cybersecurity[ManagedSecurityAwarenessProgramPerUser] == cybersecurity[ManagedSecurityAwarenessProgramLicensingRenew]), "Managed Security Service must match Licensing quantity on Renew.");
+
+        // AC‑2.2 Security Awareness Add‑On Licensing
+
+        // Rule 1: Monthly Advisory Services Validation
+
+        message(cybersecurity[ManagedSecurityAwarenessProgramMonthlyAdvisoryServices] > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser] == 0, "Monthly Advisory Services requires the Security Awareness base bundle. Please add the base bundle first.", "Warning");
+
+        // Rule 2: Quarterly Advisory Services Validation
+
+        message(cybersecurity[ManagedSecurityAwarenessProgramQuarterlyAdvisoryServices] > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser] == 0, "Quarterly Advisory Services requires the Security Awareness base bundle. Please add the base bundle first.", "Warning");
+
+        // Rule 3: Compliance Plus License Validation
+
+        message(cybersecurity[ManagedSecurityAwarenessProgramCompliancePlusLicense] > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser] == 0, "Compliance Plus License requires the Security Awareness base bundle. Please add the base bundle first.", "Warning");
+
+        // Rule 4: PhishER License Validation
+
+        message(cybersecurity[ManagedSecurityAwarenessProgramPhishERLicense] > 0 && cybersecurity[ManagedSecurityAwarenessProgramPerUser] == 0, "PhishER License requires the Security Awareness base bundle. Please add the base bundle first.", "Warning");
+
+        message(cybersecurity[ManagedSecurityAwarenessProgramMonthlyAdvisoryServices] > 0 && cybersecurity[ManagedSecurityAwarenessProgramQuarterlyAdvisoryServices] > 0, "Please choose either Monthly or Quarterly Advisory Services, not both.", "Error");
+
+        // ==========================
+
+        // AC-3.1: Exactly one base — Small/Medium/Large mutual exclusion
+
+        // Exactly one base — Small/Medium/Large with constraints
+
+        constraint(cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] > 0 -> cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] == 0 && cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment] == 0, "Cannot select multiple base sizes. Please select only one environment.");
+
+        // Medium excludes Small and Large
+
+        constraint(cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] > 0 -> cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] == 0 && cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment] == 0, "Cannot select multiple base sizes. Please select only one environment.");
+
+        // Large excludes Small and Medium
+
+        constraint(cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment] > 0 -> cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] == 0 && cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] == 0, "Cannot select multiple base sizes. Please select only one environment.");
+
+        // AC-3.2: Base selected → Licensing Base is required with Qty = 1
+
+        message((cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) > 0 && cybersecurity[VulnerabilityManagementLicensingBase] == 0, "Vulnerability Management Licensing Base (001-CYBR-LIC-VMPL-QUAL-001) is required with quantity 1 when a Vulnerability Management base scanning SKU is selected.", "Error");
+
+        // AC-3.2: Licensing requires a base — message only, no auto-add
+
+        message(cybersecurity[VulnerabilityManagementLicensingBase] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Vulnerability Management Licensing requires a base scanning SKU.", "Error");
+
+        // AC-3.3: Monthly and Quarterly Advisory are mutually exclusive
+
+        constraint(cybersecurity[VulnerabilityManagementAdvisoryServicesMonthly] > 0 -> cybersecurity[VulnerabilityManagementAdvisoryServiceQuarterly] == 0, "Cannot select both Monthly and Quarterly Advisory Services. Please select only one.");
+
+        constraint(cybersecurity[VulnerabilityManagementAdvisoryServiceQuarterly] > 0 -> cybersecurity[VulnerabilityManagementAdvisoryServicesMonthly] == 0, "Cannot select both Monthly and Quarterly Advisory Services. Please select only one.");
+
+        message(cybersecurity[VulnerabilityManagementLicensingBase].lineItemQuantity > 1, "Vulnerability Management Licensing Base quantity cannot be greater than 1. Please set the quantity to 1.", "Error");
+
+        // AC-3.3: Monthly Advisory requires a base
+
+        message(cybersecurity[VulnerabilityManagementAdvisoryServicesMonthly] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Monthly Advisory requires a Vulnerability Management base scanning SKU.", "Error");
+
+        // AC-3.3: Quarterly Advisory requires a base
+
+        message(cybersecurity[VulnerabilityManagementAdvisoryServiceQuarterly] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Quarterly Advisory requires a Vulnerability Management base scanning SKU.", "Error");
+
+        // AC-3.4: Cloud Agents Licensing requires a base
+
+        message(cybersecurity[VulnerabilityManagementCloudAgentsLicensing] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Cloud Agents Licensing requires a Vulnerability Management base scanning SKU.", "Error");
+
+        // AC-3.4: Additional Networks Licensing requires a base
+
+        message(cybersecurity[VulnerabilityManagementAdditionalNetworksLicensing] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Additional Networks Licensing requires a Vulnerability Management base scanning SKU.", "Error");
+
+        // AC-3.4: Virtual Scanner Licensing requires a base
+
+        message(cybersecurity[VulnerabilityManagementVirtualScannerLicensing] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Virtual Scanner Licensing requires a Vulnerability Management base scanning SKU.", "Error");
+
+        // AC-3.4: Web App Scanning Licensing requires a base
+
+        message(cybersecurity[VulnerabilityManagementWebAppScanningLicensing] > 0 && (cybersecurity[VulnerabilityManagementScanningServiceSmallEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceMediumEnvironment] + cybersecurity[VulnerabilityManagementScanningServiceLargeEnvironment]) == 0, "Web App Scanning Licensing requires a Vulnerability Management base scanning SKU.", "Error");
+
+        // Product Constraints AC - 4
+
+        // AC-4.1: Shield and Guardian mutually exclusive
+
+        // exclude — automatically removes the other
+
+        //   exclude(cybersecurity[AscendDefendShield] > 0, cybersecurity[AscendDefendGuardian], "Cannot select both Shield and Guardian. Please choose one.");
+
+        //  exclude(cybersecurity[AscendDefendGuardian] > 0, cybersecurity[AscendDefendShield], "Cannot select both Shield and Guardian. Please choose one.");
+
+        message(cybersecurity[AscendDefendShield] > 0 && cybersecurity[AscendDefendGuardian] > 0, "Cannot select both Shield and Guardian. Please choose one.", "Error");
+
+        // AC-4.2: Base exists → SIEM auto-add
+
+
+        // require — SIEM automatically added
+
+        require((cybersecurity[AscendDefendShield] + cybersecurity[AscendDefendGuardian]) > 0 && cybersecurity[AscendDefendSIEMBaseFee] == 0, cybersecurity[AscendDefendSIEMBaseFee], "SIEM Base Fee (001-CYBR-SVC-ASDF-SIEM-001) is required with Ascend Defend base.");
+
+        // AC-4.2: SIEM cannot exist without base — message only, no auto-add
+
+        message(cybersecurity[AscendDefendSIEMBaseFee] > 0 && (cybersecurity[AscendDefendShield] + cybersecurity[AscendDefendGuardian]) == 0, "SIEM Base Fee requires Ascend Defend Shield or Guardian.", "Error");
+
+        // AC-4.3: Add-ons require base AND SIEM both
+
+        // AC-4.3: Endpoints requires base
+
+        message(cybersecurity[AscendDefendSIEMEndpoints] > 0 && (cybersecurity[AscendDefendShield] + cybersecurity[AscendDefendGuardian]) == 0, "Endpoints (001-CYBR-SVC-ASDF-ENDP-001) requires Ascend Defend base.", "Error");
+
+        constraint(cybersecurity[AscendDefendSIEMEndpoints] > 0 -> cybersecurity[AscendDefendSIEMBaseFee] > 0, "Endpoints (001-CYBR-SVC-ASDF-ENDP-001) requires SIEM Base Fee.");
+
+        // AC-4.3: Servers requires base
+
+        //  message(adServers[AscendDefendServers] > 0 && (cybersecurity[AscendDefendShield] + cybersecurity[AscendDefendGuardian]) == 0, "Servers (001-CYBR-SVC-ASDF-SRVR-001) requires Ascend Defend base.", "Error");
+
+        //  constraint(adServers[AscendDefendServers] > 0 && cybersecurity[AscendDefendSIEMBaseFee] == 0 -> cybersecurity[AscendDefendSIEMBaseFee] > 0, "Servers (001-CYBR-SVC-ASDF-SRVR-001) requires SIEM Base Fee.");
+
+        message(cybersecurity[AscendDefendServers] > 0 && (cybersecurity[AscendDefendShield] + cybersecurity[AscendDefendGuardian]) == 0, "Servers (001-CYBR-SVC-ASDF-SRVR-001) requires Ascend Defend base.", "Error");
+
+        constraint(cybersecurity[AscendDefendServers] > 0 && cybersecurity[AscendDefendSIEMBaseFee] == 0 -> cybersecurity[AscendDefendSIEMBaseFee] > 0, "Servers (001-CYBR-SVC-ASDF-SRVR-001) requires SIEM Base Fee.");
+
+        // AC-4.3: Integrations requires base
+
+        message(cybersecurity[AscendDefendSIEMIntegration] > 0 && (cybersecurity[AscendDefendShield] + cybersecurity[AscendDefendGuardian]) == 0, "Integrations (001-CYBR-SVC-ASDF-INTG-001) requires Ascend Defend base.", "Error");
+
+        constraint(cybersecurity[AscendDefendSIEMIntegration] > 0 -> cybersecurity[AscendDefendSIEMBaseFee] > 0, "Integrations (001-CYBR-SVC-ASDF-INTG-001) requires SIEM Base Fee.");
+
+        // AC-5.1: Appliance requires Base
+
+        constraint(totalAppliances > 0 -> infrastructure[BaaSDattoManagement1] > 0, "Datto appliance requires Datto Services Base");
+
+        // AC-5.1: Base requires Appliance
+
+        message(infrastructure[BaaSDattoManagement1] > 0 && totalAppliances == 0, "Datto Services Base requires an appliance", "Error");
+
+        message(OriginalActionTypeFormula != "Renew" && totalSiris4 > 0, "Datto Siris 4 is only available on renewals", "Error");
+
+        message(OriginalActionTypeFormula != "Renew" && totalSiris5 > 0, "Datto Siris 5 is only available on renewals", "Error");
+
+        // AC-5.2: Siris X minimum quantity = 2
+
+        constraint(infrastructure[DattoSirisX2TBApplianceperAgent] > 0 -> infrastructure[DattoSirisX2TBApplianceperAgent] >= 2, "Datto Siris X 2TB requires minimum quantity of 2");
+
+        constraint(infrastructure[DattoSirisX4TBApplianceperAgent] > 0 -> infrastructure[DattoSirisX4TBApplianceperAgent] >= 2, "Datto Siris X 4TB requires minimum quantity of 2");
+
+        // Base added → License auto-add
+
+        require(cyber[UnifiedITPoweredbyServiceNow] > 0, cyber[ServiceNowITILFulfillerLicense], "ITIL Fulfiller License (001-DESK-LIC-ITIL-SNOW-001) is required with Unified IT Base.");
+
+        // Base requires License
+
+        constraint(cyber[UnifiedITPoweredbyServiceNow] > 0 -> cyber[ServiceNowITILFulfillerLicense] > 0, "ITIL Fulfiller License is required with Unified IT Base.");
+
+        // License cannot exist without Base
+
+        constraint(cyber[ServiceNowITILFulfillerLicense] > 0 -> cyber[UnifiedITPoweredbyServiceNow] > 0, "ITIL Fulfiller License requires Unified IT Base.");
+
+    }

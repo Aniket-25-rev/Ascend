@@ -1808,7 +1808,8 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
         if (!salesPathByLineId.isEmpty()) {
             List<QuoteLineItem> qliList = [
-                SELECT Id, ListPrice, Discount
+                SELECT Id, ListPrice, Discount, DiscountAmount, Net_Unit_Price_After_System_Discounts__c,
+                       Custom_Uplift_Price_Amount__c, Custom_Uplift_Price_Percentage__c
                 FROM   QuoteLineItem
                 WHERE  QuoteId = :quoteId
                 AND    Id IN :salesPathByLineId.keySet()
@@ -1823,7 +1824,21 @@ global class QuoteMarginRollupPostHook implements RevSignaling.SignalingApexProc
 
                 Decimal unitPrice = qli.ListPrice.setScale(2, RoundingMode.HALF_UP);
                 Decimal discountPct = qli.Discount == null ? 0 : qli.Discount;
-                Decimal netUnitPrice = unitPrice * (1 - (discountPct / 100));
+                // Start from the price the pricing procedure produced after system
+                // discounts (term/volume, or the last-transaction price on Amend lines)
+                // so the fallback does not wipe it back to catalog list price;
+                // only use ListPrice when that stamp is missing.
+                Decimal basePrice = qli.Net_Unit_Price_After_System_Discounts__c != null
+                    ? qli.Net_Unit_Price_After_System_Discounts__c : unitPrice;
+                // Then replay the manual adjustments in pricing procedure order:
+                // manual discount (% then amount, step 13), then Custom Uplift
+                // (% then amount, ListContainer19). Uplift is stored as a
+                // discount, so a negative value is a markup.
+                Decimal discountAmt = qli.DiscountAmount == null ? 0 : qli.DiscountAmount;
+                Decimal upliftPct   = qli.Custom_Uplift_Price_Percentage__c == null ? 0 : qli.Custom_Uplift_Price_Percentage__c;
+                Decimal upliftAmt   = qli.Custom_Uplift_Price_Amount__c == null ? 0 : qli.Custom_Uplift_Price_Amount__c;
+                Decimal netUnitPrice = basePrice * (1 - (discountPct / 100)) - discountAmt;
+                netUnitPrice = netUnitPrice * (1 - (upliftPct / 100)) - upliftAmt;
                 if (netUnitPrice < 0) netUnitPrice = 0;
                 netUnitPrice = netUnitPrice.setScale(2, RoundingMode.HALF_UP);
 

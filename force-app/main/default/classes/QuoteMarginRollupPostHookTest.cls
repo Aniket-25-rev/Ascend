@@ -1617,6 +1617,97 @@ private class QuoteMarginRollupPostHookTest {
     }
 
     @IsTest
+    static void buildNetUnitPriceFallbackUpdates_systemDiscountedPrice_usedInsteadOfListPrice() {
+        Quote q = insertQuoteWithTerms('FallbackSysDisc Quote', 12, null, 'No');
+        Id productId = insertOnboardingProduct('Generic Widget FB3B', '999-TEST-WIDGET-FB3B');
+        Id pbeId = getOrCreateStandardPricebookEntry(productId);
+        QuoteLineItem qli = new QuoteLineItem(
+            QuoteId             = q.Id,
+            PricebookEntryId    = pbeId,
+            Quantity            = 2,
+            UnitPrice           = 100,
+            Discount            = 10,
+            Line_of_Business__c = 'Service Desk',
+            Net_Unit_Price_After_System_Discounts__c = 80
+        );
+        insert qli;
+
+        // Native pricing left NetUnitPrice blank, but the procedure already
+        // stamped the price after system discounts (80 vs list 100): the
+        // fallback must keep that price (then apply the 10% manual discount)
+        // instead of resetting the line to list price.
+        List<Object> items = new List<Object>{
+            fallbackItem(qli.Id, false, null, '999-TEST-WIDGET-FB3B')
+        };
+
+        QuoteMarginRollupPostHook.PriceFallbackPlanResult plan =
+            QuoteMarginRollupPostHook.buildNetUnitPriceFallbackUpdates(items, q.Id);
+
+        System.assertEquals(null, plan.message);
+        List<Object> attrs = (List<Object>) plan.updates.get(0).get('attributes');
+        System.assertEquals(100.00, ((Map<String, Object>) attrs.get(0)).get('attributeValue'));
+        System.assertEquals(72.00,  ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildNetUnitPriceFallbackUpdates_discountAmountAndUpliftPercent_applied() {
+        Quote q = insertQuoteWithTerms('FallbackManualAdj Quote', 12, null, 'No');
+        Id productId = insertOnboardingProduct('Generic Widget FB3C', '999-TEST-WIDGET-FB3C');
+        Id pbeId = getOrCreateStandardPricebookEntry(productId);
+        QuoteLineItem qli = new QuoteLineItem(
+            QuoteId             = q.Id,
+            PricebookEntryId    = pbeId,
+            Quantity            = 2,
+            UnitPrice           = 100,
+            DiscountAmount      = 5,
+            Line_of_Business__c = 'Service Desk',
+            Net_Unit_Price_After_System_Discounts__c = 80,
+            Custom_Uplift_Price_Percentage__c        = -10
+        );
+        insert qli;
+
+        // Amend line with a quantity change: the procedure priced it as
+        // (80 - 5) * 1.10 = 82.50 on the detail rows, so the line must match.
+        List<Object> items = new List<Object>{
+            fallbackItem(qli.Id, false, null, '999-TEST-WIDGET-FB3C')
+        };
+
+        QuoteMarginRollupPostHook.PriceFallbackPlanResult plan =
+            QuoteMarginRollupPostHook.buildNetUnitPriceFallbackUpdates(items, q.Id);
+
+        List<Object> attrs = (List<Object>) plan.updates.get(0).get('attributes');
+        System.assertEquals(82.50, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
+    }
+
+    @IsTest
+    static void buildNetUnitPriceFallbackUpdates_upliftAmountMarkup_applied() {
+        Quote q = insertQuoteWithTerms('FallbackUpliftAmt Quote', 12, null, 'No');
+        Id productId = insertOnboardingProduct('Generic Widget FB3D', '999-TEST-WIDGET-FB3D');
+        Id pbeId = getOrCreateStandardPricebookEntry(productId);
+        QuoteLineItem qli = new QuoteLineItem(
+            QuoteId             = q.Id,
+            PricebookEntryId    = pbeId,
+            Quantity            = 1,
+            UnitPrice           = 100,
+            Line_of_Business__c = 'Service Desk',
+            Net_Unit_Price_After_System_Discounts__c = 80,
+            Custom_Uplift_Price_Amount__c            = -10
+        );
+        insert qli;
+
+        // Negative uplift amount = $10 markup: 80 + 10 = 90.
+        List<Object> items = new List<Object>{
+            fallbackItem(qli.Id, false, null, '999-TEST-WIDGET-FB3D')
+        };
+
+        QuoteMarginRollupPostHook.PriceFallbackPlanResult plan =
+            QuoteMarginRollupPostHook.buildNetUnitPriceFallbackUpdates(items, q.Id);
+
+        List<Object> attrs = (List<Object>) plan.updates.get(0).get('attributes');
+        System.assertEquals(90.00, ((Map<String, Object>) attrs.get(1)).get('attributeValue'));
+    }
+
+    @IsTest
     static void buildNetUnitPriceFallbackUpdates_noListPrice_skipped() {
         Quote q = insertQuoteWithTerms('FallbackNoListPrice Quote', 12, null, 'No');
 
