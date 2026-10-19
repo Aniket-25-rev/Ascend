@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MRR__c</fullName>
+    <description>Calculates the Monthly Recurring Revenue for the Quote Line Item by multiplying the Quantity by the Net Unit Price.</description>
+    <formula>IF( PricingTermCount &gt; 0,
+    /* MSAP Per User (service): pair with MSAP Licensing 001-CYBR-LIC-SAPX-KNB4-001 */
+    IF( Product2.StockKeepingUnit = &quot;001-CYBR-SVC-SAPX-USER-002&quot;,
+        ROUND( NetUnitPrice * Quantity + BLANKVALUE( Quote.Managed_Security_Licensing_Total__c, 0 ), 0 )
+            - ROUND( BLANKVALUE( Quote.Managed_Security_Licensing_Total__c, 0 ), 0 ),
+    /* Monitoring Services (service): pair with Monitoring License 001-INFR-LIC-MONI-LOMO-001 */
+    IF( Product2.StockKeepingUnit = &quot;001-INFR-SVC-MONI-DEVC-001&quot;,
+        ROUND( NetUnitPrice * Quantity + BLANKVALUE( Quote.Monitoring_Licensing_Total__c, 0 ), 0 )
+            - ROUND( BLANKVALUE( Quote.Monitoring_Licensing_Total__c, 0 ), 0 ),
+    /* every other SKU, including both licensing SKUs: unchanged */
+        NetUnitPrice * Quantity ) ),
+    0 )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>MRR</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

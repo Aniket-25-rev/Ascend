@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HaaS_Hardware_Amount__c</fullName>
+    <description>Sales-user-entered total dollar amount for a Hardware as a Service (001-INFR-ASC-HAAS-HAAS-001) line, already including markup/tax/APR from the HaaS pricing worksheet. JTLPreHook divides this by the line&apos;s PricingTermCount to derive UnitPrice, so the platform&apos;s own extension reproduces this exact total as NetTotalPrice and the correct monthly figure as MRR__c.</description>
+    <inlineHelpText>Enter the total hardware, tax and financing from the HaaS external worksheet.</inlineHelpText>
+    <label>HaaS Hardware Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

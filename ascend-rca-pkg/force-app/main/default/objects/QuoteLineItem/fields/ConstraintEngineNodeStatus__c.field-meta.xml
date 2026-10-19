@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ConstraintEngineNodeStatus__c</fullName>
+    <description>This field  is a required custom text field and context definition tag used by the Salesforce Revenue Cloud Advanced Configurator and Constraint Rules Engine (CRE) to track and process product configuration rule execution.</description>
+    <label>ConstraintEngineNodeStatus</label>
+    <length>5000</length>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>
