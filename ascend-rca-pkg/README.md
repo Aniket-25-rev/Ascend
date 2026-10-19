@@ -14,13 +14,12 @@
 
 ## Open issues before the first package version
 
-1. **37 CD mappings point to fields that don't exist in pilot.** Examples: `Quote.Cybersecurity_Margin__c`, `QuoteLineItem.LOB_Margin__c`, `QuoteLineItem.Assumed_Cost__c`. Either remove those mappings from the packaged CD or add the fields; otherwise a clean-org deploy will fail.
-2. **10 hardcoded pilot Ids in the pricing procedure** (v40):
-   - 8 decision table `LookUpId`s (`0lDVF…`)
-   - `VolumePASIdConstant` = `84XVF000000iuEb2AI`
-   - `AttributePASIdConstant` = `84XVF000000iuEc2AI`
-
-   These are invalid in any other org. Packaging needs a by-name lookup, or a post-install step to re-point them.
+1. ~~37 CD mappings point to fields that don't exist in pilot~~ **Fixed 2026-10-19.**
+   - Removed the 37 `contextAttributeMappings` hydration entries (Quote ×17, QuoteLineItem ×20), e.g. `Quote.Cybersecurity_Margin__c`, `QuoteLineItem.LOB_Margin__c`.
+   - The context *attributes* themselves are kept, so procedure references to them still resolve. They just aren't hydrated from a field.
+2. ~~10 hardcoded pilot Ids in the pricing procedure~~ **Fixed 2026-10-19.** No `0lD…` or `84X…` Ids remain.
+   - **Decision table lookups:** removed the 8 `LookUpId` parameters. Each lookup step still names its table by `LookUpApiName` (e.g. `Price_Book_Entry_Decision_Table_v2`). **Unverified:** confirm on the first scratch-org deploy that the platform resolves tables by API name alone. If it doesn't, the fallback is to re-select each table in the builder after install.
+   - **PAS constants:** `VolumePASIdConstant` and `AttributePASIdConstant` are now blank, like `BundlePASIdConstant` already was. `PriceAdjustmentSchedule` is data, so each org must set them after install (see below). While they are blank, volume and attribute discounts silently don't apply.
 3. **Namespace.** Set `"namespace"` in `sfdx-project.json` once it is registered and linked to the Dev Hub. Custom field references then become `<ns>__Field__c`.
 4. **Scratch org features.** `config/project-scratch-def.json` still needs the Revenue Cloud features and settings so the package build org can compile the CD and pricing procedure.
 5. **Dev Hub.** The only authenticated Dev Hub today is `Ascend Prod`. Decide which Dev Hub owns this package before running `sf package create`.

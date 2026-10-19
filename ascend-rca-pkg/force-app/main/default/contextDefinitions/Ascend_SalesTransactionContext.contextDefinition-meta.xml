@@ -4720,54 +4720,6 @@
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
                         <objectName>Quote</objectName>
-                        <queryAttribute>Licensing_SKU_Total__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Licensing_SKU_Total__c</contextAttribute>
-                    <contextInputAttributeName>Licensing_SKU_Total__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Is_Over_Cap__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Is_Over_Cap__c</contextAttribute>
-                    <contextInputAttributeName>Is_Over_Cap__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Adjusted_Service_Price__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Adjusted_Service_Price__c</contextAttribute>
-                    <contextInputAttributeName>Adjusted_Service_Price__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Is_Over_Cap_Monitoring__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Is_Over_Cap_Monitoring__c</contextAttribute>
-                    <contextInputAttributeName>Is_Over_Cap_Monitoring__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Monitoring_Adjusted_Service_Price__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Monitoring_Adjusted_Service_Price__c</contextAttribute>
-                    <contextInputAttributeName>Monitoring_Adjusted_Service_Price__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Monitoring_Licensing_SKU_Total__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Monitoring_Licensing_SKU_Total__c</contextAttribute>
-                    <contextInputAttributeName>Monitoring_Licensing_SKU_Total__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
                         <queryAttribute>OriginalActionType__c</queryAttribute>
                     </contextAttrHydrationDetails>
                     <contextAttribute>OriginalActionTypeFormula__c</contextAttribute>
@@ -4776,34 +4728,10 @@
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
                         <objectName>Quote</objectName>
-                        <queryAttribute>Monitoring_Fee__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Monitoring_Fee__c</contextAttribute>
-                    <contextInputAttributeName>Monitoring_Fee__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Managed_Security_Awareness_Program_Fee__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Managed_Security_Awareness_Program_Fee__c</contextAttribute>
-                    <contextInputAttributeName>Managed_Security_Awareness_Program_Fee__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
                         <queryAttribute>Contract_Term_Months__c</queryAttribute>
                     </contextAttrHydrationDetails>
                     <contextAttribute>Contract_Term_Months__c</contextAttribute>
                     <contextInputAttributeName>Contract_Term_Months__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>LOB_level_margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>LOB_level_margin__c</contextAttribute>
-                    <contextInputAttributeName>LOB_level_margin__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
@@ -4868,54 +4796,6 @@
                     </contextAttrHydrationDetails>
                     <contextAttribute>Cybersecurity_Principal_Monthly__c</contextAttribute>
                     <contextInputAttributeName>Cybersecurity_Principal_Monthly__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>VOIP_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>VOIP_Margin__c</contextAttribute>
-                    <contextInputAttributeName>VOIP_Margin__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Service_Desk_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Service_Desk_Margin__c</contextAttribute>
-                    <contextInputAttributeName>Service_Desk_Margin__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Private_Cloud_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Private_Cloud_Margin__c</contextAttribute>
-                    <contextInputAttributeName>Private_Cloud_Margin__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Onboarding_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Onboarding_Margin__c</contextAttribute>
-                    <contextInputAttributeName>Onboarding_Margin__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Infrastructure_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Infrastructure_Margin__c</contextAttribute>
-                    <contextInputAttributeName>Infrastructure_Margin__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Cybersecurity_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Cybersecurity_Margin__c</contextAttribute>
-                    <contextInputAttributeName>Cybersecurity_Margin__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
@@ -5015,22 +4895,6 @@
                     </contextAttrHydrationDetails>
                     <contextAttribute>Private_Cloud_Principal_Monthly__c</contextAttribute>
                     <contextInputAttributeName>Private_Cloud_Principal_Monthly__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Has_ServiceDesk_Services__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Has_ServiceDesk_Services__c</contextAttribute>
-                    <contextInputAttributeName>Has_ServiceDesk_Services__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>Quote</objectName>
-                        <queryAttribute>Existing_SD_Line_Count__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Existing_SD_Line_Count__c</contextAttribute>
-                    <contextInputAttributeName>Existing_SD_Line_Count__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
@@ -6847,74 +6711,10 @@
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
                         <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Cost_Price__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Cost_Price__c</contextAttribute>
-                    <contextInputAttributeName>Cost_Price__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
                         <queryAttribute>ConstraintEngineNodeStatus__c</queryAttribute>
                     </contextAttrHydrationDetails>
                     <contextAttribute>ConstraintEngineNodeStatus__c</contextAttribute>
                     <contextInputAttributeName>ConstraintEngineNodeStatus__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Minimum_Pricing_Applied__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Minimum_Pricing_Applied__c</contextAttribute>
-                    <contextInputAttributeName>Minimum_Pricing_Applied__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Minimum_Threshold_Enforced__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Minimum_Threshold_Enforced__c</contextAttribute>
-                    <contextInputAttributeName>Minimum_Threshold_Enforced__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Original_Service_Price__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Original_Service_Price__c</contextAttribute>
-                    <contextInputAttributeName>Original_Service_Price__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Adjusted_Service_Price__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Adjusted_Service_Price__c</contextAttribute>
-                    <contextInputAttributeName>Adjusted_Service_Price__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>SA_Below_Minimum__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>SA_Below_Minimum__c</contextAttribute>
-                    <contextInputAttributeName>SA_Below_Minimum__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Monitoring_Below_Minimum__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Monitoring_Below_Minimum__c</contextAttribute>
-                    <contextInputAttributeName>Monitoring_Below_Minimum__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Is_Primary_Line__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Is_Primary_Line__c</contextAttribute>
-                    <contextInputAttributeName>Is_Primary_Line__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextAttributeMappings>
                     <contextAttribute>Number_of_Months__c</contextAttribute>
@@ -6927,74 +6727,10 @@
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
                         <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Minimum_Dollar_Enforced__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Minimum_Dollar_Enforced__c</contextAttribute>
-                    <contextInputAttributeName>Minimum_Dollar_Enforced__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Is_Managed_Security_SKU__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Is_Managed_Security_SKU__c</contextAttribute>
-                    <contextInputAttributeName>Is_Managed_Security_SKU__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Is_Monitoring_SKU__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Is_Monitoring_SKU__c</contextAttribute>
-                    <contextInputAttributeName>Is_Monitoring_SKU__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Assumed_Cost__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Assumed_Cost__c</contextAttribute>
-                    <contextInputAttributeName>Assumed_Cost__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Overhead__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Overhead__c</contextAttribute>
-                    <contextInputAttributeName>Overhead__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
                         <queryAttribute>Base_Price__c</queryAttribute>
                     </contextAttrHydrationDetails>
                     <contextAttribute>Base_Price__c</contextAttribute>
                     <contextInputAttributeName>Base_Price__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>LOB_Margin__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>LOB_Margin__c</contextAttribute>
-                    <contextInputAttributeName>LOB_Margin__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Approval_Indicator__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Approval_Indicator__c</contextAttribute>
-                    <contextInputAttributeName>Approval_Indicator__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Price_Increase__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Price_Increase__c</contextAttribute>
-                    <contextInputAttributeName>Price_Increase__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
@@ -7066,14 +6802,6 @@
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
                         <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Exclude_from_Volume_Discount__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Exclude_from_Volume_Discount__c</contextAttribute>
-                    <contextInputAttributeName>Exclude_from_Volume_Discount__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
                         <queryAttribute>Category__c</queryAttribute>
                     </contextAttrHydrationDetails>
                     <contextAttribute>Category__c</contextAttribute>
@@ -7082,30 +6810,6 @@
                 <contextAttributeMappings>
                     <contextAttribute>Service_Offering__c</contextAttribute>
                     <contextInputAttributeName>Service_Offering__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Service_Offering_Cml__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Service_Offering_CML__c</contextAttribute>
-                    <contextInputAttributeName>Service_Offering_CML__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Item_Action_Status__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Item_Action_Status__c</contextAttribute>
-                    <contextInputAttributeName>Item_Action_Status__c</contextInputAttributeName>
-                </contextAttributeMappings>
-                <contextAttributeMappings>
-                    <contextAttrHydrationDetails>
-                        <objectName>QuoteLineItem</objectName>
-                        <queryAttribute>Quote_Line_Type__c</queryAttribute>
-                    </contextAttrHydrationDetails>
-                    <contextAttribute>Quote_Line_type__c</contextAttribute>
-                    <contextInputAttributeName>Quote_Line_type__c</contextInputAttributeName>
                 </contextAttributeMappings>
                 <contextAttributeMappings>
                     <contextAttrHydrationDetails>
